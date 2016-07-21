@@ -29,6 +29,14 @@ function awsenv_prompt {
   [ -z "${pr}" ] || echo "${bracket_open} ${pr} ${bracket_close}"
 }
 
+function config-git_prompt {
+  if [ -f ~/bin/config-git-status.sh ]; then
+    if ! ( ~/bin/config-git-status.sh ); then
+      echo "${bracket_open} %{$fg[red]%} ${bracket_close}"
+    fi
+  fi
+}
+
 function build_git_prompt {
   $( test "${NO_RIGHT}" = "true" ) && return
   git branch >/dev/null 2>/dev/null || return
@@ -78,9 +86,10 @@ local prompt_part_user="${bracket_open} %{$FG[040]%}%n%{$reset_color%}%{$FG[239]
 local prompt_part_path="%{$terminfo[bold]$FG[226]%}${current_dir}%{$reset_color%}"
 local prompt_part_exit="%(?..${bracket_open} %{$fg[red]%}%?%{${reset_color}%} ${bracket_close})"
 local prompt_part_char='$(prompt_char)'
+local prompt_part_configgit='$(config-git_prompt)'
 
 PROMPT="
-╭─ ${prompt_part_time}${prompt_part_user}$(awsenv_prompt)${prompt_part_exit} ${prompt_part_path}
+╭─ ${prompt_part_time}${prompt_part_user}${prompt_part_configgit}$(awsenv_prompt)${prompt_part_exit} ${prompt_part_path}
 ╰─${prompt_part_char} "
 
 RPROMPT="${git_info}"
