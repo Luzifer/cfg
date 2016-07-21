@@ -1,0 +1,42 @@
+startup_message off
+#caption always "%-Lw%{= BW}%50>%n%f* %t%{-}%+Lw%< %{=b BW} %H %{-} %l %c %d/%m/%Y"
+caption always "%{cK}$LOGNAME %{bK}(%d %M %Y, %c) %{-}%{bW} %-w%{bW}%50>%{= wb}%n%f %t%{-}%+w%< %{-}"
+bindkey ^[[1;5D prev
+bindkey ^[[1;5C next
+bindkey ^N screen
+bindkey ^T title
+#bindkey ^[[5~ 
+autodetach on
+defscrollback 65000
+
+#bindkey -k F1 select 0 ## F11 = screen 0... avoid this screen :/
+#bindkey -k k1 select 1 ## F1 = screen 1
+#bindkey -k k2 select 2 ## F2 = screen 2
+#bindkey -k k3 select 3 ## F3 = screen 3
+#bindkey -k k4 select 4 ## F4 = screen 4
+##bindkey -k k5 select 5 ## F5 = screen 5
+#bindkey -k k6 select 6 ## F6 = screen 6
+#bindkey -k k7 select 7 ## F7 = screen 7
+#bindkey -k k8 select 8 ## F8 = screen 8
+#bindkey -k k9 select 9 ## F9 = screen 9
+#bindkey -k k0 select 10 # F10 = screen 10
+#bindkey -k F2 command  ## F12 = do a command
+
+bindkey ^[[1;2P     select 1 # F1
+bindkey ^[[1;2Q     select 2 # F2
+bindkey ^[[1;2R     select 3 # F3
+bindkey ^[[1;2S     select 4 # F4
+bindkey ^[[15;2~    select 5 # F5
+bindkey ^[[17;2~    select 6 # F6
+bindkey ^[[18;2~    select 7 # F7
+bindkey ^[[19;2~    select 8 # F8
+bindkey ^[[20;2~    select 9 # F9
+bindkey ^[[21;2~    select 10 # F10
+bindkey ^[[23;2~    select 0 # F11
+bindkey ^[[24;2~    command # F12
+
+shell -bash         ## Bash is a rather nice shell.     ##
+#shelltitle "$ |"                ## Blank shell title                    ##
+shelltitle ': |bash'
+defmonitor on           ## Turn monitoring on (see 'activity')  ##
+activity "<%n>"         ## Let you know when stuff happens!     ## 
