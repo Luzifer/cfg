@@ -1,0 +1,57 @@
+[user]
+  name = Knut Ahlers
+  email = knut@ahlers.me
+  signingkey = D34BE99E
+
+[core]
+  repositoryformatversion = 0
+  filemode = true
+  bare = false
+  logallrefupdates = true
+  warnAmbiguousRefs = false
+  excludesfile = /Users/luzifer/.gitignore_global
+
+[color]
+  diff = auto
+  status = auto
+  branch = auto
+
+[commit]
+  gpgsign = true
+
+[branch]
+  autosetuprebase = always
+
+[diff]
+  renames = true
+
+[push]
+  default = tracking
+  gpgSign = if-asked
+
+[alias]
+  changes=diff --name-status -r
+  st = status
+  ci = commit
+  br = branch
+  co = checkout
+  df = diff
+  lg = log -p
+  cues = blame
+  elog = log  --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
+  starecopu = "!sh -c 'git stash && git pull --rebase && git stash pop && git commit -am \"$0\" && git push'"
+  spps = "!sh -c 'git stash && git pull --rebase && git push && git stash pop'"
+  pp = "!sh -c 'git pull --rebase && git push'"
+  squash = !sh -c 'git commit -m \"squash! $(git log -1 --format='\\''%s'\\'' $@)\"' -
+  ri = rebase --interactive --autosquash
+  lg = "log --color --graph --pretty=format:'%Cred%h%Creset [%G?]%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
+  sign-rebase = "!GIT_SEQUENCE_EDITOR='sed -i -re s/^pick/e/' sh -c 'git rebase -i $1 && git commit --amend -S --no-edit && while git rebase --continue; do git commit --amend -S --no-edit; done' -"
+
+[receive]
+  denyNonFastForwards = true
+
+[rerere]
+  enabled = 1
+
+[gpg]
+  program = gpg2
