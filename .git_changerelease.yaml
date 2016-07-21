@@ -1,0 +1,6 @@
+---
+match_patch:
+  - "^[fF]ix"
+
+match_major:
+  - "^[Bb]reaking"
