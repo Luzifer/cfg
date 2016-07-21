@@ -1,3 +1,0 @@
-#!/bin/bash
-
-exec /usr/local/bin/supervisorctl -c /Users/luzifer/config/supervisord/supervisord.conf "$@"
