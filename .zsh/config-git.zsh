@@ -1,4 +1,4 @@
-function config_public {
+function config {
   git --git-dir=${HOME}/.cfg/public --work-tree=${HOME} $@
 }
 
