@@ -1,0 +1,25 @@
+#!/bin/bash
+
+STEP_COLOR="\033[0;36m"
+NO_COLOR="\033[0m"
+
+function step {
+  echo -e ${STEP_COLOR}[$(date +%H:%M:%S)] $1${NO_COLOR}
+}
+
+step "Fetching data from remote..."
+for remote in $(git remote -v | awk '{print $1}' | sort | uniq); do
+  step "+++ Remote: '${remote}'"
+  git fetch -p ${remote}
+done
+
+step "Rebasing branch / updating submodules..."
+git pull --rebase && git submodule update --init --recursive
+
+step "Cleaning local branches..."
+for branch in $(git branch --merged | grep -v '^*'); do
+  # Do not delete master as the main branch
+  if ( test "${branch}" != "master" ); then
+    git branch -d ${branch}
+  fi
+done

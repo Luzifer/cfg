@@ -1,0 +1,5 @@
+#!/bin/bash
+
+LEN=${1:-72}
+
+pbpaste | fold -sw $LEN | pbcopy

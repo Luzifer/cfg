@@ -1,0 +1,47 @@
+#!/usr/bin/env python2
+
+import os, sys, argparse, boto.ec2
+
+def main():
+  parser = argparse.ArgumentParser(description='Searches instance IP and connects via SSH')
+  parser.add_argument('-p', type=int, default=22, metavar='port', help='Port to connect to (default 22)')
+  parser.add_argument('-u', type=str, default=None, metavar='user', help='User to use for connection (default current username)')
+  parser.add_argument('instance_id', type=str, help='ID of the instance in format "i-XXXXX"')
+  args = parser.parse_args()
+
+  if None in [os.getenv('EC2_REGION'), os.getenv('AWS_ACCESS_KEY_ID'), os.getenv('AWS_SECRET_ACCESS_KEY')]:
+    print 'Please provide these environment variables: EC2_REGION, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY'
+    sys.exit(1)
+
+  if os.getenv('EC2_REGION') not in [r.name for r in boto.ec2.regions()]:
+    print 'Region "{}" derived from environment variable EC2_REGION is not a valid region.'.format(os.getenv('EC2_REGION'))
+    sys.exit(1)
+
+  ec2_connection = boto.ec2.connect_to_region(os.getenv('EC2_REGION'),
+    aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'), 
+    aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'))
+
+  instances = ec2_connection.get_only_instances([args.instance_id])
+  if len(instances) != 1:
+    print 'Did not found a single instance for ID {}'.format(args.instance_id)
+    sys.exit(1)
+  instance = instances[0]
+
+  if instance.private_ip_address is not None:
+    _call_ssh(instance.private_ip_address, args.u, args.p)
+  else:
+    _call_ssh(instance.ip_address, args.u, args.p)
+
+def _call_ssh(ip, user=None, port=None):
+  args = ['/usr/bin/ssh']
+  if port is not None:
+    args.append('-p {}'.format(port))
+  if user is not None:
+    args.append('{}@{}'.format(user, ip))
+  else:
+    args.append('{}'.format(ip))
+    
+  os.execv('/usr/bin/ssh', args)
+
+if __name__ == '__main__':
+  main()

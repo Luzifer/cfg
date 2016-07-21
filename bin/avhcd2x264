@@ -1,0 +1,73 @@
+#!/bin/bash
+
+#
+set -e
+
+# loglevels: quiet, panic, fatal, error, warning, info, verbose, debug
+LOGLEVEL=info
+
+# set nice level, 20 lowest, -20 highest
+NICE="nice -n 19"
+
+# on pass or two pass encoding
+PASSES="2"
+
+###
+###
+###
+
+if ! [ -f "$1" ]
+then
+	echo ""$!" is not a file. Nothing to convert."
+	exit
+fi
+
+trap cleanup EXIT
+cleanup() {
+	    set +e
+			rm -f "${PASSLOGFILE}-0.log" "${PASSLOGFILE}-0.log.mbtree" "${TEMPFILE}"
+}
+
+# get creation date
+TIMESTAMP=$(stat -l -t "%Y-%m-%d %H:%M:%S" "$1" | awk '{ print $6" "$7 }')
+# get betrate
+BITRATE=$(ffmpeg -i "$1" 2>&1 |grep bitrate | awk '{print $6}')
+
+# set task priority to low
+NICE="nice -n 19"
+
+EXT="mp4"
+
+DIRECTORY=$(dirname "$1")
+FILENAME=$(basename "$1")
+NOW=$(date "+%Y%m%d%-H%M%S")
+TEMPFILE="$DIRECTORY/.${FILENAME%.*}_${NOW}_ffmpeg.${EXT}"
+
+#METADATA="-metadata creation_time=\"$TIMESTAMP\""
+
+if [ "$PASSES" == "1" ]
+then
+	# 1 pass encoding
+	$NICE ffmpeg -i "$1" -threads auto -loglevel "$LOGLEVEL" -vcodec libx264 -b:v "${BITRATE}k" -vf yadif=1 -acodec libfaac -ab 192k -ar 48000 -sn -metadata creation_time="$TIMESTAMP" -f mp4 -y "${TEMPFILE}"
+else
+	# 2 pass encoding
+	PASSLOGFILE="$DIRECTORY/.${FILENAME%.*}_${NOW}_ffmpeg"
+	$NICE ffmpeg -i "$1" -threads auto -loglevel "$LOGLEVEL" -vcodec libx264 -b:v "${BITRATE}k" -vf yadif=1 -pass 1 -passlogfile "$PASSLOGFILE" -an -sn -f rawvideo -y /dev/null
+	$NICE ffmpeg -i "$1" -threads auto -loglevel "$LOGLEVEL" -vcodec libx264 -b:v "${BITRATE}k" -vf yadif=1 -pass 2 -passlogfile "$PASSLOGFILE" -acodec libfaac -ab 192k -ar 48000 -sn -metadata creation_time="$TIMESTAMP" -f mp4 -y "${TEMPFILE}"
+	rm "${PASSLOGFILE}-0.log"
+	rm "${PASSLOGFILE}-0.log.mbtree"
+fi
+
+touch -r "$1" "${TEMPFILE}"
+
+if [ -f "${1%.*}.${EXT}" ]
+then
+	mv -f "${TEMPFILE}" "${1%.*}_${NOW}.${EXT}"
+	echo
+	echo "File "${1%.*}.${EXT}" already exist, moved to: "${1%.*}_${NOW}.${EXT}""
+	echo
+else
+	mv -i "${TEMPFILE}" "${1%.*}.${EXT}"
+fi
+
+exit

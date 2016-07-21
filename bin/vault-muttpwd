@@ -1,0 +1,12 @@
+#!/bin/bash
+
+USER=$(vault read -field=gmail_user /secret/private/mutt)
+PASS=$(vault read -field=gmail_pass /secret/private/mutt)
+
+cat <<EOM
+set imap_user="${USER}"
+set imap_pass="${PASS}"
+
+set smtp_url="smtp://${USER}@smtp.gmail.com:587/"
+set smtp_pass="${PASS}"
+EOM

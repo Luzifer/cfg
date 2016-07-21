@@ -1,0 +1,32 @@
+#!/bin/bash
+
+KEY=$1
+
+if [ -z "${KEY}" ] || ! (gpg --list-secret-keys | grep -q ${KEY}); then
+  echo "No key given or no secret key found for '${KEY}'"
+  exit 2
+fi
+
+# Read password for this key
+PWD=$(vault read --field=passphrase "/secret/gpg-key/${KEY}")
+
+if [ -z "${PWD}" ]; then
+  echo "Could not read passphrase from vault."
+  exit 2
+fi
+
+HEXPWD=$(python -c "print '${PWD}'.encode('hex')")
+
+# Get keygrip of secret key
+for KEYGRIP in $(gpg2 --with-keygrip -k ${KEY} | grep Keygrip | cut -d '=' -f 2 | xargs); do
+
+  # Set password for keygrip
+  if ! ( gpg-connect-agent -q "PRESET_PASSPHRASE ${KEYGRIP} -1 ${HEXPWD}" /bye >/dev/null 2>&1 ); then
+    echo "An error occurred while caching password in GPG agent"
+    exit 1
+  fi
+
+done
+
+echo "Successfully cached password in GPG agent"
+exit 0

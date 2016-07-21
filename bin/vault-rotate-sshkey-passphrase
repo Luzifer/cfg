@@ -1,0 +1,35 @@
+#!/bin/bash -e
+
+keyfile=$1
+
+if [ -z "$keyfile" ] || [ ! -e "${keyfile}" ]; then
+  echo "Keyfile not provided or not found: '${keyfile}'"
+  exit 1
+fi
+
+KEYNAME=$(basename ${keyfile})
+
+OLDPASS=$(vault read -field=passphrase "/secret/ssh-key/${KEYNAME}")
+
+if [ $? -gt 0 ]; then
+  echo "Unable to retrieve old passphrase."
+  exit 1
+fi
+
+NEWPASS=$(password get -l 64)
+
+if [ -z "$NEWPASS" ]; then
+  echo "Unable to generate a new passphrase"
+  exit 1
+fi
+
+vault write "/secret/ssh-key/${KEYNAME}" passphrase="${NEWPASS}"
+
+if ! (ssh-keygen -p -P "${OLDPASS}" -N "${NEWPASS}" -f "${keyfile}"); then
+  echo "Key has not been changed successfully. Writing old secret back to vault."
+  echo "A backup of the new password has been written to 'tmp_passphrase' attribute."
+  vault write "/secret/ssh-key/${KEYNAME}" passphrase="${OLDPASS}" tmp_passphrase="${NEWPASS}"
+  exit 1
+fi
+
+echo "Everything was fine, key has been changed."

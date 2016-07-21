@@ -1,0 +1,5 @@
+#!/bin/bash
+
+for host in $@; do
+  grep -v ${host} ~/.ssh/known_hosts > ~/.ssh/known_hosts.tmp && mv ~/.ssh/known_hosts.tmp ~/.ssh/known_hosts
+done

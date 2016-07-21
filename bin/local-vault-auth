@@ -1,0 +1,13 @@
+#!/bin/bash
+
+if (vault status | grep -q "Sealed: true"); then
+  echo -n "Vault is sealed, trying to unseal... "
+  UNSEAL_TOKEN=$(lpass show --field=Passphrase "vault-unseal")
+  vault unseal "${UNSEAL_TOKEN}" > /dev/null || echo "FAIL" && echo "OK"
+fi
+
+if ! (vault token-lookup 1>/dev/null 2>&1); then
+  echo -n "Vault is not authenticated, trying to authenticate... "
+  AUTH_TOKEN=$(lpass show --field=Passphrase "vault-auth")
+  echo "${AUTH_TOKEN}" | vault auth - > /dev/null || echo "FAIL" && echo "OK"
+fi

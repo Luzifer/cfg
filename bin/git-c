@@ -1,0 +1,10 @@
+#!/bin/bash -e
+
+vault-gpg $(grep default-key ~/.gnupg/gpg.conf | cut -d ' ' -f 2)
+git commit -S -v $@
+
+PROD_TASK=$(habitica https://habitica.com/api/v3/tasks/user | jq -r '.data | map(select(.text=="productivity").id)[0]')
+
+if ! ( habitica -sS -o /dev/null -X POST https://habitica.com/api/v3/tasks/${PROD_TASK}/score/up ); then
+  echo "Scoring failed."
+fi

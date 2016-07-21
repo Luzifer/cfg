@@ -1,0 +1,4 @@
+#!/bin/bash
+
+find $HOME -type f -name '.gopath' | sed 's!/.gopath$!!' > /tmp/godirs
+mv /tmp/godirs $HOME/.config/godirs

@@ -1,0 +1,6 @@
+#!/bin/bash
+
+HABITICA_API_TOKEN=$(vault read -field=api_token /secret/private/habitica)
+HABITICA_USER_ID=$(vault read -field=user_id /secret/private/habitica)
+
+curl -s -H "x-api-key: ${HABITICA_API_TOKEN}" -H "x-api-user: ${HABITICA_USER_ID}" "$@" <&0

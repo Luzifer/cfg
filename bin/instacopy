@@ -1,0 +1,56 @@
+#!/opt/local/bin/python2.7
+
+# Install: easy_install gdata
+
+# Config:
+
+google_email = 'configure@me.com'
+google_passwd = 'yoursecretpassword'
+
+instagram_token = 'some instagram_token'
+
+# Code:
+
+import gdata.photos.service, gdata.photos
+import gdata.media
+import gdata.geo
+import json, tempfile, sys, urllib, os
+
+gd_client = gdata.photos.service.PhotosService()
+gd_client.email = google_email
+gd_client.password = google_passwd
+gd_client.source = 'InstaCopy v0.1'
+gd_client.ProgrammaticLogin()
+
+album = gd_client.InsertAlbum(title='Instagram', summary='EditMe')
+album_url = '/data/feed/api/user/default/albumid/%s' % album.gphoto_id.text
+
+url = 'https://api.instagram.com/v1/users/self/media/recent?access_token=%s&count=100' % (instagram_token)
+images = json.loads(urllib.urlopen(url).read())
+
+if not 'data' in images:
+  sys.exit(0)
+
+i = 0
+
+for image in images['data']:
+  i = i + 1
+  if not image['type'] == 'image':
+    continue
+
+  _, temp_path = tempfile.mkstemp(suffix='.jpg')
+  f = open(temp_path, 'w')
+  f.write(urllib.urlopen(image['images']['standard_resolution']['url']).read())
+  f.close()
+
+  photo = gd_client.InsertPhotoSimple(album_url, image['link'].split('/')[4], image['caption']['text'], temp_path, content_type='image/jpeg')
+  photo.timestamp = gdata.photos.Timestamp(text=str(int(image['caption']['created_time']) * 1000))
+  try:
+    gd_client.UpdatePhotoMetadata(photo)
+  except:
+    pass
+  os.unlink(temp_path)
+
+  sys.stdout.write('Transferred %d of %d...\r' % (i, len(images['data'])))
+  sys.stdout.flush()
+

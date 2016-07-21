@@ -1,0 +1,3 @@
+#!/bin/bash
+
+exec git push origin '+refs/heads/*:refs/heads/*' '+refs/tags/*:refs/tags/*'

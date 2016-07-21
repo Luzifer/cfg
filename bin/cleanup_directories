@@ -1,0 +1,4 @@
+#!/bin/bash
+
+find /Users/luzifer/Downloads ! -name '.*' -mtime +12h -exec mv "{}" /Users/luzifer/.Trash/ \;
+find /Users/luzifer/.Trash ! -name '.*' -mtime +2d -exec rm -rf "{}" \;

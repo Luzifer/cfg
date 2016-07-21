@@ -1,0 +1,5 @@
+#!/bin/bash
+
+for key in $(find . -type f | grep -vE "\.(pub|pem)" | grep -vE '(config|authorized_keys|known_hosts)' | sort); do 
+  grep -q ENCRYPTED ${key} || echo "Key unsafe: ${key}"
+done

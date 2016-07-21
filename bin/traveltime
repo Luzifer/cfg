@@ -1,0 +1,16 @@
+#!/usr/bin/env python
+
+import urllib, json, sys
+
+if len(sys.argv) < 3:
+  print 'Usage: %s <lat,lon> <lat,lon>' % sys.argv[0]
+  sys.exit(2)
+
+url = 'http://maps.googleapis.com/maps/api/directions/json?origin=%s&destination=%s&sensor=false' % (sys.argv[1], sys.argv[2])
+
+result = json.loads(urllib.urlopen(url).read())
+
+duration = result['routes'][0]['legs'][0]['duration']['text']
+distance = result['routes'][0]['legs'][0]['distance']['text']
+
+print '%s for %s' % (duration, distance)

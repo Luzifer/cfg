@@ -1,0 +1,27 @@
+#!/bin/bash -ex
+
+export GOPATH="${HOME}/gocode"
+
+# Re-Install gocode
+rm -rf "${GOPATH}/bin/gocode"
+go get -u github.com/nsf/gocode
+
+# Re-Install gometalinter
+rm -rf "${GOPATH}/bin/gometalinter"
+go get -u github.com/alecthomas/gometalinter
+${GOPATH}/bin/gometalinter --install --update
+
+# Re-Install godebug
+rm -rf "${GOPATH}/bin/godebug"
+go get -u github.com/mailgun/godebug
+
+# Re-Install godep
+rm -rf "${GOPATH}/bin/godep"
+go get -u github.com/tools/godep
+
+# Re-Install go-bindata
+rm -rf "${GOPATH}/bin/go-bindata"
+go get -u github.com/jteeuwen/go-bindata/...
+
+# Ensure vim-go can work
+vim +:GoInstallBinaries +:qall

@@ -1,0 +1,76 @@
+#!/bin/bash
+
+COLOR_RED="\033[0;31m"
+COLOR_GREEN="\033[0;32m"
+COLOR_CYAN="\033[0;36m"
+COLOR_PLAIN="\033[0m"
+
+function error {
+  echo -e "${COLOR_RED}$@${COLOR_PLAIN}"
+}
+
+function success {
+  echo -e "${COLOR_GREEN}$@${COLOR_PLAIN}"
+}
+
+function info {
+  echo -e "${COLOR_CYAN}$@${COLOR_PLAIN}"
+}
+
+if ! ( which vault > /dev/null ); then
+  error "vault is required."
+  exit 2
+fi
+
+# Require something to be passed to this command
+if [ $# -eq 0 ]; then
+  error "You need to specify a key name."
+  exit 2
+fi
+
+for KEY_NAME in $@; do
+  KEYNAME_IN=${KEY_NAME}
+
+  # Try to find the passed key path / name
+  if ! [ -e "${KEY_NAME}" ]; then
+    if [ -e "${HOME}/.ssh/${KEY_NAME}" ]; then
+      KEY_NAME="${HOME}/.ssh/${KEY_NAME}"
+    else
+      error "[${KEYNAME_IN}] Could not find key file."
+      continue
+    fi
+  fi
+
+  # If this key is already in the agent we don't need to do anything
+  if ( ssh-add -l | grep -q "${KEY_NAME}" ); then
+    info "[${KEYNAME_IN}] Key already present."
+    continue
+  fi
+
+  # Retrieve key from LastPass
+  PWD=$(vault read -field=passphrase "/secret/ssh-key/$(basename ${KEY_NAME})")
+
+  # In case LastPass exitted non-zero we have no password
+  if ! [ $? -eq 0 ]; then
+    error "[${KEYNAME_IN}] Unable to get password. Not trying to unlock."
+    continue
+  fi
+
+  # Fill password to ssh-add utility
+  expect <<EOF >/dev/null
+spawn ssh-add ${KEY_NAME}
+expect "Enter passphrase"
+send "$PWD\n"
+expect eof
+EOF
+
+  # Check whether the key was added to the agent
+  if ( ssh-add -l | grep -q "${KEY_NAME}" ); then
+    success "[${KEYNAME_IN}] Key successfully added."
+    continue
+  else
+    error "[${KEYNAME_IN}] Found passphrase but could not add key."
+    continue
+  fi
+
+done

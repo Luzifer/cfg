@@ -1,0 +1,14 @@
+#!/bin/bash -e
+
+if [ -e /Volumes ]; then
+  SHACHECK="2688057d3ddc1b9b5a5a4309f89a2bcb57cc033b  /Volumes/Duplicity/mountcheck"
+  if ! ( echo "${SHACHECK}" | shasum -cs ); then
+    echo "/Volumes/Duplicity does not seem to be mounted or wrong volume"
+    exit 1
+  fi
+fi
+
+CMD=${1:-backup}
+
+exec vault2env /secret/private/duplicity/$(hostname -s) -- \
+  duplicity-backup ${CMD}

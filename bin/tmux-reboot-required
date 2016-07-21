@@ -1,0 +1,9 @@
+#!/bin/bash
+
+if ! [ -f /var/run/reboot-required ]; then
+  exit
+fi
+
+PKG_COUNT=$(wc -l /var/run/reboot-required.pkgs | awk '{ print $1 }')
+
+echo -n "Reboot required (${PKG_COUNT} pkgs)"

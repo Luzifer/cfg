@@ -1,0 +1,22 @@
+#!/bin/bash
+
+PWD=$(pwd)
+
+if ! [ -e "${PWD}/Godeps/_workspace/src" ]; then
+  echo "Path ${PWD}/Godeps/_workspace/src not found, stopping."
+  exit 1
+fi
+
+if [ -e "${PWD}/vendor" ]; then
+  echo "You already have a vendor directory, stopping."
+  exit 1
+fi
+
+set -ex
+
+mv "${PWD}/Godeps/_workspace/src" "${PWD}/vendor"
+rm -rf "${PWD}/Godeps/_workspace"
+godep update -goversion
+
+git add vendor
+git rm -rf Godeps/_workspace
