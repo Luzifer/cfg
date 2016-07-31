@@ -1,0 +1,13 @@
+#!/bin/bash
+
+EXCLUDE="(.git|workspaces|.cache|.gimme|.cfg|gocode|.local|logs|.gnupg/.*.(gpg|key))"
+
+NON_CONFIG=$(find ${HOME} -type f | grep -vE ${EXCLUDE})
+
+for repo in public secret; do
+  for managed in $(git --git-dir=${HOME}/.cfg/${repo} --work-tree=${HOME} ls-files | sed "s;^;${HOME}/;"); do
+    NON_CONFIG=$(echo "${NON_CONFIG}" | grep -v "${managed}")
+  done
+done
+
+echo "${NON_CONFIG}" | sed "s;^${HOME}/\?;;" | grep -v "^$" | sort
