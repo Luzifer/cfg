@@ -17,7 +17,7 @@ function prompt_char {
 }
 
 function box_color {
-  [ -f ~/.box_color ] && cat ~/.box_color || echo '$FG[033]'
+  [ -f ~/.box_color ] && cat ~/.box_color || ~/bin/color_from_hostname.py
 }
 
 function box_name {
