@@ -12,7 +12,7 @@ export PATH=$PATH:$HOME/android-sdk-macosx/platform-tools
 
 ## Custom scripts
 export PATH=$HOME/bin:$PATH
-source $HOME/config/zsh/go-binaries.sh
+source $HOME/.zsh/go-binaries.sh
 
 ## Some default settings
 export EDITOR=/usr/bin/vim
