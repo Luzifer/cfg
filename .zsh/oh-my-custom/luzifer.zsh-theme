@@ -16,6 +16,10 @@ function prompt_char {
     echo '○'
 }
 
+function box_color {
+  [ -f ~/.box_color ] && cat ~/.box_color || echo '$FG[033]'
+}
+
 function box_name {
     [ -f ~/.box-name ] && cat ~/.box-name || echo ${SHORT_HOST:-$HOST}
 }
@@ -82,7 +86,7 @@ local bracket_open="%{$FG[239]%}[%{$reset_color%}"
 local bracket_close="%{$FG[239]%}]%{$reset_color%}"
 
 local prompt_part_time="${bracket_open} %T ${bracket_close}"
-local prompt_part_user="${bracket_open} %{$FG[040]%}%n%{$reset_color%}%{$FG[239]%}@%{$reset_color%}%{$FG[033]%}$(box_name)%{$reset_color%} ${bracket_close}"
+local prompt_part_user="${bracket_open} %{$FG[040]%}%n%{$reset_color%}%{$FG[239]%}@%{$reset_color%}%{$(box_color)%}$(box_name)%{$reset_color%} ${bracket_close}"
 local prompt_part_path="%{$terminfo[bold]$FG[226]%}${current_dir}%{$reset_color%}"
 local prompt_part_exit="%(?..${bracket_open} %{$fg[red]%}%?%{${reset_color}%} ${bracket_close})"
 local prompt_part_char='$(prompt_char)'
