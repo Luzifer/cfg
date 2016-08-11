@@ -23,5 +23,9 @@ go get -u github.com/tools/godep
 rm -rf "${GOPATH}/bin/go-bindata"
 go get -u github.com/jteeuwen/go-bindata/...
 
+# Re-Install hclfmt
+rm -rf "${GOPATH}/bin/hclfmt"
+go get -u github.com/fatih/hclfmt
+
 # Ensure vim-go can work
 vim +:GoInstallBinaries +:qall
