@@ -25,4 +25,5 @@ for REPO in public secret; do
   fi;
   config checkout
   config config status.showUntrackedFiles no
+  config submodule update --init --recursive
 done
