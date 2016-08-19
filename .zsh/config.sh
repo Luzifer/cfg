@@ -31,6 +31,7 @@ bindkey '^[[1;9D' backward-word
 alias alpine='docker run --rm -ti alpine /bin/sh'
 alias gentex='drm dev -- docker run --rm -ti -v $(pwd):/src luzifer/xetexgen'
 alias gometalinter='gometalinter -D aligncheck -D errcheck -e bindata.go'
+alias :q='exit'
 
 ## Initialize GPG agent
 source ${HOME}/.zsh/gpg-agent.plugin.zsh
