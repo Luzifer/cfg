@@ -1,11 +1,5 @@
-## RVM binaries
-export PATH=$HOME/.rvm/bin:$PATH
-
 ## Brew installed binaries
 export PATH=/usr/local/sbin:/usr/local/bin:$PATH
-
-## Make android-sdk known
-export PATH=$PATH:$HOME/android-sdk-macosx/platform-tools
 
 ## Activate go using gimme if any go version is available
 [ -e ${HOME}/.gimme/envs/latest.env ] && source ${HOME}/.gimme/envs/latest.env
