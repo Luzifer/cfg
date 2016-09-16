@@ -2,7 +2,7 @@
 
 KEY=$1
 
-if [ -z "${KEY}" ] || ! (gpg --list-secret-keys | grep -q ${KEY}); then
+if [ -z "${KEY}" ] || ! (gpg2 --list-secret-keys | grep -q ${KEY}); then
   echo "No key given or no secret key found for '${KEY}'"
   exit 2
 fi

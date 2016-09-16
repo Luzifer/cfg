@@ -3,5 +3,7 @@
 CMD=${1:-backup}
 HOSTNAME=$(hostname -s)
 
+shift
+
 exec vault2env /secret/private/duplicity/${HOSTNAME} -- \
-  duplicity-backup -f ${HOME}/.duplicity/${HOSTNAME}.yaml ${CMD}
+  duplicity-backup -f ${HOME}/.duplicity/${HOSTNAME}.yaml ${CMD} "$@"
