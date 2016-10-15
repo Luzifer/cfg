@@ -5,4 +5,4 @@ ARGS="$@"
 HOSTNAME=$(hostname -s)
 
 exec vault2env /secret/private/duplicity/${HOSTNAME} -- \
-  duplicity-backup -f ${HOME}/.duplicity/${HOSTNAME}.yaml "${ARGS}"
+  duplicity-backup -f ${HOME}/.duplicity/${HOSTNAME}.yaml ${ARGS}
