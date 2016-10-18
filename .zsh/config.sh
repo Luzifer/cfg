@@ -10,6 +10,7 @@ source $HOME/.zsh/go-binaries.sh
 
 ## Some default settings
 export EDITOR=/usr/bin/vim
+export BROWSER=/bin/echo # enable usage of `hub browse` on remote machines
 export AUTOGOPATH_DEFAULT=$HOME/gocode
 export ANSIBLE_NOCOWS=1
 export LANG=en_US.UTF-8
