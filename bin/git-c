@@ -1,7 +1,15 @@
 #!/bin/bash -e
 
+### Fix committer email by repo
+
+git setmail >/dev/null
+
+### Commit
+
 vault-gpg $(grep default-key ~/.gnupg/gpg.conf | cut -d ' ' -f 2)
 git commit -S -v "$@"
+
+### Count productivity habit
 
 PROD_TASK=$(habitica https://habitica.com/api/v3/tasks/user | jq -r '.data | map(select(.text=="productivity").id)[0]')
 
