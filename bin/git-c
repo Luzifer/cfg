@@ -1,16 +1,28 @@
 #!/bin/bash -e
 
+STEP_COLOR="\033[0;36m"
+NO_COLOR="\033[0m"
+
+function step {
+    echo -e ${STEP_COLOR}[$(date +%H:%M:%S)] $1${NO_COLOR}
+}
+
 ### Fix committer email by repo
 
-git setmail >/dev/null
+step "Ensure correct committer email..."
+git setmail
 
 ### Commit
 
+step "Loading passphrase for GPG key..."
 vault-gpg $(grep default-key ~/.gnupg/gpg.conf | cut -d ' ' -f 2)
+
+step "Issuing commit..."
 git commit -S -v "$@"
 
 ### Count productivity habit
 
+step "Recording work..."
 PROD_TASK=$(habitica https://habitica.com/api/v3/tasks/user | jq -r '.data | map(select(.text=="productivity").id)[0]')
 
 if ! ( habitica -sS -o /dev/null -X POST https://habitica.com/api/v3/tasks/${PROD_TASK}/score/up ); then
