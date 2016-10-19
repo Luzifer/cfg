@@ -15,7 +15,7 @@ git setmail
 ### Commit
 
 step "Loading passphrase for GPG key..."
-vault-gpg $(grep default-key ~/.gnupg/gpg.conf | cut -d ' ' -f 2)
+vault-gpg $(git config user.signingkey)
 
 step "Issuing commit..."
 git commit -S -v "$@"
