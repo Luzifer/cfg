@@ -1,0 +1,70 @@
+#!/bin/bash
+
+read -r -d '' TUNNEL_CONFIG << 'EOM'
+{
+  "name":     $name,
+  "addr":     $port,
+  "proto":    "http",
+  "bind_tls": true,
+  "inspect":  false
+}
+EOM
+
+MODE="create"
+PORT="3000"
+
+while getopts ":cdl" opt; do
+  case "${opt}" in
+    c)
+      MODE="clear"
+      ;;
+    d)
+      MODE="delete"
+      ;;
+    l)
+      MODE="list"
+      ;;
+    *)
+      echo "Usage: $0 [-c] [-d] [-l] [port]"
+      echo "  -c    Clear all open tunnels"
+      echo "  -d    Delete port expose"
+      echo "  -l    List all active tunnels"
+      exit 1
+      ;;
+  esac
+done
+
+shift $((OPTIND-1))
+
+[ -z "$1" ] || PORT="$1"
+
+NAME="expose_${PORT}"
+
+case "${MODE}" in
+  create)
+    EXISTING_TUNNEL=$(curl -s "http://localhost:4040/api/tunnels/${NAME}" | jq -r '.public_url')
+    if !( test "${EXISTING_TUNNEL}" == "null" ); then
+      echo "Tunnel for port ${PORT} already open. Its address is: ${EXISTING_TUNNEL}"
+      exit 0
+    fi
+    json=$(jq -cn --arg port "${PORT}" --arg name "${NAME}" "${TUNNEL_CONFIG}")
+    TUNNEL=$(curl -s -X POST -H 'Content-Type: application/json' -d ${json} "http://localhost:4040/api/tunnels" | jq -r '.public_url')
+    echo "Tunnel for port ${PORT} opened: ${TUNNEL}"
+    ;;
+  delete)
+    for uri in $(curl -s "http://localhost:4040/api/tunnels" | jq -r --arg name "${NAME}" '.tunnels | .[] | select(.name | startswith($name)) | .uri'); do
+      curl -X DELETE "http://localhost:4040$(echo "$uri" | sed "s/+/%20/g")"
+    done
+    echo "Tunnel for port ${PORT} removed."
+    ;;
+  list)
+    echo "Active tunnels:"
+    curl -s "http://localhost:4040/api/tunnels" | jq -r '.tunnels | .[] | " - " + .public_url + " => " + .config.addr'
+    ;;
+  clear)
+    for uri in $(curl -s "http://localhost:4040/api/tunnels" | jq -r '.tunnels | .[] | .uri'); do
+      curl -X DELETE "http://localhost:4040$(echo "$uri" | sed "s/+/%20/g")"
+    done
+    echo "All tunnels closed."
+    ;;
+esac
