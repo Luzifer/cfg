@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
 # Usage: git setmail
 #
@@ -17,23 +17,23 @@ CONFIG=os.path.expanduser('~/.config/git-setmail.json')
 
 def main():
   try:
-    repo = [x.split()[1] for x in subprocess.check_output(['git', 'remote', '-v'], universal_newlines=True).split('\n') if re.match('origin.*\(push\)', x)][0]
+    repo = [x.split()[1] for x in subprocess.check_output(['git', 'remote', '-v']).split('\n') if re.match('origin.*\(push\)', x)][0]
   except:
-    print('Could not find origin, not setting email.')
+    print 'Could not find origin, not setting email.'
     return 1
 
   if os.path.isfile(CONFIG):
     combinations = json.loads(open(CONFIG).read())
   else:
-    print('Config ({}) found.'.format(CONFIG))
+    print 'Config ({}) found.'.format(CONFIG)
     return 1
 
   for combi in combinations:
     if re.search(combi['match'], repo):
-      if combi['email'] == subprocess.check_output(['git', 'config', 'user.email'], universal_newlines=True).strip():
-        print('Email correctly set to "{}", not modifying.'.format(combi['email']))
+      if combi['email'] == subprocess.check_output(['git', 'config', 'user.email']).strip():
+        print 'Email correctly set to "{}", not modifying.'.format(combi['email'])
       else:
-        print('Found repo "{}", setting email to "{}"...'.format(repo, combi['email']))
+        print 'Found repo "{}", setting email to "{}"...'.format(repo, combi['email'])
         subprocess.check_call(['git', 'config', 'user.email', combi['email']])
         if 'gpg-key' in combi and combi['gpg-key'] != '':
           subprocess.check_call(['git', 'config', 'user.signingkey', combi['gpg-key']])
