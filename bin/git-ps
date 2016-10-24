@@ -23,3 +23,6 @@ for branch in $(git branch --merged | grep -v '^*'); do
     git branch -d ${branch}
   fi
 done
+
+step "Removing local branches where remote branch is gone..."
+git branch -vv | awk '/: gone]/{print $1}' | xargs -r git branch -D
