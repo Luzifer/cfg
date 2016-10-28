@@ -20,7 +20,7 @@ def main():
     repo = [x.split()[1] for x in subprocess.check_output(['git', 'remote', '-v']).split('\n') if re.match('origin.*\(push\)', x)][0]
   except:
     print 'Could not find origin, not setting email.'
-    return 1
+    return 0
 
   if os.path.isfile(CONFIG):
     combinations = json.loads(open(CONFIG).read())
