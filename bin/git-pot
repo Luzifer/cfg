@@ -1,5 +1,5 @@
 #!/bin/bash -ex
 
-CURRENT_BRANCH=$(git branch --list | grep '^\*' | cut -d ' ' -f 2)
+CURRENT_BRANCH=$(git branch --list | awk '/^\*/{print $2}')
 
 exec git push origin ${CURRENT_BRANCH} --tags
