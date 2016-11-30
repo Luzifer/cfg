@@ -25,6 +25,6 @@ for branch in $(git branch --merged | grep -v '^*'); do
 done
 
 step "Removing local branches where remote branch is gone..."
-if ( git branch -vv | grep -q ': gone ]' ); then
+if ( git branch -vv | grep -q ': gone]' ); then
   git branch -vv | awk '/: gone]/{print $1}' | xargs git branch -D
 fi
