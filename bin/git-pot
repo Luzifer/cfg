@@ -1,5 +1,34 @@
-#!/bin/bash -ex
+#!/bin/bash -e
+
+STEP_COLOR="\033[0;36m"
+NO_COLOR="\033[0m"
+
+function step {
+    echo -e ${STEP_COLOR}[$(date +%H:%M:%S)] $1${NO_COLOR}
+}
+
+### Determine what to push
+
+step "Collect refs to push to origin"
 
 CURRENT_BRANCH=$(git branch --list | awk '/^\*/{print $2}')
+REQUIRED=$(git show-ref --tags | grep -v -F "$(git ls-remote --tags origin | grep -v '\^{}' | cut -f 2)" | cut -d '/' -f 3 | xargs)
 
-exec git push origin ${CURRENT_BRANCH} --tags
+if ( test "$(git show-ref refs/heads/${CURRENT_BRANCH} | cut -d ' ' -f 1)" != "$(git show-ref refs/remotes/origin/${CURRENT_BRANCH} | cut -d ' ' -f 1)" ); then
+  REQUIRED="${REQUIRED} ${CURRENT_BRANCH}"
+fi
+
+if [ -z "${REQUIRED}" ]; then
+  exit 0
+fi
+
+step "Execute pre-push auto-hook"
+git autohook pre-push
+
+step "Execute pushes..."
+for ref in ${REQUIRED}; do
+  git push origin ${ref}
+done
+
+step "Execute post-push auto-hook"
+git autohook post-push

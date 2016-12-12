@@ -17,8 +17,14 @@ git setmail
 step "Loading passphrase for GPG key..."
 vault-gpg $(git config user.signingkey)
 
+step "Execute pre-commit auto-hook"
+git autohook pre-commit
+
 step "Issuing commit..."
 git commit -S -v "$@"
+
+step "Execute post-commit auto-hook"
+git autohook post-commit
 
 ### Count productivity habit
 
