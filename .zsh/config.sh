@@ -23,6 +23,7 @@ bindkey '^[[1;9C' forward-word
 bindkey '^[[1;9D' backward-word
 
 ## Aliases
+alias ag='/usr/bin/ag --ignore-dir=vendor'
 alias alpine='docker run --rm -ti alpine /bin/sh'
 alias gentex='drm dev -- docker run --rm -ti -v $(pwd):/src luzifer/xetexgen'
 alias gometalinter='gometalinter -D aligncheck -D errcheck -e bindata.go'
