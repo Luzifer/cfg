@@ -26,9 +26,7 @@ step "Execute pre-push auto-hook"
 git autohook pre-push
 
 step "Execute pushes..."
-for ref in ${REQUIRED}; do
-  git push origin ${ref}
-done
+git push origin ${REQUIRED} "$@"
 
 step "Execute post-push auto-hook"
 git autohook post-push
