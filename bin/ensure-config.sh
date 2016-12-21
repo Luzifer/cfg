@@ -1,7 +1,7 @@
 #!/bin/bash
 
 PUB_CONFIG="git@github.com:Luzifer/cfg.git"
-SEC_CONFIG="git@gitlab.com:luzifer/cfg.git"
+SEC_CONFIG="git@github.com:Luzifer/cfg-secret.git"
 
 if ! [ -d ${HOME}/.cfg/public ]; then
   git clone --bare ${PUB_CONFIG} ${HOME}/.cfg/public
