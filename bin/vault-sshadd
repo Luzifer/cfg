@@ -28,49 +28,44 @@ if [ $# -eq 0 ]; then
   exit 2
 fi
 
+# Create a helper script to send STDIN data to ssh-add
+HELPER=$(tempfile -m 0700)
+trap "rm ${HELPER}" EXIT
+
+cat -s <<EOF > ${HELPER}
+#!/bin/bash
+vault read -field=private "/secret/ssh-key/\$1" | exec ssh-add -
+EOF
+
 for KEY_NAME in $@; do
-  KEYNAME_IN=${KEY_NAME}
-
-  # Try to find the passed key path / name
-  if ! [ -e "${KEY_NAME}" ]; then
-    if [ -e "${HOME}/.ssh/${KEY_NAME}" ]; then
-      KEY_NAME="${HOME}/.ssh/${KEY_NAME}"
-    else
-      error "[${KEYNAME_IN}] Could not find key file."
-      continue
-    fi
-  fi
-
   # If this key is already in the agent we don't need to do anything
   if ( ssh-add -l | grep -q "${KEY_NAME}" ); then
-    info "[${KEYNAME_IN}] Key already present."
+    info "[${KEY_NAME}] Key already present."
     continue
   fi
 
   # Retrieve key from LastPass
-  PWD=$(vault read -field=passphrase "/secret/ssh-key/$(basename ${KEY_NAME})")
-
+  PWD=$(vault read -field=passphrase "/secret/ssh-key/${KEY_NAME}")
   # In case LastPass exitted non-zero we have no password
   if ! [ $? -eq 0 ]; then
-    error "[${KEYNAME_IN}] Unable to get password. Not trying to unlock."
+    error "[${KEY_NAME}] Unable to get password. Not trying to unlock."
     continue
   fi
 
   # Fill password to ssh-add utility
   expect <<EOF >/dev/null
-spawn ssh-add ${KEY_NAME}
+spawn ${HELPER} ${KEY_NAME}
+
 expect "Enter passphrase"
 send "$PWD\n"
-expect eof
+
+expect "added:" {exit 0} timeout {exit 1}
 EOF
 
-  # Check whether the key was added to the agent
-  if ( ssh-add -l | grep -q "${KEY_NAME}" ); then
-    success "[${KEYNAME_IN}] Key successfully added."
-    continue
+  if [ $? -eq 0 ]; then
+    info "[${KEY_NAME}] Should be loaded by now."
   else
-    error "[${KEYNAME_IN}] Found passphrase but could not add key."
-    continue
+    error "[${KEY_NAME}] Was not added successfully."
   fi
 
 done
