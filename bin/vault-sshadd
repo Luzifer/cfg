@@ -29,7 +29,8 @@ if [ $# -eq 0 ]; then
 fi
 
 # Create a helper script to send STDIN data to ssh-add
-HELPER=$(tempfile -m 0700)
+HELPER=$(mktemp)
+chmod 0700 ${HELPER}
 trap "rm ${HELPER}" EXIT
 
 cat -s <<EOF > ${HELPER}
