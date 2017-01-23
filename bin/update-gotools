@@ -29,3 +29,6 @@ go get -u github.com/fatih/hclfmt
 
 # Ensure vim-go can work
 vim +:GoInstallBinaries +:qall
+
+# Normally update non-version dependent tools
+go get -u github.com/fiatjaf/jiq/cmd/jiq
