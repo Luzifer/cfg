@@ -21,7 +21,7 @@ step "Execute pre-commit auto-hook"
 git autohook pre-commit
 
 step "Issuing commit..."
-git commit -S -v "$@"
+git commit -S -s -v "$@"
 
 step "Execute post-commit auto-hook"
 git autohook post-commit
