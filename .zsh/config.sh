@@ -8,6 +8,9 @@ export PATH=/usr/local/sbin:/usr/local/bin:$PATH
 export PATH=$HOME/bin:$PATH
 source $HOME/.zsh/go-binaries.sh
 
+## Local installed pip package binaries
+export PATH=$PATH:$HOME/.local/bin
+
 ## Some default settings
 export EDITOR=/usr/bin/vim
 export BROWSER=/bin/echo # enable usage of `hub browse` on remote machines
