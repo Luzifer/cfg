@@ -1,0 +1,12 @@
+#!/bin/bash
+
+set -e
+set -o pipefail
+
+function unexpose {
+  expose -d 8888
+}
+trap unexpose EXIT
+
+expose 8888
+python -m SimpleHTTPServer 8888
