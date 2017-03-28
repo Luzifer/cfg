@@ -35,7 +35,7 @@ done
 cat <<EOF
 FROM golang:alpine
 
-MAINTAINER ${GIT_NAME} <${GIT_MAIL}>
+LABEL maintainer "${GIT_NAME} <${GIT_MAIL}>"
 
 EOF
 
