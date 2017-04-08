@@ -1,0 +1,8 @@
+#!/bin/bash
+
+[ -e $HOME/.ssh/ssh_auth_sock ] && exit 0
+
+pgrep ssh-agent | xargs -r kill
+eval $(ssh-agent)
+
+ln -sf $SSH_AUTH_SOCK $HOME/.ssh/ssh_auth_sock
