@@ -7,6 +7,9 @@ export GOPATH="${HOME}/gocode"
 rm -rf ${GOPATH}
 mkdir -p ${GOPATH}
 
+# Create `.gopath` file for $PATH detection
+touch ${GOPATH}/.gopath
+
 # Re-Install gocode
 go get -u github.com/nsf/gocode
 
