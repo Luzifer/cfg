@@ -4,5 +4,5 @@ ARGS="$@"
 [ -z "${ARGS}" ] && ARGS="backup"
 HOSTNAME=$(hostname -s)
 
-exec vault2env /secret/private/duplicity/${HOSTNAME} -- \
+exec vault2env --key=/secret/private/duplicity/${HOSTNAME} -- \
   duplicity-backup -f ${HOME}/.duplicity/${HOSTNAME}.yaml ${ARGS}
