@@ -1,0 +1,94 @@
+#!/bin/bash
+
+set -o pipefail
+set -e
+
+BASE_PATH=/tmp/system-audit
+GIT_DIR=/var/local/system-audit
+  
+function collect_hashes {
+  target=$1; shift
+  for dir in $@; do
+    if ! [ -e "${dir}" ]; then
+      echo "${dir}" >> ${BASE_PATH}/missing
+      wrap_git add --intent-to-add ${BASE_PATH}/missing
+      continue
+    fi
+
+    find ${dir} -type f -print0 | xargs -0 shasum -a 512 >> ${target}
+  done
+
+  if [ -e ${target} ]; then
+    wrap_git add --intent-to-add ${target}
+  fi
+}
+
+function wrap_git {
+  git --work-tree=${BASE_PATH} --git-dir=${GIT_DIR} "$@"
+  return $?
+}
+
+# Create target directory
+mkdir -p ${BASE_PATH}
+
+# Initialize the dir repo if not present
+if ! [ -e "${GIT_DIR}" ]; then
+  mkdir -p $(dirname ${GIT_DIR})
+  wrap_git init
+fi
+
+if [ $# -lt 1 ]; then
+  echo "Usage: $0 <collect|freeze|init|check>"
+  exit 1
+fi
+
+case "$1" in
+
+"collect")
+  # Remove old hash-files
+  rm -rf ${BASE_PATH}/*
+
+  # [OSX / Linux] Changing this script will cause a different behaviour
+  # so also this needs to be monitored.
+  collect_hashes ${BASE_PATH}/script          $0
+
+  # [OSX only] LaunchAgents and LaunchDaemons can be used to execute
+  # programs on behalf of the user or the root user. They may be used
+  # as attack vectors.
+  collect_hashes ${BASE_PATH}/agents_daemons  /System/Library/LaunchDaemons /Library/LaunchDaemons /System/Library/LaunchAgents /Library/LaunchAgents ~/Library/LaunchAgents
+
+  # [OSX / Linux ] /etc (or /private/etc on OSX) does contain configuration
+  # for system applications and might be used to change their behaviour.
+  collect_hashes ${BASE_PATH}/etc             /etc /private/etc
+
+  # [OSX / Linux] Binary folders do contain the executables used by the
+  # system itself. Exchanging them can cause harm to the system or leak
+  # data.
+  collect_hashes ${BASE_PATH}/bin             /usr/bin /usr/local/bin ~/bin
+  ;;
+
+"freeze")
+  wrap_git commit -S -a -m "Status freeze as of $(date)"
+  ;;
+
+"check")
+  $0 collect
+  $0 diff --exit-code
+  echo "Everything is still in recorded state"
+  ;;
+
+"init")
+  if [ $($0 log --pretty=format:'%h [%G?]%d %s (%cr) <%an>' --abbrev-commit | wc -l) -gt 0 ]; then
+    echo "The status was already initialized. Use 'collect' and 'diff' to review the state and 'freeze' to save it"
+    exit 1
+  fi
+
+  $0 collect
+  $0 freeze
+  ;;
+
+*)
+  wrap_git "$@"
+  ;;
+
+esac
