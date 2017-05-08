@@ -1,6 +1,7 @@
 ---
 match_patch:
   - "^[fF]ix"
+  - "^[lL]int"
 
 match_major:
   - "^[Bb]reaking"
