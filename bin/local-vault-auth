@@ -16,6 +16,18 @@ if ! (vault token-lookup 1>/dev/null 2>&1); then
   fi
 
   ${HOME}/bin/vault-user-token &
+  echo "Waiting for token to become available"
+  while ! [ -f ${HOME}/.vault-token ]; do
+    # Give the program a moment to get a token
+    echo -n .
+    sleep 0.5
+
+    if ! ( pgrep -q vault-user-token ); then
+      echo "vault-user-token exitted, giving up."
+      exit 1
+    fi
+  done
+  echo
 
   if ! (vault token-lookup 1>/dev/null 2>&1); then
     echo "Vault authentication failed finally"
