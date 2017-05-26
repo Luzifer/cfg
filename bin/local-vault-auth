@@ -1,7 +1,25 @@
 #!/bin/bash
 
+set -e
+set -o pipefail
+
+source ${HOME}/.config/vault-user-token
+
 if ! (vault token-lookup 1>/dev/null 2>&1); then
-  echo -n "Vault is not authenticated, trying to authenticate... "
-  AUTH_TOKEN=$(lpass show --field=Passphrase "vault-auth")
-  echo "${AUTH_TOKEN}" | vault auth - > /dev/null || echo "FAIL" && echo "OK"
+  echo "Vault is not authenticated, trying to authenticate... "
+
+  if ! [ -f ${HOME}/bin/vault-user-token ]; then
+    os=$(uname | awk '{print tolower($0)}')
+    curl -sSLfo ${HOME}/bin/vault-user-token \
+      https://github.com/Luzifer/vault-user-token/releases/download/${VAULT_USER_TOKEN_VERSION}/vault-user-token_${os}_amd64
+    chmod 0755 ${HOME}/bin/vault-user-token
+  fi
+
+  ${HOME}/bin/vault-user-token &
+
+  if ! (vault token-lookup 1>/dev/null 2>&1); then
+    echo "Vault authentication failed finally"
+    exit 1
+  fi
+
 fi
