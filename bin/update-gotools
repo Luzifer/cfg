@@ -34,3 +34,5 @@ vim +:GoInstallBinaries +:qall
 
 # Normally update non-version dependent tools
 go get -u github.com/fiatjaf/jiq/cmd/jiq
+
+go get -u github.com/hashicorp/vault
