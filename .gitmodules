@@ -4,3 +4,6 @@
 [submodule ".vim"]
 	path = .vim
 	url = git@github.com:Luzifer/vim.git
+[submodule ".gimme-src"]
+	path = .gimme-src
+	url = https://github.com/travis-ci/gimme.git
