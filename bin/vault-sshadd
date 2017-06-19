@@ -65,6 +65,7 @@ EOF
 
   if [ $? -eq 0 ]; then
     info "[${KEY_NAME}] Should be loaded by now."
+    vault-patch --log-level=warn secret/ssh-key/${KEY_NAME} last_used=$(date -Iseconds)
   else
     error "[${KEY_NAME}] Was not added successfully."
   fi
