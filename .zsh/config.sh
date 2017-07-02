@@ -28,7 +28,7 @@ bindkey '^[[1;9D' backward-word
 ## Aliases
 alias ag='/usr/bin/ag --ignore-dir=vendor'
 alias alpine='docker run --rm -ti alpine /bin/sh'
-alias gometalinter='gometalinter -D aligncheck -D errcheck -e bindata.go -E misspell --vendor'
+alias gometalinter='gometalinter --enable-all -D aligncheck -D errcheck -D lll --cyclo-over=15 -e bindata.go --vendor'
 alias :q='exit'
 
 ## Initialize GPG agent
