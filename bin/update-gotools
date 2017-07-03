@@ -36,3 +36,6 @@ vim +:GoInstallBinaries +:qall
 go get -u github.com/fiatjaf/jiq/cmd/jiq
 
 go get -u github.com/hashicorp/vault
+
+# Install some own tools
+go get -u github.com/Luzifer/vault-patch
