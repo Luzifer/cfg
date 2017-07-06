@@ -18,7 +18,7 @@ if ! (vault token-lookup 1>/dev/null 2>&1); then
   [ -f ${HOME}/bin/vault-user-token ] || downloadVaultUserToken
   ( test "$(${HOME}/bin/vault-user-token --version)" == "vault-user-token ${VAULT_USER_TOKEN_VERSION}" ) || downloadVaultUserToken
 
-  ${HOME}/bin/vault-user-token &
+  ${HOME}/bin/vault-user-token --full-hostname=false &
   VUT=$!
 
   echo "Waiting for token to become available"
