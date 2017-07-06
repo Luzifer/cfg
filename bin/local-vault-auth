@@ -3,17 +3,20 @@
 set -e
 set -o pipefail
 
+function downloadVaultUserToken {
+  os=$(uname | awk '{print tolower($0)}')
+  curl -sSLfo ${HOME}/bin/vault-user-token \
+    https://github.com/Luzifer/vault-user-token/releases/download/${VAULT_USER_TOKEN_VERSION}/vault-user-token_${os}_amd64
+  chmod 0755 ${HOME}/bin/vault-user-token
+}
+
 source ${HOME}/.config/vault-user-token
 
 if ! (vault token-lookup 1>/dev/null 2>&1); then
   echo "Vault is not authenticated, trying to authenticate... "
 
-  if ! [ -f ${HOME}/bin/vault-user-token ]; then
-    os=$(uname | awk '{print tolower($0)}')
-    curl -sSLfo ${HOME}/bin/vault-user-token \
-      https://github.com/Luzifer/vault-user-token/releases/download/${VAULT_USER_TOKEN_VERSION}/vault-user-token_${os}_amd64
-    chmod 0755 ${HOME}/bin/vault-user-token
-  fi
+  [ -f ${HOME}/bin/vault-user-token ] || downloadVaultUserToken
+  ( test "$(${HOME}/bin/vault-user-token --version)" == "vault-user-token ${VAULT_USER_TOKEN_VERSION}" ) || downloadVaultUserToken
 
   ${HOME}/bin/vault-user-token &
   VUT=$!
