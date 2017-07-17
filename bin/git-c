@@ -1,5 +1,8 @@
 #!/bin/bash -e
 
+set -o pipefail
+set -e
+
 STEP_COLOR="\033[0;36m"
 NO_COLOR="\033[0m"
 

@@ -1,5 +1,8 @@
 #!/bin/bash
 
+set -o pipefail
+set -e
+
 HOOKTYPE=$1
 
 if ! [ -e Makefile ]; then
