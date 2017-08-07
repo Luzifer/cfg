@@ -15,21 +15,12 @@ function step {
 step "Collect refs to push to origin"
 
 CURRENT_BRANCH=$(git branch --list | awk '/^\*/{print $2}')
-REQUIRED=$(git show-ref --tags | grep -v -F "$(git ls-remote --tags origin | grep -v '\^{}' | cut -f 2)" | cut -d '/' -f 3 | xargs)
-
-if ( test "$(git show-ref refs/heads/${CURRENT_BRANCH} | cut -d ' ' -f 1)" != "$(git show-ref refs/remotes/origin/${CURRENT_BRANCH} | cut -d ' ' -f 1)" ); then
-  REQUIRED="${REQUIRED} ${CURRENT_BRANCH}"
-fi
-
-if [ -z "${REQUIRED}" ]; then
-  exit 0
-fi
 
 step "Execute pre-push auto-hook"
 git autohook pre-push
 
 step "Execute pushes..."
-git push origin ${REQUIRED} "$@"
+git push origin ${CURRENT_BRANCH} --tags "$@"
 
 step "Execute post-push auto-hook"
 git autohook post-push
