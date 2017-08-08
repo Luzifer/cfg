@@ -12,9 +12,12 @@ function step {
 
 ### Determine what to push
 
-step "Collect refs to push to origin"
+step "Getting current branch"
 
 CURRENT_BRANCH=$(git branch --list | awk '/^\*/{print $2}')
+
+step "Loading required key to push"
+git loadkey
 
 step "Execute pre-push auto-hook"
 git autohook pre-push
