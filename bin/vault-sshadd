@@ -39,8 +39,10 @@ vault read -field=private "/secret/ssh-key/\$1" | exec ssh-add -t 3600 -
 EOF
 
 for KEY_NAME in $@; do
+  fingerprint=$(vault read -field=public "/secret/ssh-key/$1" | ssh-keygen -l -f -)
+
   # If this key is already in the agent we don't need to do anything
-  if ( ssh-add -l | grep -q "${KEY_NAME}" ); then
+  if ( ssh-add -l | grep -q "${fingerprint}" ); then
     info "[${KEY_NAME}] Key already present."
     continue
   fi
