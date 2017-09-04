@@ -40,3 +40,4 @@ go get -u github.com/hashicorp/vault
 
 # Install some own tools
 go get -u github.com/Luzifer/vault-patch
+go get -u github.com/Luzifer/vault2env
