@@ -20,8 +20,9 @@ ${GOPATH}/bin/gometalinter --install --update
 # Re-Install godebug
 go get -u github.com/mailgun/godebug
 
-# Re-Install godep
+# Re-Install godep and dep
 go get -u github.com/tools/godep
+go get -u github.com/golang/dep/cmd/dep
 
 # Re-Install go-bindata
 go get -u github.com/jteeuwen/go-bindata/...
