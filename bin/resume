@@ -1,6 +1,12 @@
 #!/bin/bash
 
-[ -n "${TMUX}" ] && exit 1
+function fail {
+  echo "Error: $@"
+  exit 1
+}
+
+[ -n "${TMUX}" ] && fail "You are already in tmux!"
+( which tmux 2>/dev/null ) || fail "No tmux found, can't continue"
 
 tmux-agent
 
