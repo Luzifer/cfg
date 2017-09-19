@@ -1,9 +1,6 @@
 #!/bin/bash
 
-function fail {
-  echo "Error: $@"
-  exit 1
-}
+source "${HOME}/bin/script_framework.sh"
 
 [ -n "${TMUX}" ] && fail "You are already in tmux!"
 ( which tmux 2>/dev/null ) || fail "No tmux found, can't continue"

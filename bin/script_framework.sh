@@ -7,8 +7,9 @@ function error {
   echo -e "${COLOR_RED}$@${COLOR_PLAIN}"
 }
 
-function success {
-  echo -e "${COLOR_GREEN}$@${COLOR_PLAIN}"
+function fail {
+  error "Error: $@"
+  exit 1
 }
 
 function info {
@@ -17,4 +18,8 @@ function info {
 
 function step {
     info "[$(date +%H:%M:%S)] $@"
+}
+
+function success {
+  echo -e "${COLOR_GREEN}$@${COLOR_PLAIN}"
 }
