@@ -3,4 +3,10 @@
 [ -n "${TMUX}" ] && exit 1
 
 tmux-agent
-tmux attach-session -t $(tmux list-sessions | sort -n | head -n1 | cut -d: -f1) || tmux
+
+if ! ( tmux list-sessions ); then
+  tmux new-session -d
+  tmux split-window -h
+fi
+
+tmux attach-session -t $(tmux list-sessions | sort -n | head -n1 | cut -d: -f1)
