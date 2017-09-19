@@ -3,12 +3,7 @@
 set -o pipefail
 set -e
 
-STEP_COLOR="\033[0;36m"
-NO_COLOR="\033[0m"
-
-function step {
-  echo -e ${STEP_COLOR}[$(date +%H:%M:%S)] $1${NO_COLOR}
-}
+source "${HOME}/bin/script_framework.sh"
 
 step "Loading required keys to pull"
 git loadkey
