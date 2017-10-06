@@ -50,7 +50,7 @@ function build_git_prompt {
   (echo "$REMOTE" | grep -q bitbucket.org) && echo -n "B "
   (echo "$REMOTE" | grep -q github.com) && echo -n "G "
   (echo "$REMOTE" | grep -q gitlab.com) && echo -n "L "
-  (echo "$REMOTE" | grep -q 2rioffice.com) && echo -n "R "
+  (echo "$REMOTE" | grep -q collins.kg) && echo -n "C "
   echo -n "%{$reset_color%}"
   echo -n "$(git_current_branch) "
   echo -n "($(git_describe)) "
