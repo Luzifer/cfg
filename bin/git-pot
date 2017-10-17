@@ -18,7 +18,7 @@ step "Execute pre-push auto-hook"
 git autohook pre-push
 
 step "Execute pushes..."
-git push origin ${CURRENT_BRANCH} --tags "$@"
+git push -u origin ${CURRENT_BRANCH} --tags "$@"
 
 step "Execute post-push auto-hook"
 git autohook post-push
