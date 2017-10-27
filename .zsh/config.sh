@@ -28,6 +28,7 @@ bindkey '^[[1;9D' backward-word
 ## Aliases
 alias alpine='docker run --rm -ti alpine /bin/sh'
 alias gometalinter='gometalinter --enable-all -D aligncheck -D errcheck -D lll --cyclo-over=15 -e bindata.go --vendor'
+alias mysql='docker run --rm -ti -v $(pwd):$(pwd) -w $(pwd) mysql bash'
 alias :q='exit'
 
 ## Initialize GPG agent
