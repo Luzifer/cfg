@@ -1,0 +1,50 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+import math
+import subprocess
+import sys
+
+# ╰─○ chronyc tracking
+# Reference ID    : 192.53.103.108 (ptbtime1.ptb.de)
+# Stratum         : 2
+# Ref time (UTC)  : Mon Oct 30 09:48:39 2017
+# System time     : 0.000000000 seconds fast of NTP time
+# Last offset     : +0.000054065 seconds
+# RMS offset      : 42.973133087 seconds
+# Frequency       : 421.567 ppm fast
+# Residual freq   : +0.013 ppm
+# Skew            : 0.218 ppm
+# Root delay      : 0.017120 seconds
+# Root dispersion : 0.001280 seconds
+# Update interval : 238.4 seconds
+# Leap status     : Normal
+
+KEY_SYSTEM_TIME  = 'System time'
+KEY_PARSED_OFFSET = 'Parsed offset'
+
+def get_stats():
+    stats = {}
+    for line in subprocess.check_output(['/usr/bin/chronyc', 'tracking']).split('\n'):
+        line_parts = line.split(' : ')
+        if len(line_parts) != 2:
+            continue
+        desc, cont = line_parts
+        stats[desc.strip()] = cont.strip()
+
+    offset_parts = stats[KEY_SYSTEM_TIME].split(' ')
+    offset = float(offset_parts[0]) * (1 if offset_parts[2] == 'fast' else -1)
+    stats[KEY_PARSED_OFFSET] = offset
+
+    return stats
+
+def main():
+    stats = get_stats()
+
+    if math.fabs(stats[KEY_PARSED_OFFSET]) > 1.0:
+        print('{:.2f}s time diff'.format(stats[KEY_PARSED_OFFSET]))
+
+    return 0
+
+if __name__ == '__main__':
+    sys.exit(main())
