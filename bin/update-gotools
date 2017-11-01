@@ -10,34 +10,34 @@ mkdir -p ${GOPATH}
 # Create `.gopath` file for $PATH detection
 touch ${GOPATH}/.gopath
 
-# Re-Install gocode
-go get -u github.com/nsf/gocode
+# Install Go-dev related tools
+go get -u github.com/nsf/gocode &
+go get -u github.com/alecthomas/gometalinter &
+go get -u github.com/mailgun/godebug &
+go get -u github.com/tools/godep &
+go get -u github.com/golang/dep/cmd/dep &
+go get -u github.com/shuLhan/go-bindata/... &
+wait
 
-# Re-Install gometalinter
-go get -u github.com/alecthomas/gometalinter
+# Ensure installed tools can work
 ${GOPATH}/bin/gometalinter --install --update
-
-# Re-Install godebug
-go get -u github.com/mailgun/godebug
-
-# Re-Install godep and dep
-go get -u github.com/tools/godep
-go get -u github.com/golang/dep/cmd/dep
-
-# Re-Install go-bindata
-go get -u github.com/shuLhan/go-bindata/...
-
-# Re-Install hclfmt
-go get -u github.com/fatih/hclfmt
-
-# Ensure vim-go can work
 vim +:GoInstallBinaries +:qall
 
+# Re-Install hclfmt
+go get -u github.com/fatih/hclfmt &
+
 # Normally update non-version dependent tools
-go get -u github.com/fiatjaf/jiq/cmd/jiq
+go get -u github.com/fiatjaf/jiq/cmd/jiq &
 
-go get -u github.com/hashicorp/vault
+# Install vault related tools
+go get -u github.com/hashicorp/vault &
+go get -u github.com/Luzifer/vault-patch &
+go get -u github.com/Luzifer/vault2env &
 
-# Install some own tools
-go get -u github.com/Luzifer/vault-patch
-go get -u github.com/Luzifer/vault2env
+# Install own tools
+go get -u github.com/Luzifer/password &
+
+# Install packer
+go get -u github.com/hashicorp/packer &
+
+wait
