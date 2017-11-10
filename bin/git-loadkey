@@ -16,7 +16,7 @@ import subprocess
 import os.path
 import json
 
-CONFIG = os.path.expanduser('~/.config/git-setmail.json')
+CONFIG = os.path.expanduser('~/.config/git-committerconfig.json')
 
 
 def main():

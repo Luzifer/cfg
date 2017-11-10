@@ -1,14 +1,14 @@
-#!/bin/bash -e
+#!/bin/bash
 
+set -eu
 set -o pipefail
-set -e
 
 source "${HOME}/bin/script_framework.sh"
 
 ### Fix committer email by repo
 
-step "Ensure correct committer email..."
-git setmail
+step "Ensure correct commit config..."
+git committerconfig
 
 ### Commit
 
@@ -19,7 +19,8 @@ step "Execute pre-commit auto-hook"
 git autohook pre-commit
 
 step "Issuing commit..."
-git commit -S -s -v "$@"
+COMMIT_OPTS=$(git config --get commit.cliopts 2>/dev/null || echo "")
+git commit -v ${COMMIT_OPTS} "$@"
 
 step "Execute post-commit auto-hook"
 git autohook post-commit
