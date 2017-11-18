@@ -2,7 +2,13 @@
 export PATH=/usr/local/sbin:/usr/local/bin:$PATH
 
 ## Activate go using gimme if any go version is available
-[ -e ${HOME}/.gimme/envs/latest.env ] && source ${HOME}/.gimme/envs/latest.env
+GO_VER=$(curl -sSLf -m 2 'https://latest.luzifer.io/catalog-api/golang/latest.txt?p=version')
+if [ -e "${HOME}/.gimme/envs/go${GO_VER}.env" ]; then
+  source "${HOME}/.gimme/envs/go${GO_VER}.env"
+else
+  echo "Your Go version is outdated (latest would be ${GO_VER})"
+  source "${HOME}/.gimme/envs/latest.env"
+fi
 
 ## Custom scripts
 export PATH=$HOME/bin:$PATH
