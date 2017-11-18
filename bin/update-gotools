@@ -1,43 +1,44 @@
 #!/bin/bash
 
-set -ex
+set -eux
 set -o pipefail
 
 export GOPATH="${HOME}/gocode"
+INSTALLS=(
+  # Go-dev related tools
+  'github.com/alecthomas/gometalinter'
+  'github.com/golang/dep/cmd/dep'
+  'github.com/mailgun/godebug'
+  'github.com/nsf/gocode'
+  'github.com/shuLhan/go-bindata/...'
+  'github.com/tools/godep'
+
+  # Vault related tools
+  'github.com/hashicorp/vault'
+  'github.com/Luzifer/vault2env'
+  'github.com/Luzifer/vault-patch'
+
+  # Other tools
+  'github.com/fatih/hclfmt'
+  'github.com/fiatjaf/jiq/cmd/jiq'
+  'github.com/hashicorp/packer'
+  'github.com/Luzifer/password'
+  'github.com/Luzifer/short_path'
+)
+
+
 rm -rf ${GOPATH}
 mkdir -p ${GOPATH}
 
 # Create `.gopath` file for $PATH detection
 touch ${GOPATH}/.gopath
 
-# Install Go-dev related tools
-go get -u github.com/nsf/gocode &
-go get -u github.com/alecthomas/gometalinter &
-go get -u github.com/mailgun/godebug &
-go get -u github.com/tools/godep &
-go get -u github.com/golang/dep/cmd/dep &
-go get -u github.com/shuLhan/go-bindata/... &
+for gp in ${INSTALLS[@]}; do
+  go get ${gp} &
+done
 wait
 
 # Ensure installed tools can work
 ${GOPATH}/bin/gometalinter --install --update
 vim +:GoInstallBinaries +:qall
 
-# Re-Install hclfmt
-go get -u github.com/fatih/hclfmt &
-
-# Normally update non-version dependent tools
-go get -u github.com/fiatjaf/jiq/cmd/jiq &
-
-# Install vault related tools
-go get -u github.com/hashicorp/vault &
-go get -u github.com/Luzifer/vault-patch &
-go get -u github.com/Luzifer/vault2env &
-
-# Install own tools
-go get -u github.com/Luzifer/password &
-
-# Install packer
-go get -u github.com/hashicorp/packer &
-
-wait
