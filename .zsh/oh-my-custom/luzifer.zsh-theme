@@ -80,7 +80,7 @@ function build_git_prompt {
   echo -n "%{$reset_color%} ${bracket_close}"
 }
 
-local current_dir='$($HOME/bin/short_path)'
+local current_dir='$(short_path)'
 local git_info='$(build_git_prompt)'
 
 local bracket_open="%{$FG[239]%}[%{$reset_color%}"
