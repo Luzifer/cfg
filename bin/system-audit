@@ -15,7 +15,7 @@ function collect_hashes {
       continue
     fi
 
-    find ${dir} -type f -print0 | xargs -0 shasum -a 512 >> ${target}
+    find ${dir} -mindepth 1 \( -type f -or -type l \) -print0 | xargs -0 shasum -a 512 >> ${target}
   done
 
   if [ -e ${target} ]; then
