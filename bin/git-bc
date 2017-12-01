@@ -1,0 +1,6 @@
+#!/bin/bash
+
+set -euxo pipefail
+
+git b "$@"
+git c -av -m "$*"
