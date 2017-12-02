@@ -24,6 +24,7 @@ INSTALLS=(
   'github.com/hashicorp/packer'
   'github.com/Luzifer/password'
   'github.com/Luzifer/short_path'
+  'github.com/Luzifer/share'
 )
 
 
