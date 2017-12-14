@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 # Usage: git loadkey
 #
@@ -21,15 +21,15 @@ CONFIG = os.path.expanduser('~/.config/git-committerconfig.json')
 
 def main():
     try:
-        repos = [x.split()[1] for x in subprocess.check_output(['git', 'remote', '-v']).split('\n') if len(x.strip()) > 0]
+        repos = [x.split()[1] for x in subprocess.check_output(['git', 'remote', '-v'], universal_newlines=True).split('\n') if len(x.strip()) > 0]
     except:
-        print 'Could not find origin, not loading key.'
+        print('Could not find origin, not loading key.')
         return 0
 
     if os.path.isfile(CONFIG):
         combinations = json.loads(open(CONFIG).read())
     else:
-        print 'Config ({}) found.'.format(CONFIG)
+        print('Config ({}) found.'.format(CONFIG))
         return 1
 
     required_keys = []
@@ -41,7 +41,7 @@ def main():
                 break
 
     for key in sorted(set(required_keys)):
-        print 'Loading key "{}"...'.format(key)
+        print('Loading key "{}"...'.format(key))
         subprocess.check_call(['vault-sshadd', key])
 
     return 0
