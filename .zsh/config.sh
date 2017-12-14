@@ -48,4 +48,4 @@ source ${HOME}/.zsh/config-git.zsh
 [ -e ${HOME}/.zsh/local-config.zsh ] && source ${HOME}/.zsh/local-config.zsh
 
 ## Clean PATH from duplicates
-PATH=$(python -c 'import os; out=[]; [out.append(i) for i in os.environ["PATH"].split(":") if not out.count(i)]; print ":".join(out)')
+PATH=$(${HOME}/bin/path-dedup.py)
