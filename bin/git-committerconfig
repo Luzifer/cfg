@@ -1,10 +1,8 @@
-#!/usr/bin/env python
-
-from __future__ import print_function
+#!/usr/bin/env python3
 
 # Usage: git setmail
 #
-# Configuration format: 
+# Configuration format:
 #   [
 #     {
 #       "match": ".*",
@@ -13,33 +11,44 @@ from __future__ import print_function
 #     }
 #   ]
 
-import sys, re, subprocess, os.path, json
+import sys
+import re
+import subprocess
+import os.path
+import json
 
-CONFIG=os.path.expanduser('~/.config/git-committerconfig.json')
+CONFIG = os.path.expanduser('~/.config/git-committerconfig.json')
+
 
 def main():
-  try:
-    repo = [x.split()[1] for x in subprocess.check_output(['git', 'remote', '-v']).split('\n') if re.match('origin.*\(push\)', x)][0]
-  except:
-    print('Could not find origin, not setting email.')
+    try:
+        repo = [x.split()[1] for x
+                in subprocess.check_output(['git', 'remote', '-v'], universal_newlines=True).split('\n')
+                if re.match('origin.*\(push\)', x)][0]
+    except:
+        print('Could not find origin, not setting email.')
+        return 0
+
+    if os.path.isfile(CONFIG):
+        combinations = json.loads(open(CONFIG).read())
+    else:
+        print('Config ({}) found.'.format(CONFIG))
+        return 1
+
+    for combi in combinations:
+        if re.search(combi['match'], repo):
+            subprocess.check_call(
+                ['git', 'config', '--local', 'user.email', combi['email']])
+            if 'gpg-key' in combi and combi['gpg-key'] != '':
+                subprocess.check_call(
+                    ['git', 'config', '--local', 'user.signingkey', combi['gpg-key']])
+            if 'commit-opts' in combi:
+                subprocess.check_call(
+                    ['git', 'config', '--local', 'commit.cliopts', combi['commit-opts']])
+            break
+
     return 0
 
-  if os.path.isfile(CONFIG):
-    combinations = json.loads(open(CONFIG).read())
-  else:
-    print('Config ({}) found.'.format(CONFIG))
-    return 1
-
-  for combi in combinations:
-    if re.search(combi['match'], repo):
-      subprocess.check_call(['git', 'config', '--local', 'user.email', combi['email']])
-      if 'gpg-key' in combi and combi['gpg-key'] != '':
-          subprocess.check_call(['git', 'config', '--local', 'user.signingkey', combi['gpg-key']])
-      if 'commit-opts' in combi:
-          subprocess.check_call(['git', 'config', '--local', 'commit.cliopts', combi['commit-opts']])
-      break
-
-  return 0
 
 if __name__ == "__main__":
-  exit(main())
+    exit(main())
