@@ -2,7 +2,7 @@
 
 KEY=$1
 
-if [ -z "${KEY}" ] || ! (gpg2 --list-secret-keys | grep -q ${KEY}); then
+if [ -z "${KEY}" ] || ! (gpg2 --list-secret-keys ${KEY}); then
   echo "No key given or no secret key found for '${KEY}'"
   exit 2
 fi
@@ -15,7 +15,7 @@ if [ -z "${PWD}" ]; then
   exit 2
 fi
 
-HEXPWD=$(python3 -c "import binascii; print(binascii.hexlify(bytearray('${PWD}', 'utf-8')))")
+HEXPWD=$(echo -n "${PWD}" | str2hex)
 
 # Get keygrip of secret key
 for KEYGRIP in $(gpg2 --with-keygrip -k ${KEY} | grep Keygrip | cut -d '=' -f 2 | xargs); do
