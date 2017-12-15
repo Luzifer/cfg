@@ -1,6 +1,5 @@
 #!/bin/bash
 
-set -e
-set -o pipefail
+set -euo pipefail
 
-git checkout -b $(slugify "$@")
+git checkout -b $(slugify -l 35 "$@")
