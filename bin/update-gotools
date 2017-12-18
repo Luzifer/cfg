@@ -27,6 +27,7 @@ INSTALLS=(
   'github.com/Luzifer/share'
   'github.com/Luzifer/slugify'
   'github.com/Luzifer/str2hex'
+  'github.com/Luzifer/git-changerelease'
 )
 
 
