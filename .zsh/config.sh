@@ -26,10 +26,10 @@ export LANG=en_US.UTF-8
 export LC_CTYPE=${LANG}
 export TZ="Europe/Berlin"
 
-## Map alt+← and alt+→ to move cursor word wise
+## Map ctrl+← and ctrl+→ to move cursor word wise
 bindkey -e
-bindkey '^[[1;9C' forward-word
-bindkey '^[[1;9D' backward-word
+bindkey '^[[1;5C' forward-word
+bindkey '^[[1;5D' backward-word
 
 ## Aliases
 alias alpine='docker run --rm -ti alpine /bin/sh'
