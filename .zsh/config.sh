@@ -36,7 +36,7 @@ alias alpine='docker run --rm -ti alpine /bin/sh'
 alias gometalinter='gometalinter --enable-all -D aligncheck -D errcheck -D lll --cyclo-over=15 -e bindata.go --vendor'
 alias mysql='docker run --rm -ti -v $(pwd):$(pwd) -w $(pwd) mysql bash'
 alias :q='exit'
-alias share='AWS_REGION=us-east-1 vault2env --key=secret/aws/private -- share --bucket=share-luzifer-io-s3bucket-164ztrtyq1f35 --base-path="file/{{ printf \"%.6s\" .Hash}}" --base-url="https://share.luzifer.io/#"'
+alias share='AWS_REGION=us-east-1 vault2env --key=secret/aws/private -- share --bucket=share-luzifer-io-s3bucket-164ztrtyq1f35 --base-path="file/{{ printf \"%.6s\" .Hash}}" --base-url="https://knut.cc/#"'
 
 ## Initialize GPG agent
 source ${HOME}/.zsh/gpg-agent.plugin.zsh
