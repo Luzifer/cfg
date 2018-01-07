@@ -2,4 +2,4 @@
 
 set -euo pipefail
 
-git checkout -b $(slugify -l 35 "$@")
+git checkout -b $(slugify "$@" | cut -c 1-72)
