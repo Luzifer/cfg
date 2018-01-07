@@ -11,7 +11,7 @@ git loadkey
 step "Fetching data from remote..."
 for remote in $(git remote -v | awk '{print $1}' | sort | uniq); do
   step "+++ Remote: '${remote}'"
-  git fetch -p ${remote}
+  git fetch -p ${remote} --tags
 done
 
 step "Rebasing branch / updating submodules..."
