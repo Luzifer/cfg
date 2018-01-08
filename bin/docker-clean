@@ -1,3 +1,4 @@
 #!/bin/bash
 
 docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v /etc:/etc spotify/docker-gc
+{ docker images | awk '/<none>/{print $3}'; docker images | awk '!/<none>|REPOSITORY/{ print $1":"$2 }'; } | xargs docker rmi
