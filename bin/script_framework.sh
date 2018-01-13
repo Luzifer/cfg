@@ -8,7 +8,7 @@ function error {
 }
 
 function fail {
-  error "Error: $@"
+  error "$@"
   exit 1
 }
 

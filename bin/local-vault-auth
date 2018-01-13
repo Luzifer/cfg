@@ -1,42 +1,44 @@
 #!/bin/bash
+set -euo pipefail
 
-set -e
-set -o pipefail
-
-function downloadVaultUserToken {
-  os=$(uname | awk '{print tolower($0)}')
-  curl -sSLfo ${HOME}/bin/vault-user-token \
-    https://github.com/Luzifer/vault-user-token/releases/download/${VAULT_USER_TOKEN_VERSION}/vault-user-token_${os}_amd64
-  chmod 0755 ${HOME}/bin/vault-user-token
+function require_gotool {
+  toolname=$(basename $1)
+  if ! ( which ${toolname} >/dev/null 2>&1 ); then
+    go version || { echo "${basename} not found and no usable go environment"; exit 1; }
+    go get -u $1
+  fi
 }
 
-source ${HOME}/.config/vault-user-token
+require_gotool github.com/Luzifer/vault-user-token
 
-if ! (vault token-lookup 1>/dev/null 2>&1); then
-  echo "Vault is not authenticated, trying to authenticate... "
+source "${HOME}/.config/vault-user-token"
+source "${HOME}/bin/script_framework.sh"
 
-  [ -f ${HOME}/bin/vault-user-token ] || downloadVaultUserToken
-  ( test "$(${HOME}/bin/vault-user-token --version)" == "vault-user-token ${VAULT_USER_TOKEN_VERSION}" ) || downloadVaultUserToken
+# Check whether a valid token is available
+( vault token-lookup >/dev/null 2>&1 ) && exit 0
 
-  ${HOME}/bin/vault-user-token --full-hostname=false &
-  VUT=$!
+step "Vault is not authenticated, trying to authenticate... "
 
-  echo "Waiting for token to become available"
-  while ! [ -f ${HOME}/.vault-token ]; do
-    # Give the program a moment to get a token
-    echo -n .
-    sleep 0.5
+# Remove old, invalid token
+rm -f "${HOME}/.vault-token"
 
-    if ! ( kill -0 $VUT ); then
-      echo "vault-user-token exitted, giving up."
-      exit 1
-    fi
-  done
-  echo
+VUT=$(pgrep -f vault-user-token || echo "" | xargs)
+[ -n "$VUT" ] && { step "Killing old vault-user-token processes..."; kill ${VUT}; }
 
-  if ! (vault token-lookup 1>/dev/null 2>&1); then
-    echo "Vault authentication failed finally"
-    exit 1
+# Start new vault-user-token daemon
+vault-user-token --full-hostname=false >/dev/null 2>&1 &
+VUT=$!
+
+step "Waiting for token to become available..."
+while ! [ -f "${HOME}/.vault-token" ]; do
+  # Give the program a moment to get a token
+  sleep 0.5
+
+  if ! ( kill -0 $VUT ); then
+    fail "vault-user-token exitted, giving up."
   fi
+done
 
-fi
+( vault token-lookup >/dev/null 2>&1 ) || fail "Vault authentication failed finally"
+
+success "Vault token became available and is valid"
