@@ -1,4 +1,20 @@
 #!/bin/bash
+set -euo pipefail
 
-docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v /etc:/etc spotify/docker-gc
-{ docker images | awk '/<none>/{print $3}'; docker images | awk '!/<none>|REPOSITORY/{ print $1":"$2 }'; } | xargs docker rmi
+if [ -e "${HOME}/bin/script_framework.sh" ]; then
+  source "${HOME}/bin/script_framework.sh"
+else
+  function step { echo $@; }
+fi
+
+step "Removing containers created / exited >= ~1h ago..."
+CONTAINERS=$(docker ps -a | awk '/(hours?|days?|weeks?|months?) ago\s+(Created|Exited)/{ print $1 }' | xargs)
+[ -n "${CONTAINERS}" ] && docker rm ${CONTAINERS}
+
+step "Removing images missing repository or tag..."
+IMGS=$(docker images | awk '/<none>.*(hours?|days?|weeks?|months?) ago/{ print $3 }' | xargs)
+[ -n "${IMGS}" ] && docker rmi ${IMGS}
+
+step "Removing images with tags not being used (used images will throw errors, that's normal)..."
+IMGS=$(docker images | awk '/(hours?|days?|weeks?|months?) ago/{ print $1":"$2 }' | xargs)
+[ -n "${IMGS}" ] && docker rmi ${IMGS} || true
