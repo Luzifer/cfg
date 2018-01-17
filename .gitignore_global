@@ -26,5 +26,6 @@ Thumbs.db
 # IDE specific files #
 #####################
 .idea
-
 .*.swp
+
+.venv
