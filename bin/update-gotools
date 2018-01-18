@@ -22,12 +22,13 @@ INSTALLS=(
   'github.com/fatih/hclfmt'
   'github.com/fiatjaf/jiq/cmd/jiq'
   'github.com/hashicorp/packer'
+  'github.com/Luzifer/git-changerelease'
   'github.com/Luzifer/password'
-  'github.com/Luzifer/short_path'
   'github.com/Luzifer/share'
+  'github.com/Luzifer/short_path'
   'github.com/Luzifer/slugify'
   'github.com/Luzifer/str2hex'
-  'github.com/Luzifer/git-changerelease'
+  'github.com/Luzifer/worktime'
 )
 
 
