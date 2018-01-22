@@ -10,6 +10,7 @@
   logallrefupdates = true
   warnAmbiguousRefs = false
   excludesfile = ~/.gitignore_global
+  pager = less -F -X
 
 [color]
   diff = auto
