@@ -17,6 +17,7 @@ INSTALLS=(
   'github.com/hashicorp/vault'
   'github.com/Luzifer/vault2env'
   'github.com/Luzifer/vault-patch'
+  'github.com/Luzifer/vault-user-token'
 
   # Other tools
   'github.com/fatih/hclfmt'
