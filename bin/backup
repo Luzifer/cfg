@@ -1,7 +1,7 @@
-#!/bin/bash -e
+#!/bin/bash
+set -euo pipefail
 
-ARGS="$@"
-[ -z "${ARGS}" ] && ARGS="backup"
+ARGS=${@:-backup}
 HOSTNAME=$(hostname -s)
 
 exec vault2env --key=/secret/private/duplicity/${HOSTNAME} -- \
