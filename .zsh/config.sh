@@ -31,6 +31,10 @@ bindkey -e
 bindkey '^[[1;5C' forward-word
 bindkey '^[[1;5D' backward-word
 
+## Ensure Home and End are working properly
+bindkey "\033[1~" beginning-of-line
+bindkey "\033[4~" end-of-line
+
 ## Aliases
 alias alpine='docker run --rm -ti alpine /bin/sh'
 alias bcrypt='python3 -c "import bcrypt; import sys; print(bcrypt.hashpw(sys.argv[1].encode(\"utf-8\"), bcrypt.gensalt(10)).decode(\"utf-8\"))"'
