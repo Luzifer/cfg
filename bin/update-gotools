@@ -29,6 +29,7 @@ INSTALLS=(
   'github.com/Luzifer/slugify'
   'github.com/Luzifer/str2hex'
   'github.com/Luzifer/worktime'
+  'github.com/peco/peco/cmd/peco'
 )
 
 

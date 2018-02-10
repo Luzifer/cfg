@@ -50,5 +50,8 @@ source ${HOME}/.zsh/config-git.zsh
 ## Load local-config if available
 [ -e ${HOME}/.zsh/local-config.zsh ] && source ${HOME}/.zsh/local-config.zsh
 
+## Load peco functions
+source ${HOME}/.zsh/peco.sh
+
 ## Clean PATH from duplicates
 PATH=$(${HOME}/bin/path-dedup.py)
