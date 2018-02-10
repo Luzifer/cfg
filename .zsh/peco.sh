@@ -3,7 +3,11 @@ function exists { which $1 &> /dev/null }
 
 # kill process
 function peco-kill-process() {
-	ps ax -o pid,time,command | peco --query "$LBUFFER" | awk '{print $1}' | xargs kill
+  local procs
+  procs=$(ps ax -o pid,user,time,command | peco --query "$LBUFFER" | awk '{print $1}')
+  if [ -n "${procs}" ]; then
+    echo "${procs}" | xargs kill
+  fi
 }
 alias killp='peco-kill-process'
 
