@@ -11,6 +11,16 @@ function peco-kill-process() {
 }
 alias killp='peco-kill-process'
 
+# load ssh-key
+function peco-load-ssh-key() {
+  local keys
+  keys=$(vault list secret/ssh-key | tail -n+3 | peco --query "$LBUFFER")
+  if [ -n "${keys}" ]; then
+    echo "${keys}" | xargs vault-sshadd
+  fi
+}
+alias psshkey='peco-load-ssh-key'
+
 # select history
 function peco-select-history() {
 	local tac
