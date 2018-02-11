@@ -22,6 +22,7 @@ INSTALLS=(
   # Other tools
   'github.com/fatih/hclfmt'
   'github.com/fiatjaf/jiq/cmd/jiq'
+  'github.com/github/hub'
   'github.com/hashicorp/packer'
   'github.com/Luzifer/git-changerelease'
   'github.com/Luzifer/password'
