@@ -11,6 +11,8 @@ function debug {
   echo "$@" >&2
 }
 
+function join_by { local d=$1; shift; echo -n "$1"; shift; printf "%s" "${@/#/$d}"; }
+
 # Wrap git to work with git-dir and work-tree being in other locations
 function gwrap {
   hub --git-dir=${HOME}/.cfg/${REPO} --work-tree=${HOME} $@
@@ -25,6 +27,7 @@ fi
 STAT_PARM="-c %Y"
 [[ "$(uname -s)" = "Darwin" ]] && STAT_PARM="-f %m"
 
+NEED_UPDATE=()
 # Check repos for updates
 for REPO in ${REPOS[@]}; do
   if [ $(( $(date +%s) - $(stat ${STAT_PARM} .cfg/${REPO}/FETCH_HEAD) )) -lt ${FETCH_INTERVAL} ]; then
@@ -38,6 +41,10 @@ for REPO in ${REPOS[@]}; do
   REMOTE=$(gwrap rev-parse FETCH_HEAD)
 
   if ! [[ "${LOCAL}" = "${REMOTE}" ]]; then
-    echo "Config repo '${REPO}' differs from upstream"
+    NEED_UPDATE+=("${REPO}")
   fi
 done
+
+if [ ${#NEED_UPDATE[@]} -gt 0 ]; then
+  echo "Config repo(s) $(join_by ", " "${NEED_UPDATE[@]}") differs from upstream"
+fi
