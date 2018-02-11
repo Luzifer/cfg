@@ -30,21 +30,18 @@ STAT_PARM="-c %Y"
 NEED_UPDATE=()
 # Check repos for updates
 for REPO in ${REPOS[@]}; do
-  if [ $(( $(date +%s) - $(stat ${STAT_PARM} .cfg/${REPO}/FETCH_HEAD) )) -lt ${FETCH_INTERVAL} ]; then
-    debug "Last repo fetch for '${REPO}' too new, not checking"
-    continue
+  if [ $(( $(date +%s) - $(stat ${STAT_PARM} .cfg/${REPO}/FETCH_HEAD) )) -gt ${FETCH_INTERVAL} ]; then
+    gwrap fetch -q
   fi
-
-  gwrap fetch -q
 
   LOCAL=$(gwrap rev-parse HEAD)
   REMOTE=$(gwrap rev-parse FETCH_HEAD)
 
   if ! [[ "${LOCAL}" = "${REMOTE}" ]]; then
-    NEED_UPDATE+=("${REPO}")
+    NEED_UPDATE+=("'${REPO}'")
   fi
 done
 
 if [ ${#NEED_UPDATE[@]} -gt 0 ]; then
-  echo "Config repo(s) $(join_by ", " "${NEED_UPDATE[@]}") differs from upstream"
+  echo "Config repo $(join_by ", " "${NEED_UPDATE[@]}") needs update"
 fi
