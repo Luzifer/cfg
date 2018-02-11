@@ -4,6 +4,7 @@ set -euo pipefail
 DEBUG=${DEBUG:-false}
 FETCH_INTERVAL=${FETCH_INTERVAL:-3600}
 REPOS=( public secret )
+SSH_KEY=${SSH_KEY:-fafnir}
 
 # Print debug messages if enabled by ${DEBUG}
 function debug {
@@ -30,7 +31,8 @@ STAT_PARM="-c %Y"
 NEED_UPDATE=()
 # Check repos for updates
 for REPO in ${REPOS[@]}; do
-  if [ $(( $(date +%s) - $(stat ${STAT_PARM} .cfg/${REPO}/FETCH_HEAD) )) -gt ${FETCH_INTERVAL} ]; then
+  if [ $(( $(date +%s) - $(stat ${STAT_PARM} .cfg/${REPO}/FETCH_HEAD) )) -gt ${FETCH_INTERVAL} ] || [ $(wc -c ~/.cfg/${REPO}/FETCH_HEAD | cut -d' ' -f1) -eq 0 ]; then
+    vault-sshadd ${SSH_KEY} 2>&1 >/dev/null || { echo "Unable to load key ${SSH_KEY}"; exit 1; }
     gwrap fetch -q
   fi
 
