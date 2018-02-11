@@ -2,13 +2,7 @@
 export PATH=/usr/local/sbin:/usr/local/bin:$PATH
 
 ## Activate go using gimme if any go version is available
-GO_VER=$(curl -sSLf -m 2 'https://latest.luzifer.io/catalog-api/golang/latest.txt?p=version')
-if [ -e "${HOME}/.gimme/envs/go${GO_VER}.env" ]; then
-  source "${HOME}/.gimme/envs/go${GO_VER}.env"
-else
-  echo "Your Go version is outdated (latest would be ${GO_VER})"
-  source "${HOME}/.gimme/envs/latest.env"
-fi
+source ${HOME}/.zsh/check_go_version
 
 ## Custom scripts
 export PATH=$HOME/bin:$PATH
@@ -48,8 +42,9 @@ alias share='AWS_REGION=us-east-1 vault2env --key=secret/aws/private -- share --
 ## Initialize GPG agent
 source ${HOME}/.zsh/gpg-agent.plugin.zsh
 
-## Load config-git functions
+## Load config-git functions and check for config updates
 source ${HOME}/.zsh/config-git.zsh
+${HOME}/bin/check_config
 
 ## Load local-config if available
 [ -e ${HOME}/.zsh/local-config.zsh ] && source ${HOME}/.zsh/local-config.zsh

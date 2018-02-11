@@ -1,0 +1,13 @@
+# If no network connection is available load latest available version
+if ( ping -c 1 -q 8.8.8.8 >/dev/null ); then
+  GO_VER=$(curl -sSLf -m 2 'https://lv.luzifer.io/catalog-api/golang/latest.txt?p=version')
+  if [ -e "${HOME}/.gimme/envs/go${GO_VER}.env" ]; then
+    source "${HOME}/.gimme/envs/go${GO_VER}.env"
+  else
+    echo "Your Go version is outdated (latest would be ${GO_VER})"
+    source "${HOME}/.gimme/envs/latest.env"
+  fi
+else
+  source "${HOME}/.gimme/envs/latest.env"
+fi
+
