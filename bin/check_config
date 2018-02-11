@@ -22,9 +22,12 @@ if ! ( ping -q -c 1 8.8.8.8 >/dev/null ); then
   exit 0
 fi
 
+STAT_PARM="-c %Y"
+[[ "$(uname -s)" = "Darwin" ]] && STAT_PARM="-f %m"
+
 # Check repos for updates
 for REPO in ${REPOS[@]}; do
-  if [ $(( $(date +%s) - $(stat -c %Y .cfg/${REPO}/FETCH_HEAD) )) -lt ${FETCH_INTERVAL} ]; then
+  if [ $(( $(date +%s) - $(stat ${STAT_PARM} .cfg/${REPO}/FETCH_HEAD) )) -lt ${FETCH_INTERVAL} ]; then
     debug "Last repo fetch for '${REPO}' too new, not checking"
     continue
   fi
