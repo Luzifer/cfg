@@ -11,10 +11,13 @@ step "Removing containers created / exited >= ~1h ago..."
 CONTAINERS=$(docker ps -a | awk '/(hours?|days?|weeks?|months?) ago\s+(Created|Exited)/{ print $1 }' | xargs)
 [ -n "${CONTAINERS}" ] && docker rm ${CONTAINERS}
 
-step "Removing images missing repository or tag..."
-IMGS=$(docker images | awk '/<none>.*(hours?|days?|weeks?|months?) ago/{ print $3 }' | xargs)
-[ -n "${IMGS}" ] && docker rmi ${IMGS}
+step "Untagging all images not used by containers..."
+PS_OUTPUT=$(docker ps -a)
+for img in $(docker images | awk '/^[a-z].*(hours?|days?|weeks?|months?) ago/{ print $1":"$2 }' | grep -v '<none>' | sort | uniq); do
+  if ! ( echo "${PS_OUTPUT}" | grep -q "\s${img}\s" ); then
+    docker rmi --no-prune "${img}"
+  fi
+done
 
-step "Removing images with tags not being used (used images will throw errors, that's normal)..."
-IMGS=$(docker images | awk '/(hours?|days?|weeks?|months?) ago/{ print $1":"$2 }' | xargs)
-[ -n "${IMGS}" ] && docker rmi ${IMGS} || true
+step "Removing dangling images..."
+docker image prune -f
