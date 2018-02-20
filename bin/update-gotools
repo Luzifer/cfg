@@ -1,52 +1,11 @@
 #!/bin/bash
 
-set -eux
-set -o pipefail
+set -euxo pipefail
 
 export GOPATH="${HOME}/gocode"
-INSTALLS=(
-  # Go-dev related tools
-  'github.com/alecthomas/gometalinter'
-  'github.com/golang/dep/cmd/dep'
-  'github.com/mailgun/godebug'
-  'github.com/nsf/gocode'
-  'github.com/shuLhan/go-bindata/...'
-  'github.com/tools/godep'
 
-  # Vault related tools
-  'github.com/hashicorp/vault'
-  'github.com/Luzifer/vault2env'
-  'github.com/Luzifer/vault-patch'
-  'github.com/Luzifer/vault-user-token'
+if [ ! -e ${GOPATH}/bin/update-gotools ]; then
+  go get -v github.com/Luzifer/update-gotools
+fi
 
-  # Other tools
-  'github.com/fatih/hclfmt'
-  'github.com/fiatjaf/jiq/cmd/jiq'
-  'github.com/github/hub'
-  'github.com/hashicorp/packer'
-  'github.com/Luzifer/git-changerelease'
-  'github.com/Luzifer/password'
-  'github.com/Luzifer/share'
-  'github.com/Luzifer/short_path'
-  'github.com/Luzifer/slugify'
-  'github.com/Luzifer/str2hex'
-  'github.com/Luzifer/worktime'
-  'github.com/peco/peco/cmd/peco'
-)
-
-
-rm -rf ${GOPATH}
-mkdir -p ${GOPATH}
-
-# Create `.gopath` file for $PATH detection
-touch ${GOPATH}/.gopath
-
-for gp in ${INSTALLS[@]}; do
-  go get ${gp} &
-done
-wait
-
-# Ensure installed tools can work
-${GOPATH}/bin/gometalinter --install --update
-vim +:GoInstallBinaries +:qall
-
+exec ${GOPATH}/bin/update-gotools "$@"

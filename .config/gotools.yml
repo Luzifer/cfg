@@ -1,0 +1,65 @@
+---
+
+cwd: /home/luzifer
+gopath: /home/luzifer/gocode
+
+packages:
+  # Go-dev related tools
+  - name: github.com/alecthomas/gometalinter
+  - name: github.com/golang/dep/cmd/dep
+  - name: github.com/mailgun/godebug
+  - name: github.com/nsf/gocode
+  - name: github.com/shuLhan/go-bindata/...
+  - name: github.com/tools/godep
+
+  # Vault related tools
+  - name: github.com/hashicorp/vault
+    version: v0.9.3
+  - name: github.com/Luzifer/vault2env
+  - name: github.com/Luzifer/vault-patch
+  - name: github.com/Luzifer/vault-user-token
+
+  # Other tools
+  - name: github.com/fatih/hclfmt
+  - name: github.com/fiatjaf/jiq/cmd/jiq
+  - name: github.com/github/hub
+  - name: github.com/hashicorp/packer
+  - name: github.com/Luzifer/git-changerelease
+  - name: github.com/Luzifer/password
+  - name: github.com/Luzifer/share
+  - name: github.com/Luzifer/short_path
+  - name: github.com/Luzifer/slugify
+  - name: github.com/Luzifer/str2hex
+  - name: github.com/Luzifer/update-gotools
+  - name: github.com/Luzifer/worktime
+  - name: github.com/peco/peco/cmd/peco
+    version: v0.5.2
+
+  # Install dependencies for vim-go (May not run concurrently or will fail)
+  - { name: github.com/davidrjenni/reftools/cmd/fillstruct, single: true }
+  - { name: github.com/dominikh/go-tools/cmd/keyify, single: true }
+  - { name: github.com/fatih/gomodifytags, single: true }
+  - { name: github.com/fatih/motion, single: true }
+  - { name: github.com/golang/lint/golint, single: true }
+  - { name: github.com/jstemmer/gotags, single: true }
+  - { name: github.com/kisielk/errcheck, single: true }
+  - { name: github.com/klauspost/asmfmt/cmd/asmfmt, single: true }
+  - { name: github.com/rogpeppe/godef, single: true }
+  - { name: github.com/zmb3/gogetdoc, single: true }
+  - { name: golang.org/x/tools/cmd/goimports, single: true }
+  - { name: golang.org/x/tools/cmd/gorename, single: true }
+  - { name: golang.org/x/tools/cmd/guru, single: true }
+  - { name: github.com/josharian/impl, single: true }
+
+# Ensure installed tools can work
+post_commands:
+  - [/bin/bash, -c, "${GOPATH}/bin/gometalinter --install"]
+
+pre_commands:
+  - [go, version]
+  - [/bin/bash, -c, "rm -rf ${GOPATH}"]
+  - [/bin/bash, -c, "mkdir -p ${GOPATH}"]
+  - [/bin/bash, -c, "touch ${GOPATH}/.gopath"]
+
+...
+
