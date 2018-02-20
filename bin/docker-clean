@@ -14,7 +14,7 @@ CONTAINERS=$(docker ps -a | awk '/(hours?|days?|weeks?|months?) ago\s+(Created|E
 step "Untagging all images not used by containers..."
 PS_OUTPUT=$(docker ps -a)
 for img in $(docker images | awk '/^[a-z].*(hours?|days?|weeks?|months?) ago/{ print $1":"$2 }' | grep -v '<none>' | sort | uniq); do
-  if ! ( echo "${PS_OUTPUT}" | grep -q "\s${img}\s" ); then
+  if ! ( echo "${PS_OUTPUT}" | grep -q "\s${img}\s" ) && ! ( echo "${PS_OUTPUT}" | grep -q "\s${img%:latest}\s" ); then
     docker rmi --no-prune "${img}"
   fi
 done
