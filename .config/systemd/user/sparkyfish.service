@@ -1,0 +1,11 @@
+[Unit]
+Description=Sparkyfish Server instance
+
+[Service]
+ExecStart=/home/luzifer/workspaces/private/go/bin/sparkyfish-server \
+            -cname workwork01.cloud.kserver.biz -location Hetzner
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=default.target
