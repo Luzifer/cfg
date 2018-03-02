@@ -14,7 +14,7 @@ packages:
 
   # Vault related tools
   - name: github.com/hashicorp/vault
-    version: v0.9.3
+    version: v0.9.5
   - name: github.com/Luzifer/vault2env
   - name: github.com/Luzifer/vault-patch
   - name: github.com/Luzifer/vault-user-token
