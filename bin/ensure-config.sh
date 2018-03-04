@@ -1,9 +1,15 @@
 #!/bin/bash
 set -euo pipefail
 
+SYSTEM=$(uname -s | tr 'A-Z' 'a-z')
+
 FORCE=0
-PUB_CONFIG="git@github.com:Luzifer/cfg.git"
-SEC_CONFIG="git@github.com:Luzifer/cfg-secret.git"
+typeset -A REPOS
+REPOS=(
+  [public]='git@github.com:Luzifer/cfg.git#master'
+  [secret]='git@github.com:Luzifer/cfg-secret.git#master'
+  [system]="git@github.com:Luzifer/cfg-system.git#${SYSTEM}"
+)
 
 # --- OPT parsing ---
 
@@ -20,30 +26,38 @@ shift $((OPTIND-1))
 
 # --- OPT parsing ---
 
-if ! [ -d ${HOME}/.cfg/public ]; then
-  git clone --bare ${PUB_CONFIG} ${HOME}/.cfg/public
-fi
-
-if ! [ -d ${HOME}/.cfg/secret ]; then
-  git clone --bare ${SEC_CONFIG} ${HOME}/.cfg/secret
+if [ -e ${HOME}/bin/script_framework.sh ]; then
+  source ${HOME}/bin/script_framework.sh
+else
+  function step { echo "$@"; }
+  function fatal { echo "$@"; exit 1; }
 fi
 
 function config {
-  git --git-dir=${HOME}/.cfg/${REPO}/ --work-tree=${HOME} $@
+  git --git-dir="${HOME}/.cfg/${repo_name}" --work-tree="${HOME}" $@
 }
 
-for REPO in public secret; do
+for repo_name in "${!REPOS[@]}"; do
+  clone_url=$(echo ${REPOS[$repo_name]} | cut -d '#' -f 1)
+  branch=$(echo ${REPOS[$repo_name]} | cut -d '#' -f 2)
+
+  step "Working on '${repo_name}' (remote: '${clone_url}', branch: '${branch}'..."
+
+  # Clone repo if it's not already available
+  if ! [ -d "${HOME}/.cfg/${repo_name}" ]; then
+    git clone --bare "${clone_url}" --branch "${branch}" "${HOME}/.cfg/${repo_name}"
+  fi
+
   # Set basic git options for the repo
   config config status.showUntrackedFiles no
 
   # Do not overwrite local changes
   if ( ! config diff --exit-code 2>&1 >/dev/null ) && [ ${FORCE} -eq 0 ]; then
-    echo "Repo '${REPO}' has unsaved changes and force-flag is not set"
-    exit 1
+    fatal "Repo '${REPO}' has unsaved changes and force-flag is not set"
   fi
 
   # Refresh latest master
-  config fetch -q origin master || { echo "Failed to fetch '${REPO}'"; exit 1; }
+  config fetch -q origin ${branch} || { fatal "Failed to fetch '${repo_name}'"; }
 
   # Apply latest master
   COMMITS_AHEAD=$(config rev-list --left-right --count FETCH_HEAD...HEAD | awk '{ print $2 }')
