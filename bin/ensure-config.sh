@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+( bash --version | grep -q 'version 4' ) || {
+  echo "Bash too old, update to >=4.0"
+  exit 1
+}
+
 SYSTEM=$(uname -s | tr 'A-Z' 'a-z')
 
 FORCE=0
