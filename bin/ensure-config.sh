@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -euo pipefail
 
 SYSTEM=$(uname -s | tr 'A-Z' 'a-z')
