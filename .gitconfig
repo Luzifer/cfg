@@ -1,49 +1,46 @@
-[user]
-  name = Knut Ahlers
-  email = knut@ahlers.me
-  signingkey = D34BE99E
-
-[core]
-  repositoryformatversion = 0
-  filemode = true
-  bare = false
-  logallrefupdates = true
-  warnAmbiguousRefs = false
-  excludesfile = ~/.gitignore_global
-  pager = less -F -X
-
-[color]
-  diff = auto
-  status = auto
-  branch = auto
-
-[commit]
-  gpgsign = true
+[alias]
+  br = branch
+  changes=diff --name-status -r
+  ci = commit
+  co = checkout
+  df = diff
+  lg = "log --color --graph --pretty=format:'%Cred%h%Creset [%G?]%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
+  pp = "!sh -c 'git pull --rebase && git push'"
+  ri = rebase --interactive --autosquash
+  sign-rebase = "!GIT_SEQUENCE_EDITOR='sed -i -re s/^pick/e/' sh -c 'git rebase -i $1 && git commit --amend -S --no-edit && while git rebase --continue; do git commit --amend -S --no-edit; done' -"
+  spps = "!sh -c 'git stash && git pull --rebase && git push && git stash pop'"
+  starecopu = "!sh -c 'git stash && git pull --rebase && git stash pop && git commit -am \"$0\" && git push'"
+  st = status
 
 [branch]
   autosetuprebase = always
 
+[color]
+  branch = auto
+  diff = auto
+  status = auto
+
+[commit]
+  gpgsign = true
+
+[core]
+  bare = false
+  excludesfile = ~/.gitignore_global
+  filemode = true
+  logallrefupdates = true
+  pager = less -F -X
+  repositoryformatversion = 0
+  warnAmbiguousRefs = false
+
 [diff]
   renames = true
+
+[gpg]
+  program = gpg2
 
 [push]
   default = upstream
   gpgSign = if-asked
-
-[alias]
-  changes=diff --name-status -r
-  st = status
-  ci = commit
-  br = branch
-  co = checkout
-  df = diff
-  lg = log -p
-  starecopu = "!sh -c 'git stash && git pull --rebase && git stash pop && git commit -am \"$0\" && git push'"
-  spps = "!sh -c 'git stash && git pull --rebase && git push && git stash pop'"
-  pp = "!sh -c 'git pull --rebase && git push'"
-  ri = rebase --interactive --autosquash
-  lg = "log --color --graph --pretty=format:'%Cred%h%Creset [%G?]%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
-  sign-rebase = "!GIT_SEQUENCE_EDITOR='sed -i -re s/^pick/e/' sh -c 'git rebase -i $1 && git commit --amend -S --no-edit && while git rebase --continue; do git commit --amend -S --no-edit; done' -"
 
 [receive]
   denyNonFastForwards = true
@@ -51,5 +48,7 @@
 [rerere]
   enabled = true
 
-[gpg]
-  program = gpg2
+[user]
+  email = knut@ahlers.me
+  name = Knut Ahlers
+  signingkey = D34BE99E
