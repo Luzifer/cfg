@@ -1,0 +1,25 @@
+#!/bin/bash
+set -euo pipefail
+
+# Load helper functions
+source ${HOME}/bin/script_framework.sh
+
+# Require at least one password to be present
+[ $# -lt 1 ] && fail "You need to supply at least password as argument"
+
+# Check against online API using range request not to disclose the password hash
+function check_password {
+  checksum=$(echo -n "${1}" | sha1sum | tr 'a-z' 'A-Z')
+  curl -s https://api.pwnedpasswords.com/range/${checksum:0:5} |
+    awk -F: "/${checksum:5:35}/{ print \$2 }" | tr -d '\n\r'
+}
+
+# Main loop to check every password
+for pass in "$@"; do
+  count=$(check_password "${pass}")
+  if [ ${count:-0} -gt 0 ]; then
+    error "Password '${pass}' was included in breaches ${count} times!"
+  else
+    info "Password '${pass}' was not yet found in breaches..."
+  fi
+done
