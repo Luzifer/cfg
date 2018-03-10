@@ -5,7 +5,7 @@ set -o pipefail
 
 source "${HOME}/bin/script_framework.sh"
 
-if ! ( which vault > /dev/null ); then
+if ! (which vault >/dev/null); then
   error "vault is required."
   exit 2
 fi
@@ -21,7 +21,7 @@ HELPER=$(mktemp)
 chmod 0700 ${HELPER}
 trap "rm ${HELPER}" EXIT
 
-cat -s <<EOF > ${HELPER}
+cat -s <<EOF >${HELPER}
 #!/bin/bash
 vault read -field=private "/secret/ssh-key/\$1" | exec ssh-add -t 3600 -
 EOF
@@ -30,7 +30,7 @@ for KEY_NAME in $@; do
   fingerprint=$(vault read -field=public "/secret/ssh-key/$1" | ssh-keygen -l -f -)
 
   # If this key is already in the agent we don't need to do anything
-  if ( ssh-add -l | grep -q "${fingerprint}" ); then
+  if (ssh-add -l | grep -q "${fingerprint}"); then
     info "[${KEY_NAME}] Key already present."
     continue
   fi

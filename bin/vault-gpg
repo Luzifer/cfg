@@ -21,7 +21,7 @@ HEXPWD=$(echo -n "${PWD}" | str2hex)
 for KEYGRIP in $(gpg2 --with-keygrip -k ${KEY} | grep Keygrip | cut -d '=' -f 2 | xargs); do
 
   # Set password for keygrip
-  if ! ( gpg-connect-agent -q "PRESET_PASSPHRASE ${KEYGRIP} -1 ${HEXPWD}" /bye >/dev/null 2>&1 ); then
+  if ! (gpg-connect-agent -q "PRESET_PASSPHRASE ${KEYGRIP} -1 ${HEXPWD}" /bye >/dev/null 2>&1); then
     echo "An error occurred while caching password in GPG agent"
     exit 1
   fi

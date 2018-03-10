@@ -3,7 +3,7 @@
 set -e
 set -o pipefail
 
-function unexpose {
+function unexpose() {
   expose -d 8888
 }
 trap unexpose EXIT

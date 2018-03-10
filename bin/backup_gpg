@@ -2,26 +2,26 @@
 
 case $1 in
 
-backup)
-  # Backup the trustdb
-  gpg2 --export-ownertrust > .gnupg/trustdb.txt
+  backup)
+    # Backup the trustdb
+    gpg2 --export-ownertrust >.gnupg/trustdb.txt
 
-  # Compile the archive
-  tar -cvjf - .gnupg/private-keys-v1.d .gnupg/pubring.gpg .gnupg/trustdb.gpg .gnupg/trustdb.txt | gpg2 --output ${HOME}/gnupg_backup.asc --symmetric --armor
-  ;;
+    # Compile the archive
+    tar -cvjf - .gnupg/private-keys-v1.d .gnupg/pubring.gpg .gnupg/trustdb.gpg .gnupg/trustdb.txt | gpg2 --output ${HOME}/gnupg_backup.asc --symmetric --armor
+    ;;
 
-restore)
+  restore)
 
-  # Restore the archive
-  gpg2 --decrypt ${HOME}/gnupg_backup.asc | tar -xvj
+    # Restore the archive
+    gpg2 --decrypt ${HOME}/gnupg_backup.asc | tar -xvj
 
-  # Restore the owner-trust
-  gpg2 --import-ownertrust < .gnupg/trustdb.txt
-  ;;
+    # Restore the owner-trust
+    gpg2 --import-ownertrust <.gnupg/trustdb.txt
+    ;;
 
-*)
-  echo "Call me like this: $0 <backup | restore>"
-  exit 1
-  ;;
+  *)
+    echo "Call me like this: $0 <backup | restore>"
+    exit 1
+    ;;
 
 esac

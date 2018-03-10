@@ -20,12 +20,12 @@ git pull --rebase && git submodule update --init --recursive
 step "Cleaning local branches..."
 for branch in $(git branch --merged | grep -v '^*'); do
   # Do not delete master as the main branch
-  if ( test "${branch}" != "master" ); then
+  if (test "${branch}" != "master"); then
     git branch -d ${branch}
   fi
 done
 
 step "Removing local branches where remote branch is gone..."
-if ( git branch -vv | grep -q ': gone]' ); then
+if (git branch -vv | grep -q ': gone]'); then
   git branch -vv | awk '/: gone]/{print $1}' | xargs git branch -D
 fi

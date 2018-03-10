@@ -65,9 +65,9 @@ RUN set -ex \\
 EOF
 
 # Allow exposing ports using `-e 3000`
-( test "EXPOSE" != "${EXPOSE}" ) && echo -e "${EXPOSE}\n"
+(test "EXPOSE" != "${EXPOSE}") && echo -e "${EXPOSE}\n"
 
-# Allow 
+# Allow
 [ -z "${VOLUME}" ] || echo -e "VOLUME [${VOLUME/, /}]\n"
 
 # Execution information

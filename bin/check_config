@@ -3,46 +3,55 @@ set -euo pipefail
 
 DEBUG=${DEBUG:-false}
 FETCH_INTERVAL=${FETCH_INTERVAL:-3600}
-REPOS=( public secret )
+REPOS=(public secret)
 SSH_KEY=${SSH_KEY:-fafnir}
 
 # Print debug messages if enabled by ${DEBUG}
-function debug {
-  [[ "${DEBUG}" = "false" ]] && return
+function debug() {
+  [[ ${DEBUG} == "false" ]] && return
   echo "$@" >&2
 }
 
-function join_by { local d=$1; shift; echo -n "$1"; shift; printf "%s" "${@/#/$d}"; }
+function join_by() {
+  local d=$1
+  shift
+  echo -n "$1"
+  shift
+  printf "%s" "${@/#/$d}"
+}
 
 # Wrap git to work with git-dir and work-tree being in other locations
-function gwrap {
+function gwrap() {
   hub --git-dir=${HOME}/.cfg/${REPO} --work-tree=${HOME} $@
 }
 
 # Ensure we're connected to network before acting
-if ! ( ping -q -c 1 8.8.8.8 >/dev/null ); then
+if ! (ping -q -c 1 8.8.8.8 >/dev/null); then
   debug "No network connection, not checking"
   exit 0
 fi
 
 STAT_PARM="-c %Y"
-[[ "$(uname -s)" = "Darwin" ]] && STAT_PARM="-f %m"
+[[ "$(uname -s)" == "Darwin" ]] && STAT_PARM="-f %m"
 
 NEED_UPDATE=()
 # Check repos for updates
 for REPO in ${REPOS[@]}; do
   LAST_FETCH=0
   [ -f ~/.cfg/${REPO}/FETCH_HEAD ] && LAST_FETCH=$(stat ${STAT_PARM} ~/.cfg/${REPO}/FETCH_HEAD)
-  if [ $(( $(date +%s) - ${LAST_FETCH} )) -gt ${FETCH_INTERVAL} ] || \
+  if [ $(($(date +%s) - LAST_FETCH)) -gt ${FETCH_INTERVAL} ] ||
     [ $(wc -c ~/.cfg/${REPO}/FETCH_HEAD | cut -d' ' -f1) -eq 0 ]; then
-    vault-sshadd ${SSH_KEY} 2>&1 >/dev/null || { echo "Unable to load key ${SSH_KEY}"; exit 1; }
+    vault-sshadd ${SSH_KEY} 2>&1 >/dev/null || {
+      echo "Unable to load key ${SSH_KEY}"
+      exit 1
+    }
     gwrap fetch -q origin master
   fi
 
   LOCAL=$(gwrap rev-parse HEAD)
   REMOTE=$(gwrap rev-parse FETCH_HEAD)
 
-  if ! [[ "${LOCAL}" = "${REMOTE}" ]]; then
+  if ! [[ ${LOCAL} == "${REMOTE}" ]]; then
     NEED_UPDATE+=("'${REPO}'")
   fi
 done

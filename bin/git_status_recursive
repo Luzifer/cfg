@@ -4,13 +4,13 @@
 
 startpath=$(pwd)
 
-for repo in $(find . -name ".git")
-do
-    repodir=$(dirname $repo)
-    reponame=$(basename $repodir)
-    cd $repodir; LANG=C git status | grep -q "nothing to commit"
-    state=$?
-    cd $startpath
-    echo -n "$reponame: "
-    [ $state -eq 0 ] && echo -e "${PR_GREEN}Up-2-date${PR_NC}" || echo -e "${PR_BR_RED}Changes available${PR_NC}"
+for repo in $(find . -name ".git"); do
+  repodir=$(dirname $repo)
+  reponame=$(basename $repodir)
+  cd $repodir
+  LANG=C git status | grep -q "nothing to commit"
+  state=$?
+  cd $startpath
+  echo -n "$reponame: "
+  [ $state -eq 0 ] && echo -e "${PR_GREEN}Up-2-date${PR_NC}" || echo -e "${PR_BR_RED}Changes available${PR_NC}"
 done

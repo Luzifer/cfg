@@ -26,7 +26,7 @@ while getopts "f" opt; do
   esac
 done
 
-shift $((OPTIND-1))
+shift $((OPTIND - 1))
 [ "${1:-}" = "--" ] && shift
 
 # --- OPT parsing ---
@@ -34,11 +34,14 @@ shift $((OPTIND-1))
 if [ -e ${HOME}/bin/script_framework.sh ]; then
   source ${HOME}/bin/script_framework.sh
 else
-  function step { echo "$@"; }
-  function fatal { echo "$@"; exit 1; }
+  function step() { echo "$@"; }
+  function fatal() {
+    echo "$@"
+    exit 1
+  }
 fi
 
-function config {
+function config() {
   git --git-dir="${HOME}/.cfg/${repo_name}" --work-tree="${HOME}" $@
 }
 
@@ -57,7 +60,7 @@ for repo_name in "${!REPOS[@]}"; do
   config config status.showUntrackedFiles no
 
   # Do not overwrite local changes
-  if ( ! config diff --exit-code 2>&1 >/dev/null ) && [ ${FORCE} -eq 0 ]; then
+  if (! config diff --exit-code 2>&1 >/dev/null) && [ ${FORCE} -eq 0 ]; then
     fatal "Repo '${REPO}' has unsaved changes and force-flag is not set"
   fi
 

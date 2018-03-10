@@ -3,11 +3,11 @@
 source "${HOME}/bin/script_framework.sh"
 
 [ -n "${TMUX}" ] && fail "You are already in tmux!"
-( which tmux 2>/dev/null ) || fail "No tmux found, can't continue"
+(which tmux 2>/dev/null) || fail "No tmux found, can't continue"
 
 tmux-agent
 
-if ! ( tmux list-sessions ); then
+if ! (tmux list-sessions); then
   tmux new-session -d
   tmux split-window -h
 fi

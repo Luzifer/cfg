@@ -1,13 +1,12 @@
 #!/bin/bash
 
-if ! ( which vault > /dev/null ); then
+if ! (which vault >/dev/null); then
   error "vault is required."
   exit 2
 fi
 
-
 # If we can list the environments there is no need to unlock the database
-if ( awsenv list > /dev/null 2>&1 ); then
+if (awsenv list >/dev/null 2>&1); then
   echo "Database already unlocked."
   exit 0
 fi
@@ -31,11 +30,10 @@ expect eof
 EOF
 
 # Check whether awsenv was unlocked
-if ( awsenv list > /dev/null 2>&1 ); then
+if (awsenv list >/dev/null 2>&1); then
   echo "Database unlocked successfully"
   exit 0
 else
   echo "Found passphrase but could not unlock database."
   exit 1
 fi
-

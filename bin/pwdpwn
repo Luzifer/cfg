@@ -8,7 +8,7 @@ source ${HOME}/bin/script_framework.sh
 [ $# -lt 1 ] && fail "You need to supply at least password as argument"
 
 # Check against online API using range request not to disclose the password hash
-function check_password {
+function check_password() {
   checksum=$(echo -n "${1}" | sha1sum | tr 'a-z' 'A-Z')
   curl -s https://api.pwnedpasswords.com/range/${checksum:0:5} |
     awk -F: "/${checksum:5:35}/{ print \$2 }" | tr -d '\n\r'
