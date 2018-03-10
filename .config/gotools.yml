@@ -32,6 +32,7 @@ packages:
   - name: github.com/Luzifer/str2hex
   - name: github.com/Luzifer/update-gotools
   - name: github.com/Luzifer/worktime
+  - name: github.com/mvdan/sh/cmd/shfmt
   - name: github.com/peco/peco/cmd/peco
     version: v0.5.2
 
