@@ -3,7 +3,7 @@ set -euo pipefail
 
 DEBUG=${DEBUG:-false}
 FETCH_INTERVAL=${FETCH_INTERVAL:-3600}
-REPOS=(public secret)
+REPOS=(public secret system)
 SSH_KEY=${SSH_KEY:-fafnir}
 
 # Print debug messages if enabled by ${DEBUG}
