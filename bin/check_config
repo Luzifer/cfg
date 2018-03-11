@@ -45,7 +45,7 @@ for REPO in ${REPOS[@]}; do
       echo "Unable to load key ${SSH_KEY}"
       exit 1
     }
-    gwrap fetch -q origin master
+    gwrap fetch -q origin
   fi
 
   LOCAL=$(gwrap rev-parse HEAD)
