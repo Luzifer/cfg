@@ -1,0 +1,17 @@
+#!/bin/bash
+set -euo pipefail
+
+# Download LICENSE template for Apache 2.0
+curl -sSLf -H 'Accept: application/vnd.github.drax-preview+json' \
+	https://api.github.com/licenses/apache-2.0 | jq -r '.body' >LICENSE
+
+# Replace copyright stub with real data
+NAME=$(git config --global user.name)
+MAIL=$(git config --global user.email)
+
+# Look for the first commit as the start year for the license
+start_year=$(date +%Y)
+first_commit=$(git rev-list --max-parents=0 HEAD 2>/dev/null || echo "")
+[ -n "${first_commit}" ] && start_year=$(git log --format="%cd" --date="format:%Y" "${first_commit}")
+
+sed -i "s/Copyright \[yyyy\] \[name of copyright owner\]/Copyright ${start_year}- ${NAME} <${MAIL}>/" LICENSE
