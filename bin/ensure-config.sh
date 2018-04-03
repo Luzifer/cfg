@@ -61,7 +61,7 @@ for repo_name in "${!REPOS[@]}"; do
 
   # Do not overwrite local changes
   if (! config diff --exit-code 2>&1 >/dev/null) && [ ${FORCE} -eq 0 ]; then
-    fatal "Repo '${REPO}' has unsaved changes and force-flag is not set"
+    fatal "Repo '${repo_name}' has unsaved changes and force-flag is not set"
   fi
 
   # Refresh latest master
