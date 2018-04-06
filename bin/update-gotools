@@ -5,7 +5,7 @@ set -euxo pipefail
 export GOPATH="${HOME}/gocode"
 
 if [ ! -e ${GOPATH}/bin/update-gotools ]; then
-  go get -v github.com/Luzifer/update-gotools
+  go get -v -u github.com/Luzifer/update-gotools
 fi
 
 exec ${GOPATH}/bin/update-gotools "$@"
