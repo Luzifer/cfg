@@ -25,6 +25,7 @@ packages:
   - name: github.com/github/hub
   - name: github.com/hashicorp/packer
   - name: github.com/hetznercloud/terraform-provider-hcloud
+  - name: github.com/Luzifer/gen-dockerfile
   - name: github.com/Luzifer/git-changerelease
   - name: github.com/Luzifer/password
   - name: github.com/Luzifer/share
