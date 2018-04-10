@@ -5,7 +5,7 @@ WORKDIR /go/src/{{ .package }}
 
 RUN set -ex \
  && apk add --update git \
- && go install -ldflags "-X main.version=\$(git describe --tags || git rev-parse --short HEAD || echo dev)"
+ && go install -ldflags "-X main.version=$(git describe --tags || git rev-parse --short HEAD || echo dev)"
 
 FROM alpine:latest
 
