@@ -32,7 +32,7 @@ bindkey "\033[4~" end-of-line
 ## Aliases
 alias alpine='docker run --rm -ti alpine /bin/sh'
 alias bcrypt='python3 -c "import bcrypt; import sys; print(bcrypt.hashpw(sys.argv[1].encode(\"utf-8\"), bcrypt.gensalt(10)).decode(\"utf-8\"))"'
-alias gometalinter='gometalinter --enable-all -D aligncheck -D errcheck -D lll --cyclo-over=15 -e bindata.go --vendor'
+alias gometalinter='gometalinter --enable-all -D aligncheck -D errcheck -D lll -D gas -E misspell --cyclo-over=15 -e bindata.go --vendor'
 alias htpasswd='python3 -c "import crypt; import sys; print(crypt.crypt(sys.argv[1], crypt.mksalt(crypt.METHOD_SHA512)));"'
 alias mysql='docker run --rm -ti -v $(pwd):$(pwd) -w $(pwd) mysql bash'
 alias mysqlpw='python3 -c "import hashlib; import sys; print(\"*{}\".format(hashlib.sha1(hashlib.sha1(sys.argv[1].encode(\"utf-8\")).digest()).hexdigest().upper()))"'
