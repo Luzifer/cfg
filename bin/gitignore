@@ -1,5 +1,9 @@
 #!/bin/bash
+set -euo pipefail
 
 for i in "$@"; do
   echo "$i" >>.gitignore
 done
+
+sort .gitignore | uniq >.gitignore.tmp
+mv .gitignore.tmp .gitignore
