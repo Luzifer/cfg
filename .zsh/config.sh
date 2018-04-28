@@ -36,6 +36,7 @@ alias gometalinter='gometalinter --enable-all -D aligncheck -D errcheck -D lll -
 alias htpasswd='python3 -c "import crypt; import sys; print(crypt.crypt(sys.argv[1], crypt.mksalt(crypt.METHOD_SHA512)));"'
 alias mysql='docker run --rm -ti -v $(pwd):$(pwd) -w $(pwd) mysql bash'
 alias mysqlpw='python3 -c "import hashlib; import sys; print(\"*{}\".format(hashlib.sha1(hashlib.sha1(sys.argv[1].encode(\"utf-8\")).digest()).hexdigest().upper()))"'
+alias pushgallery='vault2env --key=secret/aws/private -- gallery --storage s3://io-luzifer-photos'
 alias :q='exit'
 alias share='AWS_REGION=us-east-1 vault2env --key=secret/aws/private -- share --bucket=share-luzifer-io-s3bucket-164ztrtyq1f35 --base-path="file/{{ printf \"%.6s\" .Hash}}" --base-url="https://knut.cc/#"'
 alias shfmt='shfmt -d -s -ci'
