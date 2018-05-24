@@ -5,7 +5,7 @@ export PATH=/usr/local/sbin:/usr/local/bin:$PATH
 source ${HOME}/.zsh/check_go_version
 
 ## Custom scripts
-export PATH=$HOME/bin:$PATH
+export PATH=$HOME/bin:$HOME/.bin:$PATH
 source $HOME/.zsh/go-binaries.sh
 
 ## Local installed pip package binaries
