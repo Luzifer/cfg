@@ -33,7 +33,7 @@ bindkey "\033[4~" end-of-line
 alias alpine='docker run --rm -ti alpine /bin/sh'
 alias bcrypt='python3 -c "import bcrypt; import sys; print(bcrypt.hashpw(sys.argv[1].encode(\"utf-8\"), bcrypt.gensalt(10)).decode(\"utf-8\"))"'
 alias clasp='docker run --rm -ti -v ~/.config/clasp:/home/node -v $(pwd):$(pwd) -w $(pwd) luzifer/clasp'
-alias firebase='docker run --rm -ti -v ~/.config/firebase:/home/node/.config -v $(pwd):$(pwd) -w $(pwd) luzifer/firebase'
+alias firebase='docker run --rm -ti -v ~/.config/firebase:/home/node/.config -v $(pwd):$(pwd) -w $(pwd) luzifer/firebase-tools'
 alias gometalinter='gometalinter --enable-all -D aligncheck -D errcheck -D lll -D gas -E misspell --cyclo-over=15 -e bindata.go --vendor'
 alias gsdk='docker run --rm -ti -v "${HOME}/.config/gcloud:/root/.config/gcloud" -v "${HOME}/.config/gcloud_ssh:/root/.ssh" -v $(pwd):$(pwd) -w $(pwd) google/cloud-sdk:alpine'
 alias htpasswd='python3 -c "import crypt; import sys; print(crypt.crypt(sys.argv[1], crypt.mksalt(crypt.METHOD_SHA512)));"'
