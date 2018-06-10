@@ -1,6 +1,15 @@
 #!/bin/bash
 set -euo pipefail
 
+source ${HOME}/bin/script_framework.sh
+
+[ -z "${1:-}" ] && {
+  LICENSES=$(curl -sSLf -H 'Accept: application/vnd.github.drax-preview+json' https://api.github.com/licenses | jq -r '.[] | .key' | sort | xargs)
+  info "Supported licenses: ${LICENSES}"
+  info "No license was choosen, falling back to apache-2.0"
+  echo
+}
+
 LICENSE=${1:-apache-2.0}
 
 # Download LICENSE template for selected license
@@ -16,8 +25,19 @@ start_year=$(date +%Y)
 first_commit=$(git rev-list --max-parents=0 HEAD 2>/dev/null || echo "")
 [ -n "${first_commit}" ] && start_year=$(git log --format="%cd" --date="format:%Y" "${first_commit}")
 
-# Copyright replacement for Apache 2.0
-sed -i "s/Copyright \[yyyy\] \[name of copyright owner\]/Copyright ${start_year}- ${NAME} <${MAIL}>/" LICENSE
+case ${LICENSE} in
+  "apache-2.0")
+    sed -i "s/Copyright \[yyyy\] \[name of copyright owner\]/Copyright ${start_year}- ${NAME} <${MAIL}>/" LICENSE
+    ;;
 
-# Copyright replacement for MIT
-sed -i "s/Copyright (c) \[year\] \[fullname\]/Copyright (c) ${start_year}- ${NAME} <${MAIL}>/" LICENSE
+  "bsd-2-clause") ;&
+  "bsd-3-clause")
+    sed -i "s/Copyright (c) \[year\], \[fullname\]/Copyright (c) ${start_year}-, ${NAME} <${MAIL}>/" LICENSE
+    ;;
+
+  "mit")
+    sed -i "s/Copyright (c) \[year\] \[fullname\]/Copyright (c) ${start_year}- ${NAME} <${MAIL}>/" LICENSE
+    ;;
+esac
+
+info "Generated license \"${LICENSE}\" with copyright information \"${start_year}- ${NAME} <${MAIL}>\" if applicable"
