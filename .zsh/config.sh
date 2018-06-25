@@ -60,4 +60,4 @@ source ${HOME}/.zsh/config-git.zsh
 source ${HOME}/.zsh/peco.sh
 
 ## Clean PATH from duplicates
-PATH=$(${HOME}/bin/path-dedup.py)
+export PATH=$(${HOME}/bin/path-dedup.py)
