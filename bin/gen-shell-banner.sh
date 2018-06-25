@@ -25,7 +25,12 @@ if ( ping -c 1 -q 8.8.8.8 >/dev/null ); then
   if [ -e "${HOME}/.gimme/envs/go${GO_VER}.env" ]; then
     kv "Go-Version" "Up-to-date (${GO_VER})"
   else
-    kv "Go-Version" "Outdated (latest would be ${GO_VER})"
+    if [ -e ${HOME}/.gimme/envs/latest.env]; then
+      inst=$(readlink ${HOME}/.gimme/envs/latest.env | sed -E 's/.*\/(go[0-9.]+).env/\1/')
+    else
+      inst="n/a"
+    fi
+    kv "Go-Version" "Outdated (installed: ${inst} latest: ${GO_VER})"
   fi
 else
   kv "Go-Version" "Unknown, network unreachable"
