@@ -5,7 +5,7 @@
 export PATH=/usr/local/sbin:/usr/local/bin:$PATH
 
 ## Activate go using gimme if any go version is available
-[ -e ${HOME}/.gimme/envs/latest.env ] && source ${HOME}/.gimme/envs/latest.env
+[ -e ${HOME}/.gimme/envs/latest.env ] && source ${HOME}/.gimme/envs/latest.env 2>/dev/null
 
 ## Custom scripts
 export PATH=$HOME/bin:$HOME/.bin:$PATH

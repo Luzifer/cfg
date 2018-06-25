@@ -41,4 +41,3 @@ kv "Updated" "$(date +"%Y-%m-%d %H:%M")"
 
 ## End output
 printf "$(boxchar 6d)%083s$(boxchar 6a)\n" | sed "s/ /$(printf "$(boxchar 71)")/g"
-echo # Add an extra blank line
