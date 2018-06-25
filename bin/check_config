@@ -22,7 +22,7 @@ function join_by() {
 
 # Wrap git to work with git-dir and work-tree being in other locations
 function gwrap() {
-  hub --git-dir=${HOME}/.cfg/${REPO} --work-tree=${HOME} $@
+  git --git-dir=${HOME}/.cfg/${REPO} --work-tree=${HOME} $@
 }
 
 # Ensure we're connected to network before acting
@@ -58,4 +58,10 @@ done
 
 if [ ${#NEED_UPDATE[@]} -gt 0 ]; then
   echo "Config repo $(join_by ", " "${NEED_UPDATE[@]}") needs update"
+else
+  if ( ${HOME}/bin/config-git-status.sh ); then
+    echo "Up-to-date"
+  else
+    echo "Up-to-date with uncommitted changes"
+  fi
 fi

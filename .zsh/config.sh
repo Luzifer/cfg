@@ -1,8 +1,11 @@
+## If any print shell banner
+[ -f ${HOME}/.local/shell-banner.txt ] && cat ${HOME}/.local/shell-banner.txt
+
 ## Brew installed binaries
 export PATH=/usr/local/sbin:/usr/local/bin:$PATH
 
 ## Activate go using gimme if any go version is available
-source ${HOME}/.zsh/check_go_version
+[ -e ${HOME}/.gimme/envs/latest.env ] && source ${HOME}/.gimme/envs/latest.env
 
 ## Custom scripts
 export PATH=$HOME/bin:$HOME/.bin:$PATH
@@ -49,7 +52,6 @@ source ${HOME}/.zsh/gpg-agent.plugin.zsh
 
 ## Load config-git functions and check for config updates
 source ${HOME}/.zsh/config-git.zsh
-${HOME}/bin/check_config
 
 ## Load local-config if available
 [ -e ${HOME}/.zsh/local-config.zsh ] && source ${HOME}/.zsh/local-config.zsh
