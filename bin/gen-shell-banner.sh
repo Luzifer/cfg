@@ -36,6 +36,14 @@ else
   kv "Go-Version" "Unknown, network unreachable"
 fi
 
+## Check for system updates
+sys_updates=$(checkupdates | wc -l)
+if [ ${sys_updates} -gt 0 ]; then
+  kv "System-Update" "${sys_updates} packages needs updates"
+else
+  kv "System-Update" "Up-to-date"
+fi
+
 ## Log generation time
 kv "Updated" "$(date +"%Y-%m-%d %H:%M")"
 
