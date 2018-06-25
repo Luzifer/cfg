@@ -41,7 +41,7 @@ for REPO in ${REPOS[@]}; do
   [ -f ~/.cfg/${REPO}/FETCH_HEAD ] && LAST_FETCH=$(stat ${STAT_PARM} ~/.cfg/${REPO}/FETCH_HEAD)
   if [ $(($(date +%s) - LAST_FETCH)) -gt ${FETCH_INTERVAL} ] ||
     [ $(wc -c ~/.cfg/${REPO}/FETCH_HEAD | cut -d' ' -f1) -eq 0 ]; then
-    vault-sshadd ${SSH_KEY} 2>&1 >/dev/null || {
+    ${HOME}/bin/vault-sshadd ${SSH_KEY} 2>&1 >/dev/null || {
       echo "Unable to load key ${SSH_KEY}"
       exit 1
     }
