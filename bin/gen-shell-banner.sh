@@ -36,7 +36,7 @@ fi
 ## Check for system updates
 sys_updates=$(checkupdates | wc -l)
 if [ ${sys_updates} -gt 0 ]; then
-  kv "System-Update" "${sys_updates} packages needs updates"
+  kv "System-Update" "${sys_updates} packages require updates"
 else
   kv "System-Update" "Up-to-date"
 fi
