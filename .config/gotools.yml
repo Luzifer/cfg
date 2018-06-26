@@ -6,6 +6,7 @@ gopath: '~/gocode'
 packages:
   # Go-dev related tools
   - name: github.com/alecthomas/gometalinter
+  - name: github.com/golangci/golangci-lint/cmd/golangci-lint
   - name: github.com/golang/dep/cmd/dep
   - name: github.com/mailgun/godebug
   - name: github.com/nsf/gocode
@@ -14,7 +15,7 @@ packages:
 
   # Vault related tools
   - name: github.com/hashicorp/vault
-    version: v0.10.1
+    version: v0.10.3
   - name: github.com/Luzifer/vault2env
   - name: github.com/Luzifer/vault-patch
   - name: github.com/Luzifer/vault-user-token
