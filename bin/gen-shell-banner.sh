@@ -16,9 +16,6 @@ exec >${HOME}/.local/shell-banner.txt
 ## Start output
 printf "$(boxchar 6c)%083s$(boxchar 6b)\n" | sed "s/ /$(printf "$(boxchar 71)")/g"
 
-## Check whether config repos needs update
-kv "Config" "$(${HOME}/bin/check_config)"
-
 ## Check for latest Go version
 if ( ping -c 1 -q 8.8.8.8 >/dev/null ); then
   GO_VER=$(curl -sSLf -m 2 'https://lv.luzifer.io/catalog-api/golang/latest.txt?p=version')
