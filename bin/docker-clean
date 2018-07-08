@@ -2,22 +2,14 @@
 set -euo pipefail
 
 if [ -e "${HOME}/bin/script_framework.sh" ]; then
-  source "${HOME}/bin/script_framework.sh"
+	source "${HOME}/bin/script_framework.sh"
 else
-  function step() { echo $@; }
+	function step() { echo $@; }
 fi
 
 step "Removing containers created / exited >= ~1h ago..."
-CONTAINERS=$(docker ps -a | awk '/(hours?|days?|weeks?|months?) ago\s+(Created|Exited)/{ print $1 }' | xargs)
+CONTAINERS=$(docker ps -a | gawk '/(hours?|days?|weeks?|months?) ago\s+(Created|Exited)/{ print $1 }' | xargs)
 [ -n "${CONTAINERS}" ] && docker rm ${CONTAINERS}
 
-step "Untagging all images not used by containers..."
-PS_OUTPUT=$(docker ps -a)
-for img in $(docker images | awk '/^[a-z].*(hours?|days?|weeks?|months?) ago/{ print $1":"$2 }' | grep -v '<none>' | sort | uniq); do
-  if ! (echo "${PS_OUTPUT}" | grep -q "\s${img}\s") && ! (echo "${PS_OUTPUT}" | grep -q "\s${img%:latest}\s"); then
-    docker rmi --no-prune "${img}"
-  fi
-done
-
-step "Removing dangling images..."
-docker image prune -f
+step "Removing unused and dangling images..."
+docker image prune -a -f
