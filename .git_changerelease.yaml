@@ -2,6 +2,7 @@
 match_patch:
   - "^[fF]ix"
   - "^[lL]int"
+  - "^[rR]efactor"
 
 match_major:
   - "^[Bb]reaking"
