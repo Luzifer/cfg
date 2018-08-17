@@ -1,0 +1,20 @@
+#!/bin/bash
+set -euo pipefail
+
+trustmap=(
+	"unused"
+	"unused"
+	"I don't know or won't say"
+	"I do NOT trust"
+	"I trust marginally"
+	"I trust fully"
+	"I trust ultimately"
+)
+
+for trust in $(gpg --export-ownertrust | grep '^[^#]'); do
+	fp=$(echo "${trust}" | cut -d : -f 1)
+	score=$(echo "${trust}" | cut -d : -f 2)
+
+	echo "# $(gpg --list-keys "${fp}" 2>/dev/null | grep ^uid | head -n1 | sed -E 's/^uid\s+\[[a-z ]+\] //' || echo "Key / UID not found") (${trustmap[score]})"
+	echo "${trust}"
+done

@@ -1,0 +1,21 @@
+#!/bin/bash
+set -euo pipefail
+
+function echo_check() {
+	echo -n "$1: "
+	shift
+	$@ >/dev/null 2>&1 && echo "OK" || echo "FAIL (Command: $@)"
+}
+
+# Remove expired and revoked keys
+for key in $(gpg2 --list-keys --with-colons | awk -F : '/^pub:[er]/{ print $5 }'); do
+	echo_check "Removing key ${key}" gpg2 --batch --quiet --delete-keys --yes ${key}
+done
+
+# Cleanup remaining keys
+for key in $(gpg2 --list-keys --with-colons | awk -F : '/^pub:[^er]/{ print $5 }'); do
+	echo_check "Cleaning key ${key}" gpg2 --batch --quiet --edit-key ${key} check clean cross-certify save quit
+done
+
+# Update keys
+echo_check "Updating keys" gpg2 --batch --quiet --refresh-keys
