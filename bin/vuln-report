@@ -1,0 +1,14 @@
+#!/bin/bash
+set -euxo pipefail
+
+RESULTS_DIR=${RESULTS_DIR:-$(pwd)}
+
+# If the binary is not yet there, do an initialization
+[ -f ${HOME}/.bin/vuls ] || ${HOME}/bin/vuls-refresh
+[ $(( $(date +%s) - $(stat -c %Y ${HOME}/.cache/vuls/oval.sqlite3) )) -gt 86400 ] && ${HOME}/bin/vuls-refresh
+
+# spawn reporter
+exec ${HOME}/.bin/vuls report \
+	--cvedb-path ${HOME}/.cache/vuls/cve.sqlite3 \
+	--ovaldb-path ${HOME}/.cache/vuls/oval.sqlite3 \
+	--results-dir "${RESULTS_DIR}" "$@"
