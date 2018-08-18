@@ -34,6 +34,7 @@ packages:
   - name: github.com/Luzifer/short_path
   - name: github.com/Luzifer/slugify
   - name: github.com/Luzifer/str2hex
+  - name: github.com/Luzifer/tmux-collector
   - name: github.com/Luzifer/update-gotools
   - name: github.com/Luzifer/worktime
   - name: github.com/peco/peco/cmd/peco
