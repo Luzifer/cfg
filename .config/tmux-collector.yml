@@ -1,0 +1,42 @@
+---
+
+# Must match background color of bar or will look weird
+base_bg_color: colour235
+
+# Segments to display (first = left, last = right)
+segments:
+
+  # Arch Linux: Check for Updates
+  - background_success: colour88
+    foreground_success: colour251
+    command: [bash, -c, 'echo "$(checkupdates | wc -l) Updates" | grep -v "^0 Updates" || true']
+    interval: 10m
+
+  # Dropbox CLI: Check daemon status
+  - background_success: colour19
+    foreground_success: colour251
+    command: [bash, -c, 'dropbox.py status | head -n1 | grep -v "Up to date" || true']
+    interval: 30s
+    prefix: ""
+
+  # System: If present display battery status
+  - background_success: colour195
+    foreground_success: colour237
+    command: [tmux-battery]
+
+  # System: Display a stable subset of the uptime
+  - background_success: colour34
+    foreground_success: colour232
+    command: [bash, -c, 'uptime | cut -f 4-5 -d " " | cut -f 1 -d ","']
+
+  # Time
+  - background_success: colour235
+    foreground_success: colour250
+    command: ['date', '+%a, %H:%M:%S']
+
+  # Date
+  - background_success: colour235
+    foreground_success: colour69
+    command: ['date', '+%Y-%m-%d (KW %V)']
+
+...
