@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 import math
@@ -25,7 +25,7 @@ KEY_PARSED_OFFSET = 'Parsed offset'
 
 def get_stats():
     stats = {}
-    for line in subprocess.check_output(['/usr/bin/chronyc', 'tracking']).split('\n'):
+    for line in subprocess.check_output(['/usr/bin/chronyc', 'tracking']).decode('utf-8').split('\n'):
         line_parts = line.split(' : ')
         if len(line_parts) != 2:
             continue
@@ -42,7 +42,7 @@ def main():
     stats = get_stats()
 
     if math.fabs(stats[KEY_PARSED_OFFSET]) > 1.0:
-        print('{:.2f}s time diff'.format(stats[KEY_PARSED_OFFSET]))
+        print('{:.2f}s diff'.format(stats[KEY_PARSED_OFFSET]))
 
     return 0
 
