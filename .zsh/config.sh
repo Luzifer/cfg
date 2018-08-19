@@ -1,6 +1,3 @@
-## If any print shell banner
-[ -f ${HOME}/.local/shell-banner.txt ] && cat ${HOME}/.local/shell-banner.txt
-
 ## Brew installed binaries
 export PATH=/usr/local/sbin:/usr/local/bin:$PATH
 
