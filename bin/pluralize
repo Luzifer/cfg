@@ -1,0 +1,8 @@
+#!/bin/bash
+set -eo pipefail
+
+if [ $2 -eq 1 -o $2 -eq -1 ]; then
+	echo ${1}
+else
+	echo ${1}s
+fi
