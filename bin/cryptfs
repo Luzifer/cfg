@@ -1,0 +1,48 @@
+#!/bin/bash
+set -euo pipefail
+
+source ~/bin/script_framework.sh
+
+# Check for existence of required tools
+which gocryptfs >/dev/null || fail "No gocryptfs binary found in \$PATH (yay -S cryptfs / brew install cryptfs)"
+which vault >/dev/null || fail "No vault binary found in \$PATH"
+
+# Check for Dropbox folder
+[ -d "${HOME}/Dropbox/CryptFS" ] || fail "~/Dropbox/CryptFS was not found, is Dropbox sync available?"
+[ -f "${HOME}/Dropbox/CryptFS/gocryptfs.conf" ] || fail "gocryptfs.conf file was not found in CryptFS directory, unsynced?"
+
+case ${1:--m} in
+
+"-m")
+	step "Mounting ~/CryptFS"
+	mount | grep -q "${HOME}/CryptFS" && {
+		warn "~/CryptFS is already mounted"
+		exit 0
+	} || true
+
+	mkdir -p "${HOME}/CryptFS"
+	vault read -field=passphrase secret/private/gocryptfs |
+		gocryptfs -q -- "${HOME}/Dropbox/CryptFS" "${HOME}/CryptFS"
+	;;
+
+"-u")
+	step "Unmounting ~/CryptFS"
+	mount | grep -q "${HOME}/CryptFS" || {
+		warn "~/CryptFS is not mounted"
+		exit 0
+	}
+
+	case $(uname -s) in
+	"Linux")
+		fusermount -u "${HOME}/CryptFS"
+		;;
+
+	"Darwin")
+		umount "${HOME}/CryptFS"
+		;;
+	esac
+
+	success "~/CryptFS unmounted"
+	;;
+
+esac
