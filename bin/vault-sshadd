@@ -1,7 +1,5 @@
 #!/bin/bash
-
-set -e
-set -o pipefail
+set -euo pipefail
 
 source "${HOME}/bin/script_framework.sh"
 
@@ -22,8 +20,8 @@ chmod 0700 ${HELPER}
 trap "rm ${HELPER}" EXIT
 
 cat -s <<EOF >${HELPER}
-#!/bin/bash
-vault read -field=private "/secret/ssh-key/\$1" | exec ssh-add -t 3600 -
+#!/bin/bash -eu
+vault read -field=private "secret/ssh-key/\$1" | exec ssh-add -t 3600 -
 EOF
 
 for KEY_NAME in $@; do
@@ -36,7 +34,7 @@ for KEY_NAME in $@; do
   fi
 
   # Retrieve key from LastPass
-  PWD=$(vault read -field=passphrase "/secret/ssh-key/${KEY_NAME}")
+  PWD=$(vault read -field=passphrase "secret/ssh-key/${KEY_NAME}")
   # In case LastPass exitted non-zero we have no password
   if ! [ $? -eq 0 ]; then
     error "[${KEY_NAME}] Unable to get password. Not trying to unlock."
