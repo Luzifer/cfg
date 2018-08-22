@@ -19,6 +19,7 @@ export ANSIBLE_NOCOWS=1
 export LANG=en_US.UTF-8
 export LC_CTYPE=${LANG}
 export TZ="Europe/Berlin"
+export RIPGREP_CONFIG_PATH=$HOME/.config/ripgreprc
 
 ## Map ctrl+← and ctrl+→ to move cursor word wise
 bindkey -e

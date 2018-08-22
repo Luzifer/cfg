@@ -1,0 +1,5 @@
+# Search for upper and lower case characters when input is all lowercase
+--smart-case
+
+# Exclude vendor directory
+--glob=!**/vendor/**
