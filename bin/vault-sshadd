@@ -21,6 +21,7 @@ trap "rm ${HELPER}" EXIT
 
 cat -s <<EOF >${HELPER}
 #!/bin/bash -eu
+export -n DISPLAY
 vault read -field=private "secret/ssh-key/\$1" | exec ssh-add -t 3600 -
 EOF
 
