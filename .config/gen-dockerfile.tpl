@@ -1,6 +1,6 @@
 FROM golang:alpine as builder
 
-ADD . /go/src/{{ .package }}
+COPY . /go/src/{{ .package }}
 WORKDIR /go/src/{{ .package }}
 
 RUN set -ex \
