@@ -1,8 +1,28 @@
 ---
+
+# Disable GPG signing for tags in case you do not want to have signed
+# tags or do not have set up GPG signing for git.
+disable_signed_tags: false
+
+# Filter out commits using a regular expression match on the commit
+# message. By default below is a matcher for PR merges on Github.
+ignore_messages:
+  - "^Merge pull request"
+
+# Every commit message matching one of the regular expressions defined
+# in here will cause a patch-version increase (1.0.0 -> 1.0.1).
 match_patch:
   - "^[fF]ix"
   - "^[lL]int"
   - "^[rR]efactor"
 
+# Every commit message matching one of the regular expressions defined
+# in here will cause a major-version increase (1.0.0 -> 2.0.0).
 match_major:
   - "^[Bb]reaking"
+
+# Template to format the commit message containing the changelog change
+# which will be used to add the tag to.
+release_commit_message: "prepare release {{.Version}}"
+
+...
