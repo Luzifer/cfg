@@ -1,0 +1,56 @@
+#!/bin/bash
+set -euo pipefail
+
+TARGET="${HOME}/.local/share/arch-package-index"
+
+# Check for pacman (and with it for Archlinux)
+which pacman >/dev/null 2>&1 || {
+	echo "Tool 'pacman' not found: This script only works for Archlinux" >&2
+	exit 1
+}
+
+# Check for comm to be installed
+which comm >/dev/null 2>&1 || {
+	echo "Please install 'comm' utility" >&2
+	exit 1
+}
+
+# Ensure the target dir exists
+mkdir -p ${TARGET}
+
+# CD into target dir
+pushd ${TARGET} >/dev/null 2>&1
+
+[ -f groups.txt ] || {
+	echo "No groups.txt found, creating one with 'base' group."
+	echo "You might want to edit your ${TARGET}/groups.txt and add more groups installed on your system..."
+	echo "base" >groups.txt
+}
+
+# Collect packages not contained in groups
+pacman -Qgq $(cat groups.txt) | sort >group-packages.txt
+
+# Collect packages
+comm -23 <(pacman -Qeq | sort) group-packages.txt >non-group-packages.txt
+comm -23 <(pacman -Qeqn | sort) group-packages.txt >official-packages.txt
+comm -23 non-group-packages.txt official-packages.txt >aur-packages.txt
+
+# Remove temporary stores
+rm group-packages.txt non-group-packages.txt
+
+echo "Package files updated" >&2
+
+if [ -d '.git' ]; then
+	echo "Git directory found, creating update commit" >&2
+
+	git_files=(
+		aur-packages.txt
+		groups.txt
+		official-packages.txt
+	)
+
+	git add "${git_files[@]}"
+	git commit --no-gpg-sign -m 'Update from arch-package-index' "${git_files[@]}"
+fi
+
+popd >/dev/null 2>&1
