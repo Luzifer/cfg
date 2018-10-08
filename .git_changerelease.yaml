@@ -12,6 +12,7 @@ ignore_messages:
 # Every commit message matching one of the regular expressions defined
 # in here will cause a patch-version increase (1.0.0 -> 1.0.1).
 match_patch:
+  - "^[dD]ep"
   - "^[fF]ix"
   - "^[lL]int"
   - "^[rR]efactor"
