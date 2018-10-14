@@ -1,9 +1,6 @@
 ## Brew installed binaries
 export PATH=/usr/local/sbin:/usr/local/bin:$PATH
 
-## Activate go using gimme if any go version is available
-[ -e ${HOME}/.gimme/envs/latest.env ] && source ${HOME}/.gimme/envs/latest.env 2>/dev/null
-
 ## Custom scripts
 export PATH=$HOME/bin:$HOME/.bin:$PATH
 source $HOME/.zsh/go-binaries.sh
@@ -44,7 +41,7 @@ alias mysql='docker run --rm -ti -v $(pwd):$(pwd) -w $(pwd) mysql bash'
 alias mysqlpw='python3 -c "import hashlib; import sys; print(\"*{}\".format(hashlib.sha1(hashlib.sha1(sys.argv[1].encode(\"utf-8\")).digest()).hexdigest().upper()))"'
 alias pushgallery='vault2env --key=secret/aws/private -- gallery --storage s3://io-luzifer-photos'
 alias :q='exit'
-alias share='AWS_REGION=us-east-1 vault2env --key=secret/aws/private -- share --bucket=share-luzifer-io-s3bucket-164ztrtyq1f35 --base-path="file/{{ printf \"%.8s\" .Hash}}" --base-url="https://knut.cc/#"'
+alias share='AWS_REGION=us-east-1 vault2env --key=secret/aws/private -- share --bucket=share-luzifer-io-s3bucket-164ztrtyq1f35 --base-path="file/{{ printf \"%.8s\" .Hash}}" --base-url="https://knut.cc/#" --progress'
 alias shfmt='shfmt -d -s -ci'
 alias terraria='docker run --rm -ti -v /home/luzifer/tmp/terraria:/data -p 7777:7777 luzifer/terraria'
 
