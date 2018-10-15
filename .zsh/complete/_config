@@ -1,0 +1,25 @@
+#compdef _config config
+set -eo pipefail
+
+typeset -A opt_args
+
+function _config() {
+	#set -x
+	_arguments -C \
+		'1:repo:->repos' \
+		'*::: :->args'
+
+	case "$state" in
+	repos)
+		local repos
+		repos=($(ls -1 "${HOME}/.cfg"))
+		_describe 'repos' repos
+		;;
+	args)
+		_dispatch git -default-
+		;;
+	*)
+		return 1
+		;;
+	esac
+}
