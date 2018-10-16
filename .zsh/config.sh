@@ -57,6 +57,12 @@ source ${HOME}/.zsh/config-git.zsh
 ## Load peco functions
 source ${HOME}/.zsh/peco.sh
 
+## Load direnv
+(which direnv >/dev/null 2>&1) && {
+	export DIRENV_LOG_FORMAT=""
+	eval "$(direnv hook zsh)"
+}
+
 ## Clean PATH from duplicates
 export PATH=$(${HOME}/bin/path-dedup.py)
 
