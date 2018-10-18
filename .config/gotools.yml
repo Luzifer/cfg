@@ -47,7 +47,7 @@ packages:
   - { name: github.com/dominikh/go-tools/cmd/keyify, single: true }
   - { name: github.com/fatih/gomodifytags, single: true }
   - { name: github.com/fatih/motion, single: true }
-  - { name: github.com/golang/lint/golint, single: true }
+  - { name: golang.org/x/lint/golint, single: true }
   - { name: github.com/jstemmer/gotags, single: true }
   - { name: github.com/kisielk/errcheck, single: true }
   - { name: github.com/klauspost/asmfmt/cmd/asmfmt, single: true }
