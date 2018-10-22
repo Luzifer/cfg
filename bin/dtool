@@ -1,0 +1,26 @@
+#!/bin/bash
+set -euo pipefail
+
+source ${HOME}/bin/script_framework.sh
+
+[ $# -lt 1 ] && fail "At least the tool must be specified"
+
+TOOL=$1
+shift
+
+toolimage="dtool.local/${TOOL}"
+
+docker images | grep -q "^${toolimage}" || {
+	step "Building tool image for \"${TOOL}\""
+	toolpath="${HOME}/.config/dtool/${TOOL}"
+	docker build -q \
+		-t "${toolimage}" \
+		--build-arg UID=$(id -u) \
+		"${toolpath}"
+}
+
+step "Executing \"${toolimage} $@\"..."
+exec docker run --rm -ti \
+  -u $(id -u) \
+	-v "$(pwd):$(pwd)" -w "$(pwd)" \
+	"${toolimage}" "$@"
