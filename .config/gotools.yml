@@ -23,6 +23,7 @@ packages:
   # Other tools
   - name: github.com/fatih/hclfmt
   - name: github.com/fiatjaf/jiq/cmd/jiq
+  - name: github.com/genuinetools/reg
   - name: github.com/github/hub
   - name: github.com/hashicorp/packer
   - name: github.com/hetznercloud/terraform-provider-hcloud
