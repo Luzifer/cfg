@@ -1,21 +1,27 @@
 #!/bin/bash
 set -euo pipefail
 
-SYM_ADAPTER="⚡️"
-SYM_BATTERY="🔋"
+SYM_ADAPTER="$(printf '\ufba3')"
+SYM_BATTERY="$(printf '\uf58d')"
 BATTERY=/sys/class/power_supply/BAT0
 AC=/sys/class/power_supply/AC
 
-[ -e ${BATTERY} ] || { echo "No battery" >&2; exit 0; }
-[ -e ${AC} ] || { echo "No ac" >&2; exit 0; }
+[ -e ${BATTERY} ] || {
+	echo "No battery" >&2
+	exit 0
+}
+[ -e ${AC} ] || {
+	echo "No ac" >&2
+	exit 0
+}
 
 CAPACITY=$(cat ${BATTERY}/capacity)
 AC_CONNECT=$(cat ${AC}/online)
 
 if [ ${AC_CONNECT} -eq 0 ]; then
-  SYM=${SYM_BATTERY}
+	SYM=${SYM_BATTERY}
 else
-  SYM=${SYM_ADAPTER}
+	SYM=${SYM_ADAPTER}
 fi
 
 echo "${SYM} ${CAPACITY}%"
