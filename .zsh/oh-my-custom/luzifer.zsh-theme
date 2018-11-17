@@ -35,6 +35,12 @@ function config-git_prompt() {
 	fi
 }
 
+function shortened_branch() {
+	local branch=$(git_current_branch)
+	[ $(echo -n "${branch}" | wc -c) -gt 15 ] && branch="${branch:0:15}%{$fg[red]%}$(printf '\uf141')%{$reset_color%}"
+	echo "${branch}"
+}
+
 function build_git_prompt() {
 	# Allow hiding the right side of the prompt
 	(test "${NO_RIGHT}" = "true") && return
@@ -66,7 +72,7 @@ function build_git_prompt() {
 
 	# Show current branch and commit / tag
 	echo -n "%{$reset_color%}"
-	echo -n "$(git_current_branch) "
+	echo -n "$(shortened_branch) "
 	echo -n "($(git_describe)) "
 
 	# Print repository status information
