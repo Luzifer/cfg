@@ -14,8 +14,6 @@ packages:
   - name: github.com/tools/godep
 
   # Vault related tools
-  - name: github.com/hashicorp/vault
-    version: v0.11.3
   - name: github.com/Luzifer/vault2env
   - name: github.com/Luzifer/vault-patch
   - name: github.com/Luzifer/vault-user-token
@@ -39,8 +37,6 @@ packages:
   - name: github.com/Luzifer/update-gotools
   - name: github.com/Luzifer/waitfor
   - name: github.com/Luzifer/worktime
-  - name: github.com/peco/peco/cmd/peco
-    version: v0.5.3
   - name: mvdan.cc/sh/cmd/shfmt
 
   # Install dependencies for vim-go (May not run concurrently or will fail)
