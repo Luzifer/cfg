@@ -1,0 +1,41 @@
+#!/bin/bash
+set -euo pipefail
+
+source ${HOME}/bin/script_framework.sh
+
+REPO_DIR=${REPO_DIR:-/home/luzifer/tmp/archrepo}
+
+PACKAGE=${1:-}
+[ -z "${PACKAGE}" ] && fail "No package given as CLI argument"
+
+# Create working dir
+TMPDIR="/tmp/aur2repo_${PACKAGE}"
+mkdir -p "${TMPDIR}/cfg"
+
+# Ensure cleanup on script exit
+function cleanup() {
+	rm -rf "${TMPDIR}"
+}
+trap cleanup EXIT
+
+step "Fetching signing key"
+vault read --field=key secret/jenkins/arch-signing >"${TMPDIR}/cfg/signing.asc"
+
+step "Re-fetching Docker image"
+docker pull luzifer/arch-repo-builder
+
+step "Synchronizing the repository"
+vault2env --key=secret/aws/private -- \
+	aws s3 sync --delete s3://arch-luzifer-io/repo/x86_64/ "${REPO_DIR}/"
+
+step "Building AUR package"
+docker run --rm -ti \
+	-v "${TMPDIR}/src:/src" \
+	-v "${TMPDIR}/cfg:/config" \
+	-v "${REPO_DIR}:/repo" \
+	luzifer/arch-repo-builder \
+	"https://aur.archlinux.org/${PACKAGE}.git"
+
+step "Synchronizing repository changes"
+vault2env --key=secret/aws/private -- \
+	aws s3 sync --delete --exclude '*.old*' --acl=public-read "${REPO_DIR}/" s3://arch-luzifer-io/repo/x86_64/
