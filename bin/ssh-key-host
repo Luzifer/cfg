@@ -1,0 +1,40 @@
+#!/bin/bash
+set -euo pipefail
+
+source ${HOME}/bin/script_framework.sh
+
+function usage() {
+	fail "Missing parameters. Usage: $(basename $0) [-k <key>] [-p <port>] -- <host> [ssh-param ...]"
+}
+
+KEY_NAME="loki"
+PORT="22"
+
+while getopts ":k:p:" o; do
+	case "${o}" in
+	k)
+		KEY_NAME="${OPTARG}"
+		;;
+	p)
+		PORT="${OPTARG}"
+		;;
+	*)
+		usage
+		;;
+	esac
+done
+shift $((OPTIND - 1))
+
+[ $# -lt 1 ] && usage
+
+HOST=${1}
+shift
+
+step "Waiting for host to have port ${PORT} opened"
+waitfor --log-level=warn -- "nmap -p ${PORT} -Pn -oG - $(echo "${HOST}" | cut -d '@' -f 2) | grep -q ${PORT}/open/tcp"
+
+step "Loading key ${KEY_NAME}"
+vault-sshadd "${KEY_NAME}"
+
+step "Executing ssh"
+exec ssh -p ${PORT} "${HOST}" "$@"
