@@ -1,0 +1,44 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+from pbkdf2 import PBKDF2
+import sys
+
+
+def get_ssid(netctl_file):
+    for line in netctl_file:
+        if line.startswith('ESSID='):
+            return line.split('=')[1].strip("\"'")
+
+    raise Exception("No ESSID assignment found")
+
+
+def replace_key(netctl_file, ssid):
+    netctl_out = []
+
+    for line in netctl_file:
+        if line.startswith('Key='):
+            passphrase = line.split('=')[1].strip("\"'")
+            key = PBKDF2(passphrase, ssid, iterations=4096).hexread(32)
+            netctl_out.append('Key=\\"{}'.format(key))
+        else:
+            netctl_out.append(line)
+
+    return netctl_out
+
+
+def main(args):
+    netctl_file = []
+
+    with open(args[1], 'r') as f:
+        netctl_file = f.read().split('\n')
+
+    ssid = get_ssid(netctl_file)
+    netctl_file = replace_key(netctl_file, ssid)
+
+    with open(args[1], 'w+') as f:
+        f.write('\n'.join(netctl_file))
+
+
+if __name__ == '__main__':
+    main(sys.argv)
