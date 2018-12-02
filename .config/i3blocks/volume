@@ -1,0 +1,28 @@
+#!/usr/bin/env python
+
+import subprocess
+
+
+def main():
+    volume = subprocess.check_output([
+        'pulsemixer', '--get-volume',
+    ]).decode('utf-8').strip().split(' ')
+    minvol = min([int(i) for i in volume])
+
+    mute = int(subprocess.check_output([
+        'pulsemixer', '--get-mute',
+    ]).decode('utf-8').strip()) == 1
+
+    icon = '\uf9c3' if mute else '\uf9c2'
+    text = '{} {}%'.format(icon, minvol)
+    color = '#7f7f7f' if mute else ''
+
+    print('\n'.join([
+        text,
+        text,
+        color,
+    ]))
+
+
+if __name__ == '__main__':
+    main()

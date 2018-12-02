@@ -1,0 +1,18 @@
+#!/bin/bash
+
+interface=$(ip a | grep 'wlp.*:' | sed -E 's/^[0-9]*: ([^:]+):.*/\1/')
+
+# We found no wlp* interface: Get out here
+[ -z "${interface}" ] && exit
+
+ip=$(ip a show ${interface} | awk '/inet .* scope global/{ print $2 }' | cut -d '/' -f1)
+
+# We found no ip: Get out here
+[ -z "${ip}" ] && exit
+
+network=$(iwgetid -r)
+
+# We found no network: Get out here
+[ -z "${network}" ] && exit
+
+printf "\uf1eb %s (%s)" ${network} ${ip}

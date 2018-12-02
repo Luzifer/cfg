@@ -1,0 +1,10 @@
+#!/bin/bash
+
+which getxkblayout >/dev/null 2>/dev/null || {
+	printf '\uf071 getxkblayout package missing'
+	exit 1
+}
+
+printf '\uf812 '
+
+getxkblayout | awk '/short/{ print $2 }'
