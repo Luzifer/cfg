@@ -29,6 +29,9 @@ separator_block_width=15
 markup=none
 
 
+[arch-update]
+interval=600
+
 [disk]
 interval=30
 
