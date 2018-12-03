@@ -3,4 +3,4 @@
 u=$(checkupdates | wc -l)
 [ $u -gt 0 ] || exit
 
-printf "\uf94f %d %s" $u $(/home/luzifer/bin/pluralize Update $u)
+printf "\uf94f %d %s" $u $(${HOME}/bin/pluralize Update $u)
