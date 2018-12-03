@@ -1,21 +1,18 @@
 #!/bin/bash
 set -euo pipefail
 
-BATTERY=/sys/class/power_supply/BAT0
-
 ac_conn=0
-
 for ac in $(find /sys/class/power_supply -type l -name 'A*'); do
 	[ $(cat "${ac}/online") -eq 1 ] && ac_conn=1
 done
 
 bat_cap=()
 for bat in $(find /sys/class/power_supply -type l -name 'B*'); do
-	bat_cap+="$(cat "${bat}/capacity")%"
+	bat_cap+=("$(cat "${bat}/capacity")%")
 done
 
 if [ ${ac_conn} -eq 0 ]; then
-	printf '\uf58d %s' ${bat_cap[@]}
+	printf '\uf58d %s' "${bat_cap[*]}"
 else
-	printf '\uf740 %s' ${bat_cap[@]}
+	printf '\uf740 %s' "${bat_cap[*]}"
 fi
