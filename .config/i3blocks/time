@@ -1,5 +1,6 @@
 #!/bin/bash
 
-printf '\uf5ec '
+DIFF=$(${HOME}/bin/tmux-chrony-timediff)
+[ -n "${DIFF}" ] && DIFF="(${DIFF})"
 
-date "+%Y-%m-%d %H:%M:%S"
+printf '\uf5ec %s %s' "$(date "+%Y-%m-%d %H:%M:%S")" "${DIFF}"
