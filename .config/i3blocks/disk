@@ -19,7 +19,7 @@ def main():
         (mountpoint, total, available) = line.split('\t')
         fs[mountpoint] = (total, available)
 
-    color = ''
+    color = '#50fa7b'
 
     strings = []
     for mount, data in fs.items():
@@ -35,19 +35,16 @@ def main():
         if float(data[0]) > 0.0:
             usage = (1 - float(data[1])/float(data[0])) * 100.0
 
-        strings.append('{}: {:.0f}%'.format(
-            mount,
-            usage,
-        ))
-
         if usage > CRIT:
             color = '#dd0000'
 
-    print('\ufaed '+'\n'.join([
-        '  '.join(strings),
-        '  '.join(strings),
-        color,
-    ]))
+        strings.append('<span color="#8FAAFC">{}</span>: <span color="{}">{:.0f}%</span>'.format(
+            mount,
+            color,
+            usage,
+        ))
+
+    print('\ufaed '+' '.join(strings))
 
 
 if __name__ == '__main__':

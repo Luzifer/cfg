@@ -26,7 +26,7 @@
 # Each block command defaults to the script name to avoid boilerplate.
 command=$HOME/.config/i3blocks/$BLOCK_NAME
 separator_block_width=15
-markup=none
+markup=pango
 
 
 [arch-update]
@@ -61,10 +61,3 @@ interval=10
 
 [time]
 interval=1
-separator=false
-separator_block_width=30
-
-
-[empty]
-command=echo " "
-interval=once

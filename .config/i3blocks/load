@@ -1,5 +1,31 @@
-#!/bin/bash
+#!/usr/bin/python
 
-printf '\uf085 '
+import multiprocessing
+import os
 
-uptime | sed 's/.*average: //'
+
+def load_fmt(load):
+    cores = multiprocessing.cpu_count()
+    color = '#ffffff'
+
+    if load > cores * 0.5:
+        color = '#FFD966'
+
+    if load > cores * 0.7:
+        color = '#dd0000'
+
+    return '<span color="{}">{:.2f}</span>'.format(color, load)
+
+
+def main():
+    load1, load5, load15 = os.getloadavg()
+
+    print('\uf085 {}, {}, {}'.format(
+        load_fmt(load1),
+        load_fmt(load5),
+        load_fmt(load15),
+    ))
+
+
+if __name__ == '__main__':
+    main()

@@ -1,4 +1,5 @@
 #!/bin/bash
+set -euo pipefail
 
 interface=$(ip a | grep 'wlp.*:' | sed -E 's/^[0-9]*: ([^:]+):.*/\1/')
 
@@ -15,4 +16,4 @@ network=$(iwgetid -r)
 # We found no network: Get out here
 [ -z "${network}" ] && exit
 
-printf "\uf1eb %s (%s)" ${network} ${ip}
+printf "\uf1eb <span color=\"#8FAAFC\">%s</span> <span color=\"#50fa7b\">(%s)</span>" ${network} ${ip}

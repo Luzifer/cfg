@@ -18,17 +18,13 @@ def main():
         if temp > max_temp:
             max_temp = temp
 
-    text = '\uf2c7 {:.1f}°C'.format(max_temp)
-    color = ''
-
+    color = '#ffffff'
     if max_temp > CRIT:
         color = '#dd0000'
 
-    print('\n'.join([
-        text,
-        text,
-        color,
-    ]))
+    text = '\uf2c7 <span color="{}">{:.1f}°C</span>'.format(color, max_temp)
+
+    print(text)
 
 
 if __name__ == '__main__':

@@ -8,7 +8,13 @@ done
 
 bat_cap=()
 for bat in $(find /sys/class/power_supply -type l -name 'B*'); do
-	bat_cap+=("$(cat "${bat}/capacity")%")
+	color='#ffffff'
+	cap=$(cat "${bat}/capacity")
+
+	[ ${cap} -lt 50 ] && color='#ffd966'
+	[ ${cap} -lt 25 ] && color='#dd0000'
+
+	bat_cap+=("<span color=\"${color}\">${cap}%</span>")
 done
 
 if [ ${ac_conn} -eq 0 ]; then

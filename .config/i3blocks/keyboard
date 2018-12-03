@@ -1,4 +1,5 @@
 #!/bin/bash
+set -euo pipefail
 
 which getxkblayout >/dev/null 2>/dev/null || {
 	printf '\uf071 getxkblayout package missing'
