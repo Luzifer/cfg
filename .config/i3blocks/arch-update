@@ -1,7 +1,24 @@
 #!/bin/bash
 set -euo pipefail
 
-u=$(checkupdates | wc -l)
-[ $u -gt 0 ] || exit
+req_restart_prefix=(
+	linux
+	systemd
+)
 
-printf "\uf94f %d %s" $u $(${HOME}/bin/pluralize Update $u)
+function get_grep() {
+	local IFS_bak="${IFS}"
+	IFS="|"
+	echo "${req_restart_prefix[*]}"
+	IFS="${IFS_bak}"
+}
+
+updates=$(checkupdates)
+
+num=$(echo "${updates}" | wc -l)
+[ $num -gt 0 ] || exit
+
+req_restart=""
+echo "${updates}" | grep -qE "^($(get_grep)) " && req_restart=' <span color="#dd0000">(reboot)</span>'
+
+printf "\uf94f %d %s%s" $num $(${HOME}/bin/pluralize Update $num) "${req_restart}"
