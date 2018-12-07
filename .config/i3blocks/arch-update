@@ -15,7 +15,7 @@ function get_grep() {
 
 updates=$(checkupdates)
 
-num=$(echo -n "${updates}" | wc -l)
+num=$(echo "${updates}" | grep -c -- '->')
 [ $num -gt 0 ] || exit
 
 req_restart=""
