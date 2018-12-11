@@ -4,4 +4,4 @@ set -euo pipefail
 DIFF=$(${HOME}/bin/tmux-chrony-timediff)
 [ -n "${DIFF}" ] && DIFF="(${DIFF})"
 
-printf '\uf5ec %s %s' "$(date "+%a %Y-%m-%d %H:%M:%S")" "${DIFF}"
+printf '\uf64f %s %s' "$(date "+%a %Y-%m-%d %H:%M:%S")" "${DIFF}"
