@@ -2,6 +2,7 @@
 set -euo pipefail
 
 req_restart_prefix=(
+	glibc
 	linux
 	systemd
 )
@@ -16,7 +17,6 @@ function get_grep() {
 updates=$(checkupdates)
 
 num=$(echo "${updates}" | grep -c -- '->')
-[ $num -gt 0 ] || exit
 
 req_restart=""
 echo "${updates}" | grep -qE "^($(get_grep)) " && req_restart=' <span color="#dd0000">(reboot)</span>'
