@@ -1,0 +1,5 @@
+#!/bin/bash
+set -euo pipefail
+
+xset dpms force off
+pgrep i3lock || i3lock -e -f -c 000000
