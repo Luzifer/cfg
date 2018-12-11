@@ -1,21 +1,29 @@
 #!/bin/bash
 set -euo pipefail
 
+IFS=$'\n'
+
 ac_conn=0
-for ac in $(find /sys/class/power_supply -type l -name 'A*'); do
-	[ $(cat "${ac}/online") -eq 1 ] && ac_conn=1
-done
+(acpi -a | grep -q on-line) && ac_conn=1
 
 bat_cap=()
-for bat in $(find /sys/class/power_supply -type l -name 'B*'); do
+for line in $(acpi -b | grep -v 'unavailable' | sed -E 's/.*: ([^,]+), ([0-9]+)%(, ([0-9]+:[0-9]+|)|).*/\1\t\2\t\4/'); do
 	color='#ffffff'
-	cap=$(cat "${bat}/capacity")
+
+	state=$(echo "${line}" | cut -d $'\t' -f 1)
+	cap=$(echo "${line}" | cut -d $'\t' -f 2)
+	remain="($(echo "${line}" | cut -d $'\t' -f 3)) "
+
+	[[ ${state} == 'Full' ]] && remain=''
+	[[ ${remain} == '() ' ]] && remain='(??) '
 
 	[ ${cap} -lt 50 ] && color='#ffd966'
 	[ ${cap} -lt 25 ] && color='#dd0000'
 
-	bat_cap+=("<span color=\"${color}\">${cap}%</span>")
+	bat_cap+=("<span color=\"${color}\">${cap}% ${remain}</span>")
 done
+
+IFS=' '
 
 if [ ${ac_conn} -eq 0 ]; then
 	printf '\uf58d %s' "${bat_cap[*]}"
