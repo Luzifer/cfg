@@ -16,9 +16,19 @@ function get_grep() {
 
 updates=$(checkupdates)
 
-num=$(echo "${updates}" | grep -c -- '->')
+num=$(echo "${updates}" | grep -c -- '->' || true)
 
-req_restart=""
-echo "${updates}" | grep -qE "^($(get_grep)) " && req_restart=' <span color="#dd0000">(reboot)</span>'
+# No updates: Gray
+color="#7f7f7f"
+display_num=""
 
-printf "\uf94f %d %s%s" $num $(${HOME}/bin/pluralize Update $num) "${req_restart}"
+# Normal updates: White
+[ $num -gt 0 ] && {
+	color="#ffffff"
+	display_num="${num}"
+}
+
+# Requires reboot: Red
+(echo "${updates}" | grep -qE "^($(get_grep))") && color="#dd0000"
+
+printf '<span color="%s">\uf94f %s</span>' "${color}" "${display_num}"
