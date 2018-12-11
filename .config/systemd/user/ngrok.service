@@ -1,0 +1,13 @@
+[Unit]
+Description=ngrok port forwarding
+
+[Service]
+TimeoutStartSec=0
+TimeoutStopSec=0
+Restart=on-failure
+RestartSec=5
+ExecStartPre=/bin/bash -c 'if ! [ -e /home/luzifer/.bin/ngrok ]; then mkdir -p /home/luzifer/.bin && curl -sSLo /tmp/ngrok.zip https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip && unzip -q /tmp/ngrok.zip -d /home/luzifer/.bin && rm /tmp/ngrok.zip; fi'
+ExecStart=/home/luzifer/.bin/ngrok start --none
+
+[Install]
+WantedBy=default.target

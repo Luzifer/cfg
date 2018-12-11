@@ -1,0 +1,5 @@
+[Service]
+ExecStart=/usr/bin/ssh-agent -D -a "${HOME}/.ssh/ssh_auth_sock"
+
+[Install]
+WantedBy=default.target
