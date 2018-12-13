@@ -4,6 +4,10 @@ COLOR_CYAN="\033[0;36m"
 COLOR_YELLOW="\033[0;33m"
 COLOR_PLAIN="\033[0m"
 
+function check_util() {
+	which ${1} >/dev/null 2>&1 || fail "Missing ${1} util"
+}
+
 function error() {
 	echo -e "${COLOR_RED}$@${COLOR_PLAIN}" >&2
 }
@@ -22,7 +26,7 @@ function info() {
 }
 
 function step() {
-	info "[$(date +%H:%M:%S)] $@"
+	info "[$(date +%H:%M:%S)] $(printf "%${script_level:-0}s" '' | tr ' ' '+')$@"
 }
 
 function success() {
