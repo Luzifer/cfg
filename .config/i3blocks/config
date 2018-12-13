@@ -29,6 +29,9 @@ separator_block_width=15
 markup=pango
 
 
+[mpc]
+interval=5
+
 [arch-update]
 interval=600
 

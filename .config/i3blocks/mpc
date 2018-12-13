@@ -1,0 +1,22 @@
+#!/bin/bash
+set -euo pipefail
+
+[ $(mpc | wc -l) -eq 1 ] && {
+	printf '<span color="#7f7f7f">\uf9da</span>'
+	exit
+}
+
+title=$(mpc | head -n1 | tr -cd "[:print:]")
+state=$(mpc | grep '^\[' | sed -E 's/^\[(.+)\].*/\1/')
+
+case ${state} in
+playing)
+	printf '\uf909 <span color="#8faafc">%s</span>' "${title}"
+	;;
+paused)
+	printf '\uf8e3 <span color="#7f7f7f">%s</span>' "${title}"
+	;;
+*)
+	printf '<span color="#dd0000">State: %s Title: %s<span>' ${state} "${title}"
+	;;
+esac
