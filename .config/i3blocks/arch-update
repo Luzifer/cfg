@@ -25,10 +25,10 @@ display_num=""
 # Normal updates: White
 [ $num -gt 0 ] && {
 	color="#ffffff"
-	display_num="${num}"
+	display_num=" ${num}"
 }
 
 # Requires reboot: Red
 (echo "${updates}" | grep -qE "^($(get_grep))") && color="#dd0000"
 
-printf '<span color="%s">\uf94f %s</span>' "${color}" "${display_num}"
+printf '<span color="%s">\uf94f%s</span>' "${color}" "${display_num}"
