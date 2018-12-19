@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-scrot /tmp/screen.png
+maim -u /tmp/screen.png
 convert /tmp/screen.png -scale 5% -scale 2000% /tmp/screen.png
 
 if [[ -f ${HOME}/.config/screen-lock.png ]]; then
