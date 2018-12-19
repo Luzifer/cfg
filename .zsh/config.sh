@@ -44,7 +44,7 @@ alias pushgallery='vault2env --key=secret/aws/private -- gallery --storage s3://
 alias :q='exit'
 alias repo-add='repo-add -s --key D0391BF9'
 alias repo-remove='repo-remove -s --key D0391BF9'
-alias scrot="scrot --border --select --silent ~/Downloads/screenshot-%Y%m%d-%H%M%S.png"
+alias scrot='maim -s -u ~/Downloads/screenshot-$(%Y%m%d-%H%M%S).png'
 alias share='AWS_REGION=us-east-1 vault2env --key=secret/aws/private -- share --bucket=share-luzifer-io-s3bucket-164ztrtyq1f35 --base-path="file/{{ printf \"%.8s\" .Hash}}" --base-url="https://knut.cc/#" --progress'
 alias shfmt='shfmt -d -s -ci'
 alias terraria='docker run --rm -ti -v /home/luzifer/tmp/terraria:/data -p 7777:7777 luzifer/terraria'
