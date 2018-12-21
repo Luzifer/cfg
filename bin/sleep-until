@@ -1,0 +1,12 @@
+#!/bin/bash
+set -euo pipefail
+
+source ${HOME}/bin/script_framework.sh
+
+time=${1:-}
+[ -z "${time}" ] && fail "No time specified"
+
+tdiff=$(($(date -d "$1" +%s) - $(date +%s)))
+step "Sleeping ${tdiff}s until ${time}..."
+
+sleep ${tdiff}
