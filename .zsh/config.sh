@@ -35,7 +35,7 @@ alias clasp='docker run --rm -ti -v ~/.config/clasp:/home/node -v $(pwd):$(pwd) 
 alias envrun='envrun --log-level=error'
 alias ffmpeg='dtool ffmpeg'
 alias firebase='docker run --rm -ti -v ~/.config/firebase:/home/node/.config -v $(pwd):$(pwd) -w $(pwd) luzifer/firebase-tools'
-alias gometalinter='gometalinter --enable-all -D aligncheck -D errcheck -D lll -D gas -D gochecknoglobals -D gochecknoinits -E misspell --cyclo-over=15 -e bindata.go --vendor'
+alias gometalinter='gometalinter --enable-all -D aligncheck -D errcheck -D lll -D gas -D gochecknoglobals -D gochecknoinits -D dupl -D unparam -E misspell --cyclo-over=15 -e bindata.go --vendor'
 alias gsdk='docker run --rm -ti -v "${HOME}/.config/gcloud:/root/.config/gcloud" -v "${HOME}/.config/gcloud_ssh:/root/.ssh" -v $(pwd):$(pwd) -w $(pwd) google/cloud-sdk:alpine'
 alias htpasswd='python3 -c "import crypt; import sys; print(crypt.crypt(sys.argv[1], crypt.mksalt(crypt.METHOD_SHA512)));"'
 alias mysql='docker run --rm -ti -v $(pwd):$(pwd) -w $(pwd) mysql bash'
