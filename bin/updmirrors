@@ -1,0 +1,27 @@
+#!/bin/bash
+set -euo pipefail
+
+source ${HOME}/bin/script_framework.sh
+
+check_util rankmirrors # from pacman-contrib
+
+outfile=/etc/pacman.d/mirrorlist
+oldlist=/etc/pacman.d/mirrorlist.bak
+
+if [ $(id -u) -eq 0 ]; then
+	step "Creating backup of current mirrorlist"
+	cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.bak
+else
+	outfile=/tmp/mirrors.rank
+	oldlist=/etc/pacman.d/mirrorlist
+	warn "Not running as root, new mirrorlist will be written to ${outfile}"
+fi
+
+step "Measuring mirror speed, searching 5 fastest mirrors"
+curl -s "https://www.archlinux.org/mirrorlist/?country=all&protocol=https&use_mirror_status=on" |
+	sed -e 's/^#Server/Server/' -e '/^#/d' |
+	rankmirrors -n 5 - |
+	tee ${outfile}
+
+step "Generating diff from old to new mirrorlist"
+diff -wu ${oldlist} ${outfile}
