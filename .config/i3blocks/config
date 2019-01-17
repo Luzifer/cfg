@@ -32,6 +32,9 @@ markup=pango
 [mpc]
 interval=5
 
+[github]
+interval=300
+
 [arch-update]
 interval=600
 
