@@ -28,4 +28,7 @@ if [[ -f ${HOME}/.config/screen-lock.png ]]; then
 	done
 fi
 
+# Stop MPD playback when mpc client was found
+(which mpc >/dev/null 2>&1) && mpc stop
+
 i3lock -e -f -n -i /tmp/screen.png
