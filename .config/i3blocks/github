@@ -1,6 +1,8 @@
 #!/bin/bash
 set -euo pipefail
 
+[ -f ${HOME}/.config/i3blocks/.env ] && source ${HOME}/.config/i3blocks/.env
+
 # Get token from vault
 gh_token=$(vault read -field=token secret/private/github/notifications)
 [ -z "${gh_token}" ] && exit 1
