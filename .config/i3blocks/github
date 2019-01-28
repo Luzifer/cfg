@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # In case we got a click, open the notifications page
-[ -n "${BLOCK_BUTTON}" ] && xdg-open "https://github.com/notifications" >/dev/null 2>&1
+[ -n "${BLOCK_BUTTON:-}" ] && xdg-open "https://github.com/notifications" >/dev/null 2>&1
 
 [ -f ${HOME}/.config/i3blocks/.env ] && source ${HOME}/.config/i3blocks/.env
 
