@@ -29,7 +29,7 @@ verify)
 		echo
 		echo '/!\ ATTENTION: SIGNATURE MISMATCH! /!\'
 		echo
-		diff -wu /boot/files.sha512 /tmp/files.sha512
+		diff -wu --color /boot/files.sha512 /tmp/files.sha512
 
 		exit 1
 	}
