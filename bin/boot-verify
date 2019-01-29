@@ -1,0 +1,36 @@
+#!/bin/bash
+set -euo pipefail
+
+# Needs to run as root to get all hashes
+[ $(id -u) -eq 0 ] || exec sudo $0 "$@"
+
+# Read command from CLI
+cmd=${1:-verify}
+KEY=${KEY:-6A64A47A}
+signature_file=/boot/files.sig
+
+case "${cmd}" in
+
+# Create a new signature file
+sign)
+	find /boot -type f -! -name 'files.sig' -exec sha512sum '{}' \; |
+		gpg --output ${signature_file} --detach-sign
+	;;
+
+# Verify signature file
+verify)
+	[ -f ${signature_file} ] || {
+		echo "Signature file not yet initialized. Use '$0 sign'"
+		exit 1
+	}
+
+	find /boot -type f -! -name 'files.sig' -exec sha512sum '{}' \; |
+		gpg --verify ${signature_file} -
+	;;
+
+*)
+	echo "Unsupported command '${cmd}': $0 <sign|verify>"
+	exit 1
+	;;
+
+esac
