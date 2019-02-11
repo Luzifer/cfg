@@ -47,6 +47,7 @@ alias repo-remove='repo-remove -s --key D0391BF9'
 alias scrot='maim -s -u ~/Downloads/screenshot-$(%Y%m%d-%H%M%S).png'
 alias share='AWS_REGION=us-east-1 vault2env --key=secret/aws/private -- share --bucket=share-luzifer-io-s3bucket-164ztrtyq1f35 --base-path="file/{{ printf \"%.8s\" .Hash}}" --base-url="https://knut.cc/#" --progress'
 alias shfmt='shfmt -d -s -ci'
+alias ssh='ssh-key-host'
 alias terraria='docker run --rm -ti -v /home/luzifer/tmp/terraria:/data -p 7777:7777 luzifer/terraria'
 
 ## Initialize GPG agent
