@@ -1,0 +1,26 @@
+#!/bin/bash
+set -euo pipefail
+
+source ${HOME}/bin/script_framework.sh
+
+ydl=$(which youtube-dl)
+yurl=${1:-}
+
+[ -n "${ydl}" ] || fail "Missing youtube-dl command"
+[ -n "${yurl}" ] || fail "Missing YouTube URL"
+
+step "Fetching video information..."
+title=$(${ydl} -e ${yurl})
+playlist=$(${ydl} -g ${yurl})
+
+step "Writing playlist..."
+cat -s <<EOF >${HOME}/.config/mpd/playlists/mpc-yt.m3u
+#EXTM3U
+#EXTINF:0,${title}
+${playlist}
+EOF
+
+step "Loading playlist and starting playback..."
+mpc clear
+mpc load mpc-yt
+mpc play
