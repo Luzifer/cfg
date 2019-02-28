@@ -6,7 +6,7 @@ set -euo pipefail
 	exit
 }
 
-title=$(mpc | head -n1 | tr -cd "[:print:]" | cut -c 1-75)
+title=$(mpc | head -n1 | tr -cd "[:print:]")
 state=$(mpc | grep '^\[' | sed -E 's/^\[(.+)\].*/\1/')
 
 case ${state} in
