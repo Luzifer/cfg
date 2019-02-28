@@ -1,13 +1,22 @@
 #!/bin/bash
 set -euo pipefail
 
+declare -A streamalias
+
 source ${HOME}/bin/script_framework.sh
+
+[ -f ${HOME}/.config/mpc-yt.cfg ] && source ${HOME}/.config/mpc-yt.cfg
 
 ydl=$(which youtube-dl)
 yurl=${1:-}
 
 [ -n "${ydl}" ] || fail "Missing youtube-dl command"
 [ -n "${yurl}" ] || fail "Missing YouTube URL"
+
+[ -n "${streamalias[${yurl}]:-}" ] && {
+	info "Found alias \"${yurl}\", continuing with configured URL \"${streamalias[${yurl}]}\""
+	yurl=${streamalias[${yurl}]}
+}
 
 step "Fetching video information..."
 title=$(${ydl} -e ${yurl})
