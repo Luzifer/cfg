@@ -56,8 +56,11 @@ interval=30
 [load]
 interval=30
 
+[vpn]
+interval=5
+
 [wifi]
-interval=30
+interval=5
 
 [battery]
 interval=10
