@@ -19,6 +19,7 @@ packages:
   - name: github.com/Luzifer/vault-user-token
 
   # Other tools
+  - name: github.com/bradleyfalzon/revgrep/...
   - name: github.com/fatih/hclfmt
   - name: github.com/fiatjaf/jiq/cmd/jiq
   - name: github.com/genuinetools/reg
@@ -28,7 +29,7 @@ packages:
   - name: github.com/Luzifer/duplicity-backup
   - name: github.com/Luzifer/gen-dockerfile
   - name: github.com/Luzifer/git-changerelease
-  - name: github.com/Luzifer/password
+  - name: github.com/Luzifer/password/cmd/password
   - name: github.com/Luzifer/share
   - name: github.com/Luzifer/short_path
   - name: github.com/Luzifer/slugify
