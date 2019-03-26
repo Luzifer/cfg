@@ -1,34 +1,9 @@
 #!/bin/bash
 set -euo pipefail
 
-maim -u /tmp/screen.png
-convert /tmp/screen.png -scale 5% -scale 2000% /tmp/screen.png
-
-if [[ -f ${HOME}/.config/screen-lock.png ]]; then
-	# placement x/y
-	px=0
-	py=0
-	# lockscreen image info
-	r=$(file ${HOME}/.config/screen-lock.png | grep -o '[0-9]* x [0-9]*')
-	rx=$(echo $r | cut -d' ' -f 1)
-	ry=$(echo $r | cut -d' ' -f 3)
-
-	sr=$(xrandr --query | grep ' connected' | sed 's/primary //' | cut -f3 -d' ')
-	for res in $sr; do
-		# monitor position/offset
-		srx=$(echo $res | cut -d'x' -f 1)                   # x pos
-		sry=$(echo $res | cut -d'x' -f 2 | cut -d'+' -f 1)  # y pos
-		srox=$(echo $res | cut -d'x' -f 2 | cut -d'+' -f 2) # x offset
-		sroy=$(echo $res | cut -d'x' -f 2 | cut -d'+' -f 3) # y offset
-		px=$((srox + srx / 2 - rx / 2))
-		py=$((sroy + sry / 2 - ry / 2))
-
-		convert /tmp/screen.png ${HOME}/.config/screen-lock.png -geometry +$px+$py -composite -matte /tmp/screen.png
-		echo "done"
-	done
-fi
+[ -f ${HOME}/.local/share/screen-lock.png ] || ${HOME}/bin/generate_lockscreen
 
 # Stop MPD playback when mpc client was found
 (which mpc >/dev/null 2>&1) && mpc stop
 
-i3lock -e -f -n -i /tmp/screen.png
+i3lock -e -f -n -i ${HOME}/.local/share/screen-lock.png

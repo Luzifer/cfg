@@ -1,0 +1,7 @@
+[Unit]
+Description=Generate a new lockscreen image
+
+[Service]
+Type=oneshot
+
+ExecStart=/home/luzifer/bin/generate_lockscreen

@@ -1,0 +1,143 @@
+#!/usr/bin/env python
+
+import re
+import shutil
+import subprocess
+import sys
+import tempfile
+import os
+
+LOGO_RES_QUERY = r'([0-9]+) x ([0-9]+)'
+SCREEN_RES_QUERY = r'connected (?:primary |)([0-9]+)x([0-9]+)\+([0-9]+)\+([0-9]+)'
+
+
+def blur_canvas(tempdir):
+    subprocess.check_call([
+        'convert',
+        get_canvas_filename(tempdir),
+        '-gaussian-blur', '0x4',
+        get_canvas_filename(tempdir),
+    ])
+
+
+def cleanup(tempdir):
+    shutil.rmtree(tempdir)
+
+
+def create_canvas(tempdir, resolutions):
+    w, h = get_canvas_size(resolutions)
+    subprocess.check_call([
+        'convert',
+        '-size', '{}x{}'.format(w, h),
+        'xc:none',
+        get_canvas_filename(tempdir),
+    ])
+
+
+def get_canvas_filename(tempdir):
+    return os.path.join(tempdir, 'canvas.png')
+
+
+def get_canvas_size(resolutions):
+    w, h = 0, 0
+
+    for res in resolutions:
+        w = max(w, res['x']+res['w'])
+        h = max(h, res['y']+res['h'])
+
+    return (w, h)
+
+
+def get_image_resolutions():
+    resolutions = []
+
+    for line in subprocess.check_output(['xrandr', '--query']).decode('utf-8').split('\n'):
+        res = re.search(SCREEN_RES_QUERY, line)
+        if res is None:
+            continue
+
+        resolutions.append({
+            'w': int(res.group(1)),
+            'h': int(res.group(2)),
+            'x': int(res.group(3)),
+            'y': int(res.group(4)),
+        })
+
+    return resolutions
+
+
+def move_image(tempdir):
+    filename = os.path.expanduser('~/.local/share/screen-lock.png')
+
+    os.makedirs(os.path.dirname(filename), exist_ok=True)
+    shutil.move(get_canvas_filename(tempdir), filename)
+
+
+def render_base_on_canvas(tempdir, res):
+    url = 'https://source.unsplash.com/{w}x{h}/?nature,water'.format(**res)
+
+    subprocess.check_call([
+        'convert',
+        get_canvas_filename(tempdir),
+        url,
+        '-geometry', '+{x}+{y}'.format(**res),
+        '-composite', '-matte',
+        get_canvas_filename(tempdir),
+    ])
+
+
+def render_logo_on_canvas(tempdir, res):
+    filename = os.path.expanduser('~/.config/screen-lock.png')
+    if not os.path.exists(filename):
+        return
+
+    lres = re.search(LOGO_RES_QUERY, subprocess.check_output(
+        ['file', filename]).decode('utf-8'))
+
+    if lres is None:
+        return
+
+    geo = {
+        'x': res['x']+res['w']/2-int(lres.group(1))/2,
+        'y': res['y']+res['h']/2-int(lres.group(2))/2,
+    }
+
+    subprocess.check_call([
+        'convert',
+        get_canvas_filename(tempdir),
+        filename,
+        '-geometry', '+{x}+{y}'.format(**geo),
+        '-composite', '-matte',
+        get_canvas_filename(tempdir),
+    ])
+
+
+def main():
+    tempdir = tempfile.mkdtemp()
+
+    try:
+        resolutions = get_image_resolutions()
+        create_canvas(tempdir, resolutions)
+
+        for res in resolutions:
+            render_base_on_canvas(tempdir, res)
+
+        blur_canvas(tempdir)
+
+        for res in resolutions:
+            render_logo_on_canvas(tempdir, res)
+
+        move_image(tempdir)
+
+        return 0
+
+    except Exception as e:
+        print('Something went wrong:\n{}'.format(e))
+        return 1
+
+    finally:
+        cleanup(tempdir)
+
+
+if __name__ == '__main__':
+    sys.exit(main())

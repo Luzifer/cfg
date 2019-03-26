@@ -1,0 +1,9 @@
+[Unit]
+Description=Generate a new lockscreen image
+After=network-online.target
+
+[Timer]
+OnCalendar=*:0
+
+[Install]
+WantedBy=timers.target
