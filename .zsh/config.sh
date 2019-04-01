@@ -9,7 +9,7 @@ source $HOME/.zsh/go-binaries.sh
 export PATH=$PATH:$HOME/.local/bin
 
 ## Some default settings
-export EDITOR=/usr/bin/vim
+export EDITOR=/usr/bin/nvim
 export BROWSER=/bin/echo # enable usage of `hub browse` on remote machines
 export AUTOGOPATH_DEFAULT=$HOME/gocode
 export ANSIBLE_NOCOWS=1
