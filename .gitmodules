@@ -1,6 +1,6 @@
 [submodule ".zsh/oh-my-zsh"]
 	path = .zsh/oh-my-zsh
 	url = https://github.com/robbyrussell/oh-my-zsh.git
-[submodule ".vim"]
-	path = .vim
+[submodule ".config/nvim"]
+	path = .config/nvim
 	url = git@github.com:Luzifer/vim.git
