@@ -1,0 +1,56 @@
+#!/bin/bash
+set -euo pipefail
+
+sniplet_dir="${HOME}/.config/sniplet"
+tmpdir=$(mktemp -d)
+
+function cleanup() {
+	rm -rf ${tmpdir}
+}
+trap cleanup EXIT
+
+# In case the directory does not exist create it
+[ -d "${sniplet_dir}" ] || {
+	mkdir "${sniplet_dir}"
+}
+
+# Find sniplet files
+names=$(find "${sniplet_dir}" -type f | sed "s|${sniplet_dir}||" | sort)
+
+# Let the user select one of them
+name=$(
+	zenity \
+		--list \
+		--title="Sniplet" \
+		--width=275 \
+		--height=400 \
+		--column=Sniplet \
+		${names}
+)
+sniplet="${sniplet_dir}/${name}"
+
+# Check presence of the sniplet
+[ -f "${sniplet}" ] || {
+	zenity --error --text="Sniplet has gone away"
+	exit 1
+}
+
+# Store clipboard away
+xsel -b -o >"${tmpdir}/b"
+xsel -p -o >"${tmpdir}/p"
+
+# Render the sniplet using korvike for templating
+korvike -i "${sniplet}" -o "${tmpdir}/s"
+
+# Set clipboard with sniplet
+xsel -b -i <"${tmpdir}/s"
+xsel -p -i <"${tmpdir}/s"
+
+# Do the paste magic
+sleep 0.3
+xdotool key shift+Insert
+sleep 0.5
+
+# Restore clipboard
+xsel -b -i <"${tmpdir}/b"
+xsel -p -i <"${tmpdir}/p"
