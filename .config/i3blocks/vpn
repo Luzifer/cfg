@@ -8,7 +8,7 @@ import yaml
 
 def check_ping_reachable(ip):
     try:
-        subprocess.check_call(['ping', '-c2', ip],
+        subprocess.check_call(['ping', '-c2', '-W1', ip],
                               stdout=subprocess.DEVNULL,
                               stderr=subprocess.DEVNULL)
         return True
@@ -31,7 +31,7 @@ def main():
     results = [config['prefix']]
 
     for check in config['checks']:
-        if check_service_active(check['service']) and check_ping_reachable(check['ip']):
+        if check_ping_reachable(check['ip']):
             check['color'] = config['colors']['success']
         else:
             check['color'] = config['colors']['failure']
