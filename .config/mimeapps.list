@@ -1,0 +1,14 @@
+[Default Applications]
+application/xhtml_xml=brave-beta-bin.desktop;
+image/webp=brave-beta-bin.desktop;
+text/html=brave-beta-bin.desktop;
+text/xml=brave-beta-bin.desktop;
+x-scheme-handler/about=brave-beta-bin.desktop
+x-scheme-handler/ftp=brave-beta-bin.desktop;
+x-scheme-handler/http=brave-beta-bin.desktop;
+x-scheme-handler/https=brave-beta-bin.desktop;
+x-scheme-handler/irc=brave-beta-bin.desktop
+x-scheme-handler/ircs=brave-beta-bin.desktop
+x-scheme-handler/mailto=brave-beta-bin.desktop
+x-scheme-handler/unknown=brave-beta-bin.desktop
+x-scheme-handler/webcal=brave-beta-bin.desktop
