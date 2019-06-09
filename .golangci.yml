@@ -1,0 +1,28 @@
+# Derived from https://github.com/golangci/golangci-lint/blob/master/.golangci.example.yml
+
+---
+
+run:
+  skip-files:
+    - bindata.go
+
+output:
+  format: tab
+
+linters-settings:
+  gocyclo:
+    # minimal code complexity to report, 30 by default (but we recommend 10-20)
+    min-complexity: 15
+
+linters:
+  enable-all: true
+  disable:
+    - dupl              # Generally a good thing, just too picky
+    - errcheck          # Covered by GAS in a better way so don't bother me
+    - gochecknoglobals  # I object this one: Globals are not always a bad thing
+    - gochecknoinits    # I also object this one: Sometimes init functions make sense
+    - interfacer        # Too eager: I don't always pass interfaces but sometimes specific types
+    - lll               # GTFO my lawn.
+    - unparam           # This one complains about parameters expected for interface implementations
+
+...
