@@ -24,5 +24,6 @@ linters:
     - interfacer        # Too eager: I don't always pass interfaces but sometimes specific types
     - lll               # GTFO my lawn.
     - unparam           # This one complains about parameters expected for interface implementations
+    - maligned          # I sort structs my way.
 
 ...
