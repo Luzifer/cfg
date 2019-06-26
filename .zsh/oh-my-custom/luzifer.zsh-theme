@@ -94,6 +94,13 @@ function build_git_prompt() {
 	echo -n "%{$reset_color%} ${bracket_close}"
 }
 
+function prompt_gomod() {
+	local mod_default="auto"
+	local mod=${GO111MODULE:-${mod_default}}
+
+	[[ ${mod} == ${mod_default} ]] || echo "${bracket_open} %{$fg[yellow]%}${mod} ${bracket_close}"
+}
+
 local current_dir='$(short_path)'
 local git_info='$(build_git_prompt)'
 
@@ -106,9 +113,10 @@ local prompt_part_path="%{$terminfo[bold]$FG[226]%}${current_dir}%{$reset_color%
 local prompt_part_exit="%(?..${bracket_open} %{$fg[red]%}%?%{${reset_color}%} ${bracket_close})"
 local prompt_part_char='$(prompt_char)'
 local prompt_part_configgit='$(config-git_prompt)'
+local prompt_part_gomod='$(prompt_gomod)'
 
 PROMPT="
-╭─ ${prompt_part_time}${prompt_part_user}${prompt_part_configgit}${prompt_part_exit} ${prompt_part_path}
+╭─ ${prompt_part_time}${prompt_part_user}${prompt_part_configgit}${prompt_part_gomod}${prompt_part_exit} ${prompt_part_path}
 ╰─ "
 
 RPROMPT="${git_info}"
