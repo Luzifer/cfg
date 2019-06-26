@@ -8,6 +8,15 @@ source $HOME/.zsh/go-binaries.sh
 ## Local installed pip package binaries
 export PATH=$PATH:$HOME/.local/bin
 
+## Make join_by function globally available
+function join_by() {
+	local d=$1
+	shift
+	echo -n "$1"
+	shift
+	printf "%s" "${@/#/$d}"
+}
+
 ## Some default settings
 export EDITOR=/usr/bin/nvim
 export BROWSER=/bin/echo # enable usage of `hub browse` on remote machines
