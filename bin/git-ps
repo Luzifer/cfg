@@ -1,31 +1,36 @@
 #!/bin/bash
-
-set -o pipefail
-set -e
+set -euo pipefail
 
 source "${HOME}/bin/script_framework.sh"
+
+jump_branch="${1:-}"
 
 step "Loading required keys to pull"
 git loadkey
 
 step "Fetching data from remote..."
 for remote in $(git remote -v | awk '{print $1}' | sort | uniq); do
-  step "+++ Remote: '${remote}'"
-  git fetch -p ${remote} --tags
+	step "+++ Remote: '${remote}'"
+	git fetch -p ${remote} --tags
 done
+
+[[ -z ${jump_branch} ]] || {
+	step "Switching to branch ${jump_branch}"
+	git checkout "${jump_branch}"
+}
 
 step "Rebasing branch / updating submodules..."
 git pull --rebase && git submodule update --init --recursive
 
 step "Cleaning local branches..."
 for branch in $(git branch --merged | grep -v '^*'); do
-  # Do not delete master as the main branch
-  if (test "${branch}" != "master"); then
-    git branch -d ${branch}
-  fi
+	# Do not delete master as the main branch
+	if (test "${branch}" != "master"); then
+		git branch -d ${branch}
+	fi
 done
 
 step "Removing local branches where remote branch is gone..."
 if (git branch -vv | grep -q ': gone]'); then
-  git branch -vv | awk '/: gone]/{print $1}' | xargs git branch -D
+	git branch -vv | awk '/: gone]/{print $1}' | xargs git branch -D
 fi
