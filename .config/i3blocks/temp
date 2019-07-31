@@ -1,22 +1,52 @@
 #!/usr/bin/env python
 
+import json
 import re
 import subprocess
 
 CRIT = 70.0
 
+CHIP_BLACKLIST = []
+SENSOR_BLACKLIST = [r'^AUXTIN[0-9]']
+
+
+def in_blacklist(identifier, blacklist):
+    for entry in blacklist:
+        if entry == identifier or re.match(entry, identifier):
+            return True
+    return False
+
 
 def main():
-    sensors = subprocess.check_output(['sensors', '-u']).decode('utf-8')
+    sensors_data = json.loads(subprocess.check_output(
+        ['sensors', '-j']).decode('utf-8'))
 
     max_temp = 0.0
-    for line in sensors.split('\n'):
-        if not re.match(r'.*temp._input:.*', line):
-            continue
-        temp = float(line.split(':')[1])
+    # for line in sensors.split('\n'):
+    #    if not re.match(r'.*temp._input:.*', line):
+    #        continue
+    #    temp = float(line.split(':')[1])
 
-        if temp > max_temp:
-            max_temp = temp
+    #    if temp > max_temp:
+    #        max_temp = temp
+
+    for chip, sensors in sensors_data.items():
+        if in_blacklist(chip, CHIP_BLACKLIST):
+            continue
+
+        for sensor, readings in sensors.items():
+            if in_blacklist(sensor, SENSOR_BLACKLIST):
+                continue
+
+            if type(readings) == str:
+                continue
+
+            for name, value in readings.items():
+                if not re.match(r'^temp._input$', name):
+                    continue
+
+                if value > max_temp:
+                    max_temp = value
 
     color = '#ffffff'
     if max_temp > CRIT:
