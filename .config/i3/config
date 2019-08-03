@@ -171,7 +171,7 @@ bindsym $mod+r mode "resize"
 
 bar {
   position top
-  status_command i3blocks
+  status_command envrun --env-file ${HOME}/.config/i3blocks.env -- i3blocks
   #status_command 2>/tmp/i3blocks.err i3blocks -vvv | tee /tmp/i3blocks.out
 }
 
