@@ -1,0 +1,70 @@
+#!/usr/bin/env python3
+
+import json
+import os
+import subprocess
+
+from block import *
+
+import requests
+
+ICON = '\ufa6d'
+MONDASH_URL = 'https://mondash.org/{dashid}'
+STATUS_COLOR = {
+    'OK': COLOR_SUCCESS,
+    'Warning': COLOR_WARNING,
+    'Critical': COLOR_DANGER,
+    'Unknown': COLOR_SECONDARY,
+}
+
+
+class Mondash(Block):
+    def dashid(self):
+        id = self.instance()
+
+        if id.startswith('$env_'):
+            id = os.environ[id[5:]]
+
+        return id
+
+    def execute(self):
+        if self.button_is(BTN_LEFT):
+            subprocess.check_call([
+                'xdg-open',
+                MONDASH_URL.format(dashid=self.dashid()),
+            ])
+
+        result = []
+
+        for status, count in self.get_counts().items():
+            if count == 0:
+                continue
+
+            color = STATUS_COLOR[status]
+
+            result.append(self.color_text(str(count), color))
+
+        return ' / '.join(result)
+
+    def get_counts(self):
+        counts = {'OK': 0, 'Warning': 0, 'Critical': 0, 'Unknown': 0}
+
+        url = MONDASH_URL.format(dashid=self.dashid()) + '.json'
+        data = requests.get(url).json()
+
+        if not 'metrics' in data:
+            raise Exception('No metrics block found in result data')
+
+        for metric in data['metrics']:
+            counts[metric['status']] += 1
+
+        return counts
+
+
+def main():
+    block = Mondash(ICON)
+    block.render()
+
+
+if __name__ == '__main__':
+    main()

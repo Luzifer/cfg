@@ -32,6 +32,14 @@ markup=pango
 [mpc]
 interval=5
 
+[mondash]
+instance=$env_MONDASH_PRIVATE
+interval=30
+
+[mondash]
+instance=$env_MONDASH_ARCHNAS
+interval=30
+
 [github]
 interval=300
 
