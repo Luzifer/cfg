@@ -172,6 +172,7 @@ bindsym $mod+r mode "resize"
 bar {
   position top
   status_command i3blocks
+  #status_command 2>/tmp/i3blocks.err i3blocks -vvv | tee /tmp/i3blocks.out
 }
 
 # Start i3bar to display a workspace bar (plus the system information i3status
