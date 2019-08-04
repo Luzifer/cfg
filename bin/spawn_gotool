@@ -1,0 +1,18 @@
+#!/bin/bash
+set -euo pipefail
+
+PKG=${1:-}
+
+[[ -n ${PKG} ]] || {
+	echo "Usage: $0 <package>" >&2
+	exit 1
+}
+
+cat -s <<EOF | docker run --rm -i -e CGO_ENABLED=0 -v "$(pwd):$(pwd)" golang:alpine sh -ex -
+apk --no-cache add git
+
+go get -v ${PKG}
+chown $(id -u):$(id -g) /go/bin/*
+
+mv /go/bin/* $(pwd)
+EOF
