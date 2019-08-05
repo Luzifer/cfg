@@ -32,6 +32,9 @@ markup=pango
 [mpc]
 interval=5
 
+[spotify]
+interval=5
+
 [mondash]
 instance=$env_MONDASH_PRIVATE
 interval=30

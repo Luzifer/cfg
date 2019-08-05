@@ -1,0 +1,65 @@
+#!/usr/bin/env python3
+
+import dbus
+
+from block import *
+
+ICON = "\uf1bc"
+
+
+class Spotify(Block):
+    def __init__(self, icon=None, icon_color=None):
+        super().__init__(icon, icon_color)
+
+        self.bus = dbus.SessionBus()
+        spotify_obj = self.bus.get_object(
+            "org.mpris.MediaPlayer2.spotify",
+            "/org/mpris/MediaPlayer2",
+        )
+        self.spotify_props = dbus.Interface(
+            spotify_obj,
+            'org.freedesktop.DBus.Properties',
+        )
+        self.spotify_player = dbus.Interface(
+            spotify_obj,
+            'org.mpris.MediaPlayer2.Player',
+        )
+
+    def execute(self):
+        if self.button_is(BTN_LEFT):
+            self.spotify_player.PlayPause()
+            pass
+
+        if not self.is_playing():
+            self.set_icon_color(COLOR_SECONDARY)
+            return ""
+
+        return self.get_artist_title()
+
+    def is_playing(self):
+        status = self.spotify_props.Get(
+            'org.mpris.MediaPlayer2.Player',
+            'PlaybackStatus',
+        )
+
+        return status == 'Playing'
+
+    def get_artist_title(self):
+        meta = self.spotify_props.Get(
+            'org.mpris.MediaPlayer2.Player',
+            'Metadata',
+        )
+
+        return "{} - {}".format(
+            meta.get('xesam:artist')[0],
+            meta.get('xesam:title'),
+        )
+
+
+def main():
+    block = Spotify(ICON)
+    block.render()
+
+
+if __name__ == '__main__':
+    main()
