@@ -50,10 +50,10 @@ class Spotify(Block):
             'Metadata',
         )
 
-        return "{} - {}".format(
+        return self.safe_text("{} - {}".format(
             meta.get('xesam:artist')[0],
             meta.get('xesam:title'),
-        )
+        ))
 
 
 def main():

@@ -1,3 +1,4 @@
+import html
 import os
 
 BTN_LEFT = 1
@@ -76,6 +77,9 @@ class Block:
             icon=self.color_text(self.ICON, self.ICON_COLOR),
             text=text,
         ))
+
+    def safe_text(self, text):
+        return html.escape(text)
 
     def set_icon(self, icon):
         """
