@@ -87,6 +87,9 @@ bindsym $mod+e layout toggle split
 # toggle tiling / floating
 bindsym $mod+Shift+space floating toggle
 
+# Set sticky modifier to keep floating windows on all workspaces
+bindsym $mod+Shift+w sticky toggle
+
 # change focus between tiling / floating windows
 bindsym $mod+space focus mode_toggle
 
