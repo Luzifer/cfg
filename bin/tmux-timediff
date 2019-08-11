@@ -1,0 +1,66 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+import math
+import re
+import subprocess
+import sys
+
+# # timedatectl timesync-status
+#        Server: 2001:638:610:be01::108 (ptbtime1.ptb.de)
+# Poll interval: 17min 4s (min: 32s; max 34min 8s)
+#          Leap: normal
+#       Version: 4
+#       Stratum: 1
+#     Reference: PTB
+#     Precision: 1us (-20)
+# Root distance: 167us (max: 5s)
+#        Offset: +1.086ms
+#         Delay: 11.524ms
+#        Jitter: 445us
+#  Packet count: 5
+#     Frequency: +99.341ppm
+
+KEY_OFFSET = 'Offset'
+KEY_PARSED_OFFSET = 'Parsed Offset'
+
+mult = {
+    's': 1.0,
+    'ms': 1.0 / 1000.0,
+    'us': 1.0 / 1000000.0,
+}
+
+
+def get_stats():
+    stats = {}
+    for line in subprocess.check_output(['timedatectl', 'timesync-status']).decode('utf-8').split('\n'):
+        line_parts = line.split(': ', 2)
+        if len(line_parts) != 2:
+            continue
+        desc, cont = line_parts
+        stats[desc.strip()] = cont.strip()
+
+    groups = re.search(r'^([+-])([0-9.]+)([a-z]+)$',
+                       stats[KEY_OFFSET]).groups()
+    offset = float(groups[1])
+    offset = offset * mult[groups[2]]
+
+    if groups[0] == '-':
+        offset = offset * -1
+
+    stats[KEY_PARSED_OFFSET] = offset
+
+    return stats
+
+
+def main():
+    stats = get_stats()
+
+    if math.fabs(stats[KEY_PARSED_OFFSET]) > 1.0:
+        print('{:.2f}s diff'.format(stats[KEY_PARSED_OFFSET]))
+
+    return 0
+
+
+if __name__ == '__main__':
+    sys.exit(main())
