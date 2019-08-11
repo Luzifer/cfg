@@ -4,6 +4,7 @@
 
 run:
   skip-files:
+    - assets.go
     - bindata.go
 
 output:
