@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-DIFF=$(${HOME}/bin/tmux-chrony-timediff)
+DIFF=$(${HOME}/bin/tmux-timediff)
 [ -n "${DIFF}" ] && DIFF="(${DIFF})"
 
 printf '\uf64f %s %s' "$(date "+%a %Y-%m-%d %H:%M:%S")" "${DIFF}"
