@@ -43,6 +43,10 @@ interval=30
 instance=$env_MONDASH_ARCHNAS
 interval=30
 
+[mondash]
+instance=$env_MONDASH_FWWEDEL
+interval=30
+
 [github]
 interval=300
 
