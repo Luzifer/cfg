@@ -1,6 +1,0 @@
-#!/bin/bash
-set -euo pipefail
-
-printf '\uf6e2 '
-
-${HOME}/bin/dropbox.py status | head -n1 || true
