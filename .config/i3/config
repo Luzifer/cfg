@@ -170,7 +170,7 @@ mode "resize" {
 
 bindsym $mod+r mode "resize"
 
-#exec_always --no-startup-id $HOME/.config/polybar/launch.sh
+exec dex -ae i3
 
 bar {
   position top
