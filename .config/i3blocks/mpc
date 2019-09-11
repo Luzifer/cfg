@@ -1,22 +1,71 @@
-#!/bin/bash
-set -euo pipefail
+#!/usr/bin/env python3
 
-[ $(mpc | wc -l) -eq 1 ] && {
-	printf '<span color="#7f7f7f">\uf9da</span>'
-	exit
-}
+import dbus
 
-title=$(mpc | head -n1 | tr -cd "[:print:]" | sed 's/&/\&amp;/g; s/</\&lt;/g; s/>/\&gt;/g')
-state=$(mpc | grep '^\[' | sed -E 's/^\[(.+)\].*/\1/')
+from block import *
 
-case ${state} in
-playing)
-	printf '\uf909 <span color="#8faafc">%s</span>' "${title}"
-	;;
-paused)
-	printf '\uf8e3 <span color="#7f7f7f">%s</span>' "${title}"
-	;;
-*)
-	printf '<span color="#dd0000">State: %s Title: %s<span>' ${state} "${title}"
-	;;
-esac
+ICON = "\uf001"
+
+
+class MPD(Block):
+    def __init__(self, icon=None, icon_color=None):
+        super().__init__(icon, icon_color)
+
+        self.bus = dbus.SessionBus()
+        mpd_obj = self.bus.get_object(
+            "org.mpris.MediaPlayer2.mpd",
+            "/org/mpris/MediaPlayer2",
+        )
+        self.mpd_props = dbus.Interface(
+            mpd_obj,
+            'org.freedesktop.DBus.Properties',
+        )
+        self.mpd_player = dbus.Interface(
+            mpd_obj,
+            'org.mpris.MediaPlayer2.Player',
+        )
+
+    def execute(self):
+        if self.button_is(BTN_LEFT):
+            self.mpd_player.PlayPause()
+            pass
+
+        if not self.is_playing():
+            self.set_icon_color(COLOR_SECONDARY)
+            return ""
+
+        return self.get_artist_title()
+
+    def is_playing(self):
+        status = self.mpd_props.Get(
+            'org.mpris.MediaPlayer2.Player',
+            'PlaybackStatus',
+        )
+
+        return status == 'Playing'
+
+    def get_artist_title(self):
+        meta = self.mpd_props.Get(
+            'org.mpris.MediaPlayer2.Player',
+            'Metadata',
+        )
+
+        if meta.get('xesam:artist')[0] == 'unknown artist' and ' - ' in meta.get('xesam:title'):
+            return self.safe_text(meta.get('xesam:title'))
+
+        return self.safe_text("{} - {}".format(
+            meta.get('xesam:artist')[0],
+            meta.get('xesam:title'),
+        ))
+
+
+def main():
+    try:
+        block = MPD(ICON)
+        block.render()
+    except:
+        pass
+
+
+if __name__ == '__main__':
+    main()
