@@ -27,7 +27,10 @@ def check_service_active(service):
 
 
 def main():
-    config = yaml.load(open(Path('~/.config/i3-vpn.json').expanduser()))
+    config = yaml.load(
+        open(Path('~/.config/i3-vpn.json').expanduser()),
+        Loader=yaml.SafeLoader,
+    )
     results = [config['prefix']]
 
     for check in config['checks']:
