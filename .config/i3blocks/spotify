@@ -57,8 +57,11 @@ class Spotify(Block):
 
 
 def main():
-    block = Spotify(ICON)
-    block.render()
+    try:
+        block = Spotify(ICON)
+        block.render()
+    except:
+        pass
 
 
 if __name__ == '__main__':
