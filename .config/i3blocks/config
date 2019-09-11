@@ -29,7 +29,7 @@ separator_block_width=15
 markup=pango
 
 
-[mpc]
+[mpd]
 interval=5
 
 [spotify]
