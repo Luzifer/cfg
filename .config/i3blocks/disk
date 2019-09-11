@@ -1,55 +1,64 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import subprocess
 import sys
 
+from block import *
+
 CRIT = 90.0
 MOUNT_BLACKLIST = ['/dev', '/efi', '/proc', '/run', '/sys', '/tmp']
 FS_BLACKLIST = ['//', 'cgroup', 'tmpfs']
+ICON = '\ufaed'
+
+
+class Disk(Block):
+    def execute(self):
+        output = subprocess.check_output([
+            'sh', '-c', 'df -a -B 1 | awk \'{ printf "%s\\t%d\\t%d\\t%s\\n", $6, $2, $4, $1 }\''
+        ]).decode('utf-8')
+
+        fs = {}
+        for line in output.split('\n'):
+            if len(line) == 0 or line[0] != '/':
+                continue
+            (mountpoint, total, available, filesystem) = line.split('\t')
+            fs[mountpoint] = (total, available, filesystem)
+
+        color = '#50fa7b'
+
+        strings = []
+        for mount, data in fs.items():
+            skip = False
+            for b in MOUNT_BLACKLIST:
+                if mount.startswith(b):
+                    skip = True
+
+            for b in FS_BLACKLIST:
+                if data[2].startswith(b):
+                    skip = True
+
+            if skip:
+                continue
+
+            usage = 0.0
+            if float(data[0]) > 0.0:
+                usage = (1 - float(data[1])/float(data[0])) * 100.0
+
+            if usage > CRIT:
+                color = '#dd0000'
+
+            strings.append('<span color="#8FAAFC">{}</span>: <span color="{}">{:.0f}%</span>'.format(
+                mount,
+                color,
+                usage,
+            ))
+
+        return ' '.join(strings)
 
 
 def main():
-    output = subprocess.check_output([
-        'sh', '-c', 'df -a -B 1 | awk \'{ printf "%s\\t%d\\t%d\\t%s\\n", $6, $2, $4, $1 }\''
-    ]).decode('utf-8')
-
-    fs = {}
-    for line in output.split('\n'):
-        if len(line) == 0 or line[0] != '/':
-            continue
-        (mountpoint, total, available, filesystem) = line.split('\t')
-        fs[mountpoint] = (total, available, filesystem)
-
-    color = '#50fa7b'
-
-    strings = []
-    for mount, data in fs.items():
-        skip = False
-        for b in MOUNT_BLACKLIST:
-            if mount.startswith(b):
-                skip = True
-
-        for b in FS_BLACKLIST:
-            if data[2].startswith(b):
-                skip = True
-
-        if skip:
-            continue
-
-        usage = 0.0
-        if float(data[0]) > 0.0:
-            usage = (1 - float(data[1])/float(data[0])) * 100.0
-
-        if usage > CRIT:
-            color = '#dd0000'
-
-        strings.append('<span color="#8FAAFC">{}</span>: <span color="{}">{:.0f}%</span>'.format(
-            mount,
-            color,
-            usage,
-        ))
-
-    print('\ufaed '+' '.join(strings))
+    block = Disk(ICON)
+    block.render()
 
 
 if __name__ == '__main__':
