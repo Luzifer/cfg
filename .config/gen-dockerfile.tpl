@@ -5,7 +5,9 @@ WORKDIR /go/src/{{ .package }}
 
 RUN set -ex \
  && apk add --update git \
- && go install -ldflags "-X main.version=$(git describe --tags --always || echo dev)"
+ && go install \
+      -ldflags "-X main.version=$(git describe --tags --always || echo dev)" \
+      -mod=readonly
 
 FROM alpine:latest
 
@@ -18,7 +20,8 @@ RUN set -ex \
  && echo "{{ .timezone }}" > /etc/timezone \
  && apk --no-cache del --purge tzdata \
  {{- end -}}
- && apk --no-cache add ca-certificates
+ && apk --no-cache add \
+      ca-certificates
 
 COPY --from=builder /go/bin/{{ .binary }} /usr/local/bin/{{ .binary }}
 
