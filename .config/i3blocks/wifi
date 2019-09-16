@@ -16,7 +16,7 @@ network=$(iwgetid -r)
 # We found no network: Get out here
 [ -z "${network}" ] && exit
 
-printf "\uf9a1 <span color=\"#8FAAFC\">%s</span> <span color=\"#50fa7b\">(%s)</span>" ${network} ${ip}
+printf "\uf9a1 <span color=\"#8FAAFC\">%s</span> <span color=\"#50fa7b\">(%s)</span>\n" ${network} ${ip}
 
 # On click copy IP
 [ -n "${BLOCK_BUTTON:-}" ] && echo -n "${ip}" | tr -d '\n' | xclip -selection c || true
