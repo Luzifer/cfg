@@ -26,5 +26,6 @@ linters:
     - lll               # GTFO my lawn.
     - unparam           # This one complains about parameters expected for interface implementations
     - maligned          # I sort structs my way.
+    - whitespace        # When I use newlines for better overview STFU
 
 ...
