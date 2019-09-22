@@ -4,3 +4,6 @@
 [submodule ".config/nvim"]
 	path = .config/nvim
 	url = git@github.com:Luzifer/vim.git
+[submodule ".cache/ulauncher_cache/extensions/com.github.Luzifer.autotype"]
+	path = .cache/ulauncher_cache/extensions/com.github.Luzifer.autotype
+	url = https://github.com/Luzifer/ulauncher-autotype.git
