@@ -26,7 +26,7 @@ done
 IFS=' '
 
 if [ ${ac_conn} -eq 0 ]; then
-	printf '\uf58d %s' "${bat_cap[*]}"
+	printf '\uf58d %s\n' "${bat_cap[*]}"
 else
-	printf '\uf740 %s' "${bat_cap[*]}"
+	printf '\uf740 %s\n' "${bat_cap[*]}"
 fi
