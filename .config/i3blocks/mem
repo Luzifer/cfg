@@ -7,4 +7,4 @@ color='#ffffff'
 [ ${mem_use} -gt 70 ] && color='#ffd966'
 [ ${mem_use} -gt 90 ] && color='#dd0000'
 
-printf '\uf85a <span color="%s">%.0f%%</span>' ${color} ${mem_use}
+printf '\uf85a <span color="%s">%.0f%%</span>\n' ${color} ${mem_use}
