@@ -6,6 +6,6 @@ which getxkblayout >/dev/null 2>/dev/null || {
 	exit 1
 }
 
-printf '\uf812 '
+printf '\uf11c '
 
 getxkblayout | awk '/short/{ print $2 }'
