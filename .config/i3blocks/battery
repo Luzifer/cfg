@@ -1,6 +1,12 @@
 #!/bin/bash
 set -euo pipefail
 
+# Check no support for battery (likely desktop PC)
+acpi -b |& grep -q 'No support' && {
+	printf '\uf0e7\n'
+	exit 0
+} || true
+
 IFS=$'\n'
 
 ac_conn=0
@@ -26,7 +32,9 @@ done
 IFS=' '
 
 if [ ${ac_conn} -eq 0 ]; then
-	printf '\uf58d %s\n' "${bat_cap[*]}"
+	# PS not connected, on battery
+	printf '\uf241 %s\n' "${bat_cap[*]}"
 else
-	printf '\uf740 %s\n' "${bat_cap[*]}"
+	# PS connected, on AC
+	printf '\uf376 %s\n' "${bat_cap[*]}"
 fi

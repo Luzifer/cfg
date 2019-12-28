@@ -31,4 +31,4 @@ display_num=""
 # Requires reboot: Red
 (echo "${updates}" | grep -qE "^($(get_grep))") && color="#dd0000"
 
-printf '<span color="%s">\uf94f%s</span>\n' "${color}" "${display_num}"
+printf '<span color="%s">\uf0ad%s</span>\n' "${color}" "${display_num}"
