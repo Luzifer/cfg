@@ -21,4 +21,4 @@ display_num=""
 	display_num=" ${count}"
 }
 
-printf '<span color="%s">\ue709%s</span>' "${color}" "${display_num}"
+printf '<span color="%s">\ue709%s</span>\n' "${color}" "${display_num}"
