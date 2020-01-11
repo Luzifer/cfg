@@ -3,11 +3,41 @@ set -euo pipefail
 
 source "${HOME}/bin/script_framework.sh"
 
-port="${1:-}"
-[[ -n $port ]] || fatal "Missing local port as first argument"
+function usage() {
+	echo "Usage: $0 [-hv] [-p prefix] <port>" >&2
+}
 
 # Get real shareport command
 shareport=$(which -a shareport | grep -v $0 | head -n1)
+
+# Start argument array
+args=($shareport)
+
+# Parse options
+while getopts ":hp:v" o; do
+	case "${o}" in
+	h)
+		usage
+		exit 0
+		;;
+	p)
+		args+=(--var "FQDN_PREFIX=${OPTARG}")
+		;;
+	v)
+		args+=(--log-level debug)
+		;;
+	*)
+		usage
+		fatal "Invalid option -- ${OPTARG}"
+		;;
+	esac
+done
+shift $((OPTIND - 1))
+
+# Add port
+port="${1:-}"
+[[ -n $port ]] || fatal "Missing local port as first argument"
+args+=(--local-addr "localhost:${port}")
 
 step "Fetching secrets..."
 export IDENTITY_FILE=$(mktemp)
@@ -28,4 +58,4 @@ function cleanup() {
 trap cleanup EXIT
 
 step "Starting shareport..."
-$shareport --local-addr "localhost:$1"
+"${args[@]}"
