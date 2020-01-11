@@ -1,0 +1,31 @@
+#!/bin/bash
+set -euo pipefail
+
+source "${HOME}/bin/script_framework.sh"
+
+port="${1:-}"
+[[ -n $port ]] || fatal "Missing local port as first argument"
+
+# Get real shareport command
+shareport=$(which -a shareport | grep -v $0 | head -n1)
+
+step "Fetching secrets..."
+export IDENTITY_FILE=$(mktemp)
+export IDENTITY_FILE_PASSWORD=$(vault read -field=passphrase secret/ssh-key/shareport)
+
+vault read -field=private secret/ssh-key/shareport >${IDENTITY_FILE}
+
+# Configure remote
+export REMOTE_HOST=knut.dev:22
+export REMOTE_SCRIPT="${HOME}/.config/shareport.remote.sh"
+export REMOTE_USER=shareport
+
+# Setup removal of SSH key after exit
+function cleanup() {
+	step "Cleaning up..."
+	rm -f ${IDENTITY_FILE}
+}
+trap cleanup EXIT
+
+step "Starting shareport..."
+$shareport --local-addr "localhost:$1"
