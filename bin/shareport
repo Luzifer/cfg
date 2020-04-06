@@ -12,13 +12,17 @@ shareport=$(which -a shareport | grep -v $0 | head -n1)
 
 # Start argument array
 args=($shareport)
+host=localhost
 
 # Parse options
-while getopts ":hp:v" o; do
+while getopts ":hi:p:v" o; do
 	case "${o}" in
 	h)
 		usage
 		exit 0
+		;;
+	i)
+		host="${OPTARG}"
 		;;
 	p)
 		args+=(--var "FQDN_PREFIX=${OPTARG}")
@@ -37,7 +41,7 @@ shift $((OPTIND - 1))
 # Add port
 port="${1:-}"
 [[ -n $port ]] || fatal "Missing local port as first argument"
-args+=(--local-addr "localhost:${port}")
+args+=(--local-addr "${host}:${port}")
 
 step "Fetching secrets..."
 export IDENTITY_FILE=$(mktemp)
