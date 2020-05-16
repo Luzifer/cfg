@@ -31,3 +31,7 @@ Thumbs.db
 
 .venv
 .envrc
+
+# Archlinux
+*.pkg.tar.xz
+*.pkg.tar.std
