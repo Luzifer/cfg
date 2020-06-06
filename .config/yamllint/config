@@ -1,0 +1,51 @@
+---
+# See documentation for configuration / rules here:
+# https://yamllint.readthedocs.io/en/stable/configuration.html
+#
+# - Put this file in ~/.config/yamllint/config to apply the rules
+# - Install yamllint using `pip install yamllint`
+# - Execute the check using `yamllint <path to yaml> [<path to yaml>]`
+
+extends: default
+
+rules:
+  braces:
+    level: warning
+    min-spaces-inside: 1
+    max-spaces-inside: 1
+    min-spaces-inside-empty: 0
+    max-spaces-inside-empty: 1
+  brackets:
+    level: warning
+  colons:
+    level: warning
+  commas:
+    level: warning
+  document-end:
+    level: warning
+    present: true
+  document-start:
+    level: warning
+    present: true
+  empty-lines:
+    level: warning
+  hyphens:
+    level: warning
+  indentation:
+    level: warning
+    spaces: 2
+    indent-sequences: true
+    check-multi-line-strings: true
+  key-duplicates:
+    level: error
+  line-length:
+    level: warning
+    allow-non-breakable-inline-mappings: true
+  new-line-at-end-of-file:
+    level: warning
+  trailing-spaces:
+    level: warning
+
+...
+
+# vim: set ft=yaml:
