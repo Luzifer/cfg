@@ -6,4 +6,10 @@ set -euo pipefail
 # Stop MPD playback when mpc client was found
 (which mpc >/dev/null 2>&1) && mpc stop
 
+# Disable streamdeck to disallow input
+systemctl --user stop streamdeck
+
 i3lock -e -f -n -i ${HOME}/.local/share/screen-lock.png
+
+# Restart streamdeck again
+systemctl --user start streamdeck
