@@ -35,3 +35,7 @@ Thumbs.db
 # Archlinux
 *.pkg.tar.xz
 *.pkg.tar.std
+
+# Just (using as internal task-runner)
+justfile
+Justfile
