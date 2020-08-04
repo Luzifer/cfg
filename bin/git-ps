@@ -16,7 +16,7 @@ done
 
 [[ -z ${jump_branch} ]] || {
 	step "Switching to branch ${jump_branch}"
-	git checkout "${jump_branch}"
+	git switch "${jump_branch}"
 }
 
 step "Rebasing branch / updating submodules..."
