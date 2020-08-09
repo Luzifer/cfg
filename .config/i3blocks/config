@@ -44,6 +44,10 @@ instance=$env_MONDASH_ARCHNAS
 interval=30
 
 [mondash]
+instance=$env_MONDASH_INFRA
+interval=30
+
+[mondash]
 instance=$env_MONDASH_FWWEDEL
 interval=30
 
