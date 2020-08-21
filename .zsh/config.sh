@@ -48,6 +48,7 @@ alias htpasswd='python3 -c "import crypt; import sys; print(crypt.crypt(sys.argv
 alias just='just --no-dotenv'
 alias l='ls --git -lg'
 alias ls='/usr/bin/exa'
+alias markdownlint='dtool markdownlint'
 alias mqttcli='vault2env --key=secret/private/mqttcli -- mqttcli'
 alias mysql='docker run --rm -ti -v $(pwd):$(pwd) -w $(pwd) mysql bash'
 alias mysqlpw='python3 -c "import hashlib; import sys; print(\"*{}\".format(hashlib.sha1(hashlib.sha1(sys.argv[1].encode(\"utf-8\")).digest()).hexdigest().upper()))"'
