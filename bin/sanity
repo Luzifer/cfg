@@ -5,6 +5,21 @@ source ${HOME}/bin/script_framework.sh
 
 reportpad=0
 retcode=0
+showsuccess=1
+
+while getopts "hq" opt; do
+	case "${opt}" in
+	q)
+		showsuccess=0
+		;;
+	*)
+		echo "Usage: $(basename $0) [-hq]"
+		echo "       -h  Show help"
+		echo "       -q  Quiet (show no success messages)"
+		exit 2
+		;;
+	esac
+done
 
 # report is a wrapper to display messages in a certain level with
 # added information about the function yielding the result. It
@@ -14,6 +29,8 @@ function report() {
 	shift
 	local message="$@"
 	local func="${FUNCNAME[1]#sanity_}"
+
+	[[ $levelfunc == "success" ]] && [ $showsuccess -eq 0 ] && return || true
 
 	"$levelfunc" "$(printf "%-${reportpad}s" ${func}) ${message}"
 }
