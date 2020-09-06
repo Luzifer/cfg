@@ -3,9 +3,15 @@ COLOR_GREEN="\033[0;32m"
 COLOR_CYAN="\033[0;36m"
 COLOR_YELLOW="\033[0;33m"
 COLOR_PLAIN="\033[0m"
+COLOR_PURPLE="\033[35m"
 
 function check_util() {
 	which ${1} >/dev/null 2>&1 || fail "Missing ${1} util"
+}
+
+function debug() {
+	[[ ${DEBUG:-false} != false ]] || return 0
+	echo -e "${COLOR_PURPLE}$@${COLOR_PLAIN}"
 }
 
 function error() {
