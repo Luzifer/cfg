@@ -1,0 +1,43 @@
+#!/bin/bash
+set -euo pipefail
+
+source ${HOME}/bin/script_framework.sh
+
+reportpad=0
+retcode=0
+
+# report is a wrapper to display messages in a certain level with
+# added information about the function yielding the result. It
+# must be called from within a "sanity_*" function
+function report() {
+	local levelfunc="$1"
+	shift
+	local message="$@"
+	local func="${FUNCNAME[1]#sanity_}"
+
+	"$levelfunc" "$(printf "%-${reportpad}s" ${func}) ${message}"
+}
+
+# Load all part-files from the ~/.config/sanity.d directory
+for partFile in "${HOME}/.config/sanity.d"/*.sh; do
+	source "${partFile}"
+done
+
+# Collect all functions present within the part-files matching the
+# "sanity_*" naming schema
+parts=($(declare -F | awk '/sanity_[0-9a-zA-Z_-]+$/{ print $3 }'))
+
+# For display reasons store the longest function name to be used in
+# report to format the output in columns
+for func in "${parts[@]}"; do
+	lfunc=$((${#func} - 7)) # 7 = length of stripped "sanity_" prefix
+	[ ${lfunc} -lt ${reportpad} ] || reportpad=${lfunc}
+done
+
+# Execute all "sanity_*" functions and store exit-code 1 if one of
+# them fails to exit gracefully
+for func in "${parts[@]}"; do
+	"${func}" || retcode=1
+done
+
+exit ${retcode}
