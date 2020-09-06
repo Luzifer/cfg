@@ -1,8 +1,6 @@
 function sanity_deprecated_reporunner_images() {
-	report debug "Check for deprecated repo-runner images"
-
 	[[ -f .repo-runner.yaml ]] || {
-		report debug "No Repo-Runner config found"
+		report debug "No Repo-Runner config found, skipping check"
 		return 0
 	}
 

@@ -1,8 +1,6 @@
 function sanity_makefile_contains_autohook() {
-	report debug "Check for auto-hook in Makefile"
-
 	[[ -f Makefile ]] || {
-		report debug "No Makefile found"
+		report debug "No Makefile found, skipping check"
 		return 0
 	}
 
