@@ -1,5 +1,15 @@
 FROM golang:alpine as builder
 
+{{ if hasFeature "private-mods" -}}
+ARG VAULT_ADDR
+ARG VAULT_TOKEN
+
+RUN set -ex \
+ && apk --no-cache add git \
+ && GOPATH=/usr/local go get -u -v github.com/Luzifer/git-credential-vault \
+ && git config --global credential.helper 'vault --vault-path-prefix secret/jenkins/git-credential'
+{{- end }}
+
 COPY . /go/src/{{ .package }}
 WORKDIR /go/src/{{ .package }}
 
