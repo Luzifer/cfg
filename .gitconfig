@@ -46,7 +46,7 @@
 [user]
   email = knut@ahlers.me
   name = Knut Ahlers
-  signingkey = D34BE99E
+  signingkey = D215AD7D
 
 # Mappings for private repos and `go get`
 [url "ssh://git@github.com/contentflow/"]
