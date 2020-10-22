@@ -3,7 +3,7 @@
   ci = commit
   co = checkout
   df = diff
-  lg = "log --color --graph --pretty=format:'%Cred%h%Creset [%G?]%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an / %cn>%Creset' --abbrev-commit"
+  lg = "log --color --graph --pretty=format:'%Cred%h%Creset %Cgreen(%ci)%Creset [%G?]%C(yellow)%d%Creset %s %C(bold blue)<%an / %cn>%Creset' --abbrev-commit"
   ri = rebase --interactive --autosquash
   st = status
 
