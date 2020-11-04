@@ -1,0 +1,10 @@
+[Unit]
+Description=Forces volume to stay at a level despite browser objecting
+After=pulseaudio.service
+Requires=pulseaudio.service
+
+[Service]
+ExecStart=/usr/bin/bash -e -c 'while true; do pactl set-source-volume @DEFAULT_SOURCE@ %i%; sleep 0.1; done'
+
+[Install]
+WantedBy=default.target
