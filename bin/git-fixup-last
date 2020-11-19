@@ -6,4 +6,4 @@ source ${HOME}/bin/script_framework.sh
 commit=$(git log master..HEAD --oneline | grep -v 'fixup!' | head -n1)
 
 step "Doing fixup against commit: ${commit}"
-exec git c --fixup $(echo "${commit}" | cut -d ' ' -f 1)
+exec git c --fixup $(echo "${commit}" | cut -d ' ' -f 1) "$@"
