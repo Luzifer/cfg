@@ -18,7 +18,7 @@ else
 fi
 
 step "Measuring mirror speed, searching 5 fastest mirrors"
-curl -s "https://www.archlinux.org/mirrorlist/?country=all&protocol=https&use_mirror_status=on" |
+curl -s "https://archlinux.org/mirrorlist/all/https/" |
 	sed -e 's/^#Server/Server/' -e '/^#/d' |
 	rankmirrors -n 5 - |
 	tee ${outfile}
