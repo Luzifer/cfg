@@ -1,0 +1,75 @@
+#!/usr/bin/env python3
+
+import re
+import sys
+
+STATE_KEY = 0
+STATE_SKIP = 1
+STATE_VALUE = 2
+
+
+def sort_tags(tagstring):
+    tags = {}
+
+    state = STATE_KEY
+    c_key = ''
+    c_value = ''
+
+    for c in tagstring:
+        if state == STATE_KEY and c == ':':
+            state = STATE_SKIP
+            continue
+
+        if state == STATE_KEY:
+            c_key += c
+            continue
+
+        if state == STATE_SKIP and c == ' ':
+            state = STATE_KEY
+            continue
+
+        if state == STATE_SKIP and c == '"':
+            state = STATE_VALUE
+            continue
+
+        if state == STATE_SKIP:
+            continue
+
+        if state == STATE_VALUE and c == '"':
+            state = STATE_SKIP
+            tags[c_key] = c_value
+            c_key = ''
+            c_value = ''
+            continue
+
+        if state == STATE_VALUE:
+            c_value += c
+            continue
+
+    out = []
+    for key in sorted(tags.keys()):
+        out.append('{key}:"{value}"'.format(
+            key=key,
+            value=tags[key],
+        ))
+
+    return ' '.join(out)
+
+
+def main():
+    for line in sys.stdin.read().rstrip('\n').split('\n'):
+        match = re.search(r'(?P<fielddef>.*) `(?P<tags>.*)`$', line)
+        if match is None:
+            print(line)
+            continue
+
+        print('{definition} `{tags}`'.format(
+            definition=match.group('fielddef'),
+            tags=sort_tags(match.group('tags')),
+        ))
+
+    return 0
+
+
+if __name__ == '__main__':
+    sys.exit(main())
