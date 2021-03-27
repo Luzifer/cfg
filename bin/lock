@@ -9,7 +9,7 @@ set -euo pipefail
 # Disable streamdeck to disallow input
 systemctl --user stop streamdeck
 
-i3lock -e -f -n -i ${HOME}/.local/share/screen-lock.png
+i3lock -e -f -n -c 000000
 
 # Restart streamdeck again
 systemctl --user start streamdeck
