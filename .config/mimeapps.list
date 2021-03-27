@@ -19,6 +19,7 @@ x-scheme-handler/ircs=brave-beta-bin.desktop
 x-scheme-handler/mailto=chromium.desktop
 x-scheme-handler/unknown=chromium.desktop
 x-scheme-handler/webcal=chromium.desktop
+x-scheme-handler/tg=userapp-Telegram Desktop-0J95Y0.desktop
 
 [Added Associations]
 application/x-extension-htm=chromium.desktop;
@@ -31,3 +32,4 @@ text/html=chromium.desktop;
 x-scheme-handler/chrome=chromium.desktop;
 x-scheme-handler/http=chromium.desktop;
 x-scheme-handler/https=chromium.desktop;
+x-scheme-handler/tg=userapp-Telegram Desktop-0J95Y0.desktop;
