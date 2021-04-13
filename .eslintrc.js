@@ -21,7 +21,11 @@ Module._findPath = (request, paths, isMain) => {
   return r
 }
 
-// https://eslint.org/docs/user-guide/configuring
+/*
+ * ESLint configuration derived as differences from eslint:recommended
+ * with changes I found useful to ensure code quality and equal formatting
+ * https://eslint.org/docs/user-guide/configuring
+ */
 
 module.exports = {
   env: {
@@ -31,8 +35,7 @@ module.exports = {
 
   extends: [
     'plugin:vue/strongly-recommended',
-    // https://github.com/standard/standard/blob/master/docs/RULES-en.md
-    'eslint:recommended',
+    'eslint:recommended', // https://github.com/standard/standard/blob/master/docs/RULES-en.md
   ],
 
   globals: {
@@ -51,7 +54,6 @@ module.exports = {
 
   root: true,
 
-  // add your custom rules here
   rules: {
     'array-bracket-newline': ['error', { multiline: true }],
     'array-bracket-spacing': ['error'],
@@ -60,7 +62,7 @@ module.exports = {
     'arrow-spacing': ['error', { after: true, before: true }],
     'block-spacing': ['error'],
     'brace-style': ['error', '1tbs'],
-    'comma-dangle': ['error', 'always-multiline'], // Apply Contentflow rules
+    'comma-dangle': ['error', 'always-multiline'],
     'comma-spacing': ['error'],
     'comma-style': ['error', 'last'],
     'curly': ['error'],
