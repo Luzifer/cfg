@@ -34,7 +34,7 @@ module.exports = {
   },
 
   extends: [
-    'plugin:vue/strongly-recommended',
+    'plugin:vue/recommended',
     'eslint:recommended', // https://eslint.org/docs/rules/
   ],
 
@@ -134,6 +134,16 @@ module.exports = {
     'switch-colon-spacing': ['error'],
     'template-curly-spacing': ['error', 'never'],
     'unicode-bom': ['error', 'never'],
+    'vue/new-line-between-multi-line-property': ['error'],
+    'vue/no-empty-component-block': ['error'],
+    'vue/no-reserved-component-names': ['error'],
+    'vue/no-template-target-blank': ['error'],
+    'vue/no-unused-properties': ['error'],
+    'vue/no-unused-refs': ['error'],
+    'vue/no-useless-mustaches': ['error'],
+    'vue/require-name-property': ['error'],
+    'vue/v-for-delimiter-style': ['error'],
+    'vue/v-on-function-call': ['error'],
     'wrap-iife': ['error'],
     'yoda': ['error'],
   },
