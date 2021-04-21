@@ -1,0 +1,11 @@
+#!/bin/bash
+set -euo pipefail
+
+mkdir -p .github
+cat -s >.github/FUNDING.yml <<EOF
+---
+
+github: [ Luzifer ]
+
+...
+EOF
