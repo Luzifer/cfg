@@ -141,6 +141,7 @@ module.exports = {
     'vue/no-unused-properties': ['error'],
     'vue/no-unused-refs': ['error'],
     'vue/no-useless-mustaches': ['error'],
+    'vue/order-in-components': ['off'], // Collides with sort-keys
     'vue/require-name-property': ['error'],
     'vue/v-for-delimiter-style': ['error'],
     'vue/v-on-function-call': ['error'],
