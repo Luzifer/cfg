@@ -1,0 +1,21 @@
+#!/usr/bin/env python
+
+import contextlib
+import pulsectl
+
+with pulsectl.Pulse('Remap-Sink Name-Fix') as pulse:
+    for sink_input in pulse.sink_input_list():
+        if not sink_input.name.startswith('Remapped Stream'):
+            continue
+
+        for sink in pulse.sink_list():
+            if sink.owner_module != sink_input.owner_module:
+                continue
+
+            with contextlib.closing(pulsectl.connect_to_cli(as_file=False)) as s:
+                cmd = 'update-sink-input-proplist {} media.name="{}"\n'.format(
+                    sink_input.index,
+                    'Remapped Stream: {}'.format(sink.description),
+                )
+
+                s.send(cmd.encode('utf-8'))
