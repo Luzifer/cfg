@@ -17,11 +17,22 @@ else
 	warn "Not running as root, new mirrorlist will be written to ${outfile}"
 fi
 
-step "Measuring mirror speed, searching 5 fastest mirrors"
-curl -s "https://archlinux.org/mirrorlist/all/https/" |
-	sed -e 's/^#Server/Server/' -e '/^#/d' |
+step "Collecting mirrors"
+IFS=$'\n'
+mirrors=(
+	$(
+		curl -sSfL "https://archlinux.org/mirrors/status/json/" |
+			jq -r '.urls[] | select(.active) | select(.completion_pct == 1.0) | select( .delay < 3600) | select(.protocol == "https") | .url'
+	)
+)
+unset IFS
+
+step "Measuring mirror speed, searching 5 fastest mirrors of ${#mirrors[@]} mirrors"
+for url in "${mirrors[@]}"; do
+	echo "Server = ${url}\$repo/os/\$arch"
+done |
 	rankmirrors -n 5 - |
-	tee ${outfile}
+	tee "${outfile}"
 
 step "Generating diff from old to new mirrorlist"
-diff -wu ${oldlist} ${outfile}
+diff -wu "${oldlist}" "${outfile}"
