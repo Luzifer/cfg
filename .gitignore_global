@@ -30,6 +30,7 @@ Thumbs.db
 .*.swp
 
 .venv
+.env
 .envrc
 
 # Archlinux
