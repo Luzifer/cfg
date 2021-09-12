@@ -9,6 +9,13 @@ set -euo pipefail
 # Disable streamdeck to disallow input
 systemctl --user stop streamdeck
 
+# Terminate Discord in order to get mobile notifications
+killall -TERM Discord || true
+
+# Mute default sink & source
+pactl set-sink-mute @DEFAULT_SINK@ true || true
+pactl set-sink-mute @DEFAULT_SINK@ true || true
+
 i3lock -e -f -n -c 000000
 
 # Restart streamdeck again
