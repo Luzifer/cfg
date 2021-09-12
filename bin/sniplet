@@ -15,7 +15,7 @@ trap cleanup EXIT
 }
 
 # Find sniplet files
-names=$(find "${sniplet_dir}" -type f | sed "s|${sniplet_dir}||" | sort)
+names=$(find "${sniplet_dir}" -type f | sed "s|${sniplet_dir}/||" | sort)
 
 # Let the user select one of them
 name=$(
@@ -36,15 +36,15 @@ sniplet="${sniplet_dir}/${name}"
 }
 
 # Store clipboard away
-xsel -b -o >"${tmpdir}/b"
-xsel -p -o >"${tmpdir}/p"
+xclip -selection clipboard -o >"${tmpdir}/clipboard"
+xclip -selection primary -o >"${tmpdir}/primary"
 
 # Render the sniplet using korvike for templating
-korvike -i "${sniplet}" -o "${tmpdir}/s"
+korvike -i "${sniplet}" -o "${tmpdir}/sniplet"
 
 # Set clipboard with sniplet
-xsel -b -i <"${tmpdir}/s"
-xsel -p -i <"${tmpdir}/s"
+xclip -selection clipboard -i <"${tmpdir}/sniplet"
+xclip -selection primary -i <"${tmpdir}/sniplet"
 
 # Do the paste magic
 sleep 0.3
@@ -52,5 +52,5 @@ xdotool key shift+Insert
 sleep 0.5
 
 # Restore clipboard
-xsel -b -i <"${tmpdir}/b"
-xsel -p -i <"${tmpdir}/p"
+xclip -selection clipboard -i <"${tmpdir}/clipboard"
+xclip -selection primary -i <"${tmpdir}/primary"
