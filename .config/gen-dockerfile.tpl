@@ -7,7 +7,7 @@ ARG VAULT_TOKEN
 RUN set -ex \
  && apk --no-cache add git \
  && GOPATH=/usr/local go get -u -v github.com/Luzifer/git-credential-vault \
- && git config --global credential.helper 'vault --vault-path-prefix secret/jenkins/git-credential'
+ && git config --global credential.helper 'vault --vault-path-prefix {{ env `VAULT_GIT_CREDENTIAL_PATH` }}'
 {{- end }}
 
 COPY . /go/src/{{ .package }}
