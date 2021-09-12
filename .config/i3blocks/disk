@@ -8,7 +8,7 @@ from block import *
 CRIT = 90.0
 MOUNT_BLACKLIST = ['/dev', '/efi', '/proc', '/run', '/sys', '/tmp']
 FS_BLACKLIST = ['//', 'cgroup', 'dev',
-                'fusectl', 'proc', 'run', 'sys', 'tmpfs']
+                'fusectl', 'overlay', 'proc', 'run', 'sys', 'tmpfs']
 ICON = '\ufaed'
 
 
