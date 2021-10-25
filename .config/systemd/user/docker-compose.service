@@ -5,7 +5,6 @@ Description=Docker Compose container starter
 WorkingDirectory=/home/luzifer/.config
 Type=oneshot
 RemainAfterExit=yes
-Environment=DOCKER_HOST=http+unix://var/run/docker.sock
 
 ExecStartPre=/usr/bin/docker-compose pull --quiet --ignore-pull-failures
 ExecStart=/usr/bin/docker-compose up -d --remove-orphans
