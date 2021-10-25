@@ -6,7 +6,7 @@ ARG VAULT_TOKEN
 
 RUN set -ex \
  && apk --no-cache add git \
- && GOPATH=/usr/local go get -u -v github.com/Luzifer/git-credential-vault \
+ && GOPATH=/usr/local go install github.com/Luzifer/git-credential-vault@latest \
  && git config --global credential.helper 'vault --vault-path-prefix {{ env `VAULT_GIT_CREDENTIAL_PATH` }}'
 {{- end }}
 
