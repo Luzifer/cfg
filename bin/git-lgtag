@@ -1,0 +1,4 @@
+#!/bin/bash
+set -euo pipefail
+
+exec git lg $(git tag --sort=-taggerdate | head -n1)^..HEAD
