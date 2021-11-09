@@ -54,13 +54,16 @@ def read_and_reduce():
 
 def write_hosts_file(knownhosts):
     # Replace known hosts with a cleaned version
-    with open(KNOWN_HOSTS, 'w') as f:
-        for key, host in knownhosts.items():
-            if len(host['hosts']) == 0:
-                continue
+    lines = []
+    for key, host in knownhosts.items():
+        if len(host['hosts']) == 0:
+            continue
 
-            host['hosts_joined'] = ",".join(sorted(host['hosts'], reverse=True))
-            f.write("{hosts_joined} {keytype} {fingerprint}\n".format(**host))
+        host['hosts_joined'] = ",".join(sorted(host['hosts'], reverse=True))
+        lines.append("{hosts_joined} {keytype} {fingerprint}".format(**host))
+
+    with open(KNOWN_HOSTS, 'w') as f:
+        f.write('\n'.join(sorted(lines)))
 
 
 def main():
