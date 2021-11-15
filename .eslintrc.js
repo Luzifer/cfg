@@ -8,7 +8,7 @@
 const Module = require('module')
 
 const hacks = [
-  'babel-eslint',
+  '@babel/eslint-parser',
   'eslint-plugin-vue',
 ]
 
@@ -42,9 +42,10 @@ module.exports = {
     process: true,
   },
 
+  parser: '@babel/eslint-parser',
   parserOptions: {
     ecmaVersion: 2020,
-    parser: 'babel-eslint',
+    requireConfigFile: false,
   },
 
   plugins: [
