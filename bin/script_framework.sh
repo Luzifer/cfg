@@ -41,7 +41,8 @@ function log_level_matches() {
 		[warning]=2
 		[error]=3
 	)
-	[ ${log_levels[${LOG_LEVEL:-UNDEF}]:-1} -le ${1} ] && return 0 || return 1
+	local fb_ll=${log_levels[${DEFAULT_LOG_LEVEL:-info}]}
+	[ ${log_levels[${LOG_LEVEL:-UNDEF}]:-${fb_ll}} -le ${1} ] && return 0 || return 1
 }
 
 function step() {
