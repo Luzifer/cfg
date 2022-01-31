@@ -64,6 +64,7 @@ def write_hosts_file(knownhosts):
 
     with open(KNOWN_HOSTS, 'w') as f:
         f.write('\n'.join(sorted(lines)))
+        f.write('\n')
 
 
 def main():
