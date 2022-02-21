@@ -54,6 +54,9 @@ interval=30
 [twitch_donations]
 interval=120
 
+[food_budget]
+interval=120
+
 [github]
 interval=300
 
