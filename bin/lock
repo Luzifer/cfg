@@ -14,7 +14,7 @@ killall -TERM Discord || true
 
 # Mute default sink & source
 pactl set-sink-mute @DEFAULT_SINK@ true || true
-pactl set-sink-mute @DEFAULT_SINK@ true || true
+pactl set-source-mute @DEFAULT_SOURCE@ true || true
 
 i3lock -e -f -n -c 000000
 
