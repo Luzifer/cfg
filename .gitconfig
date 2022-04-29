@@ -1,65 +1,65 @@
 [alias]
-  br = branch
-  ci = commit
-  co = checkout
-  df = diff
-  lg = "log --color --graph --pretty=format:'%Cred%h%Creset %Cgreen(%ci)%Creset [%G?]%C(yellow)%d%Creset %s %C(bold blue)<%an / %cn>%Creset' --abbrev-commit"
-  ri = rebase --interactive --autosquash
-  st = status
+br = branch
+ci = commit
+co = checkout
+df = diff
+lg = "log --color --graph --pretty=format:'%Cred%h%Creset %Cgreen(%ci)%Creset [%G?]%C(yellow)%d%Creset %s %C(bold blue)<%an / %cn>%Creset' --abbrev-commit"
+ri = rebase --interactive --autosquash
+st = status
 
 [branch]
-  autosetuprebase = always
+autosetuprebase = always
 
 [color]
-  branch = auto
-  diff = auto
-  status = auto
+branch = auto
+diff = auto
+status = auto
 
 [commit]
-  gpgsign = true
+gpgsign = true
 
 [core]
-  bare = false
-  excludesfile = ~/.gitignore_global
-  filemode = true
-  logallrefupdates = true
-  pager = less -F -X
-  repositoryformatversion = 0
-  warnAmbiguousRefs = false
+bare = false
+excludesfile = ~/.gitignore_global
+filemode = true
+logallrefupdates = true
+pager = less -F -X
+repositoryformatversion = 0
+warnAmbiguousRefs = false
 
 [diff]
-  renames = true
+renames = true
 
 [filter "lfs"]
-	process = git-lfs filter-process
-	required = true
-	clean = git-lfs clean -- %f
-	smudge = git-lfs smudge -- %f
+process = git-lfs filter-process
+required = true
+clean = git-lfs clean -- %f
+smudge = git-lfs smudge -- %f
 
 [gpg]
-  program = gpg2
+program = gpg2
 
 [push]
-  default = upstream
-  gpgSign = if-asked
+default = upstream
+gpgSign = if-asked
 
 [receive]
-  denyNonFastForwards = true
+denyNonFastForwards = true
 
 [rerere]
-  enabled = true
+enabled = true
 
 [user]
-  email = knut@ahlers.me
-  name = Knut Ahlers
-  signingkey = D215AD7D
+email = knut@ahlers.me
+name = Knut Ahlers
+signingkey = D215AD7D
 
 # Mappings for private repos and `go get`
 [url "ssh://git@github.com/contentflow/"]
-  insteadOf = https://github.com/contentflow/
+insteadOf = https://github.com/contentflow/
 
 [url "ssh://git@github.com/FFWedel/"]
-  insteadOf = https://github.com/FFWedel/
+insteadOf = https://github.com/FFWedel/
 
 [url "ssh://git@github.com/Luzifer/"]
-  insteadOf = https://github.com/Luzifer/
+insteadOf = https://github.com/Luzifer/
