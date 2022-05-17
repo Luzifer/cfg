@@ -1,0 +1,25 @@
+#!/bin/zsh
+set -euo pipefail
+
+source ~/bin/script_framework.sh
+
+function usage() {
+	fail "Usage: $0 <chapters file> <source video>"
+}
+
+chapters_file="${1:-}"
+[[ -n $chapters_file ]] || usage
+
+source_video="${2:-}"
+[[ -n $source_video ]] || usage
+
+IFS=$'\n'
+
+for line in $(grep -vE "^(|#.*)$" ${chapters_file}); do
+	start_ts=$(echo "${line}" | cut -d ' ' -f 1)
+	end_ts=$(echo "${line}" | cut -d ' ' -f 2)
+	name=$(echo "${line}" | cut -d ' ' -f 3-)
+
+	step "Copying segment between ${start_ts}s and ${end_ts}s into file ${name}.${source_video##*.}"
+	ffmpeg -ss ${start_ts} -i "${source_video}" -c copy -t $((end_ts - start_ts)) "${name}.${source_video##*.}"
+done
