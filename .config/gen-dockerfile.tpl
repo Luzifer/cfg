@@ -17,7 +17,10 @@ RUN set -ex \
  && apk add --update git \
  && go install \
       -ldflags "-X main.version=$(git describe --tags --always || echo dev)" \
-      -mod=readonly
+      -mod=readonly \
+      -modcacherw \
+      -trimpath
+
 
 FROM alpine:latest
 
