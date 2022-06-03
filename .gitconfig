@@ -49,6 +49,11 @@ denyNonFastForwards = true
 [rerere]
 enabled = true
 
+[safe]
+# Don't try this at home: Need to work with mounted repos and
+# therefore to disable the directory safety check
+directory = *
+
 [user]
 email = knut@ahlers.me
 name = Knut Ahlers
