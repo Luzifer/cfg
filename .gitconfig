@@ -60,9 +60,6 @@ name = Knut Ahlers
 signingkey = D215AD7D
 
 # Mappings for private repos and `go get`
-[url "ssh://git@github.com/contentflow/"]
-insteadOf = https://github.com/contentflow/
-
 [url "ssh://git@github.com/FFWedel/"]
 insteadOf = https://github.com/FFWedel/
 
