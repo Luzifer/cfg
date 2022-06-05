@@ -1,5 +1,5 @@
 function gen_prefix() {
-	cat /dev/urandom | tr -dc 'a-z0-9' | head -c 8 || true
+	tr -dc 'a-z0-9' </dev/urandom | head -c 8 || true
 }
 
 # Generate an unique ID and set config path for it
@@ -23,10 +23,10 @@ cat -s <<EOF >${config_file}
 server {
   listen        443 ssl http2;
   server_name   ${share_id}.knut.dev;
-  
+
   ssl_certificate     /data/ssl/nginxle/knut.dev.pem;
   ssl_certificate_key /data/ssl/nginxle/knut.dev.key;
-  
+
   location / {
     proxy_pass          http://${LISTEN};
     proxy_set_header    Upgrade \$http_upgrade;
