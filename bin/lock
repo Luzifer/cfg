@@ -1,16 +1,30 @@
 #!/bin/bash
 set -euo pipefail
 
-[ -f ${HOME}/.local/share/screen-lock.png ] || ${HOME}/bin/generate_lockscreen
+program_kills=(
+	Discord
+)
+
+systemd_services=(
+	streamdeck
+)
+
+function log() {
+	echo "$@" >&2
+}
 
 # Stop MPD playback when mpc client was found
 (which mpc >/dev/null 2>&1) && mpc stop
 
-# Disable streamdeck to disallow input
-systemctl --user stop streamdeck
+# Disable systemd user services
+for svc in "${systemd_services[@]}"; do
+	systemctl is-active ${svc} >/dev/null 2>&1 && systemctl --user stop ${svc} || log "Service ${svc} not active / not found"
+done
 
 # Terminate Discord in order to get mobile notifications
-killall -TERM Discord || true
+for prog in "${program_kills[@]}"; do
+	killall -TERM ${prog} || true
+done
 
 # Mute default sink & source
 pactl set-sink-mute @DEFAULT_SINK@ true || true
@@ -18,5 +32,7 @@ pactl set-source-mute @DEFAULT_SOURCE@ true || true
 
 i3lock -e -f -n -c 000000
 
-# Restart streamdeck again
-systemctl --user start streamdeck
+# Restart user-services
+for svc in "${systemd_services[@]}"; do
+	systemctl is-enabled ${svc} >/dev/null 2>&1 && systemctl --user start ${svc} || log "Service ${svc} not enabled, skipping start"
+done

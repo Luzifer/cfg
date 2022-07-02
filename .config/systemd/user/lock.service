@@ -1,0 +1,5 @@
+[Unit]
+Description=Lock screen and stop services
+
+[Service]
+ExecStart=/home/luzifer/bin/lock
