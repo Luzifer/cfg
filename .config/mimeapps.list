@@ -20,6 +20,7 @@ x-scheme-handler/mailto=chromium.desktop
 x-scheme-handler/unknown=chromium.desktop
 x-scheme-handler/webcal=chromium.desktop
 x-scheme-handler/tg=userapp-Telegram Desktop-0J95Y0.desktop
+x-scheme-handler/msteams=teams.desktop
 
 [Added Associations]
 application/x-extension-htm=chromium.desktop;
