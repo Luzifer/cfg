@@ -18,7 +18,7 @@ function log() {
 
 # Disable systemd user services
 for svc in "${systemd_services[@]}"; do
-	systemctl is-active ${svc} >/dev/null 2>&1 && systemctl --user stop ${svc} || log "Service ${svc} not active / not found"
+	systemctl --user is-active ${svc} >/dev/null 2>&1 && systemctl --user stop ${svc} || log "Service ${svc} not active / not found"
 done
 
 # Terminate Discord in order to get mobile notifications
@@ -34,5 +34,5 @@ i3lock -e -f -n -c 000000
 
 # Restart user-services
 for svc in "${systemd_services[@]}"; do
-	systemctl is-enabled ${svc} >/dev/null 2>&1 && systemctl --user start ${svc} || log "Service ${svc} not enabled, skipping start"
+	systemctl --user is-enabled ${svc} >/dev/null 2>&1 && systemctl --user start ${svc} || log "Service ${svc} not enabled, skipping start"
 done
