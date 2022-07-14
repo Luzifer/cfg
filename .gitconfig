@@ -60,8 +60,8 @@ name = Knut Ahlers
 signingkey = D215AD7D
 
 # Mappings for private repos and `go get`
-[url "ssh://git@github.com/FFWedel/"]
-insteadOf = https://github.com/FFWedel/
+[url "git@bitbucket.org:"]
+insteadOf = https://bitbucket.org/
 
-[url "ssh://git@github.com/Luzifer/"]
-insteadOf = https://github.com/Luzifer/
+[url "git@github.com:"]
+insteadOf = https://github.com/
