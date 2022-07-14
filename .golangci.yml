@@ -17,6 +17,9 @@ issues:
   # rule of revive and other errors one really wants to see.
   # Smme detail: https://github.com/golangci/golangci-lint/issues/456
   exclude-use-default: false
+  # Don't limit the number of shown issues: Report ALL of them
+  max-issues-per-linter: 0
+  max-same-issues: 0
 
 linters:
   disable-all: true
