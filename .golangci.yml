@@ -123,7 +123,7 @@ linters-settings:
       - name: error-return            # The error return parameter should be last.
       - name: error-strings           # Conventions around error strings.
       - name: exported                # Naming and commenting conventions on exported symbols.
-        arguments: ['checkPrivateReceivers', 'sayRepetitiveInsteadOfStutters']
+        arguments: ['sayRepetitiveInsteadOfStutters']
       #- name: file-header            # Header which each file should have.
                                       # Useless without config, have no config for it
       - name: flag-parameter          # Warns on boolean parameters that create a control coupling
