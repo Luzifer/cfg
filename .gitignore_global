@@ -41,3 +41,7 @@ justfile
 Justfile
 
 *.bak
+
+# Golang
+go.work
+go.work.sum
