@@ -13,9 +13,9 @@ def main():
         'pulsemixer', '--get-mute',
     ]).decode('utf-8').strip()) == 1
 
-    icon = '\uf9c3' if mute else '\uf9c2'
+    icon = '\uf6a9' if mute else '\uf6a8'
     text = '{} {}%'.format(icon, minvol)
-    color = '#7f7f7f' if mute else ''
+    color = '#7f7f7f' if mute else '#ffffff'
 
     print('\n'.join([
         text,
