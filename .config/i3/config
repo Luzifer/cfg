@@ -165,4 +165,5 @@ exec dex -ae i3
 bar {
   position top
   status_command envrun --env-file ${HOME}/.config/i3blocks.env -- i3blocks -c ${HOME}/.config/i3blocks/config.`hostname`
+  tray_output primary
 }
