@@ -3,16 +3,16 @@
 HOOKTYPE=$1
 
 if [ -e Justfile ]; then
-	just --list --list-heading '' --list-prefix '' |
-		grep -q "auto-hook-${HOOKTYPE}" && exec just "auto-hook-${HOOKTYPE}" || true
+  just --list --list-heading '' --list-prefix '' |
+    grep -q "auto-hook-${HOOKTYPE}" && exec just "auto-hook-${HOOKTYPE}" || true
 fi
 
 if [ -e Makefile ]; then
-	TARGETS=$(make -pRrq : 2>/dev/null |
-		awk -v RS= -F: '/^# File/,/^# Finished Make data base/ {if ($$1 !~ "^[#.]") {print $$1}}' |
-		sort | egrep -v -e '^[^[:alnum:]]' | sed 's/:$//' | xargs)
+  TARGETS=$(make -pRrq : 2>/dev/null |
+    awk -v RS= -F: '/^# File/,/^# Finished Make data base/ {if ($$1 !~ "^[#.]") {print $$1}}' |
+    sort | grep -E -v -e '^[^[:alnum:]]' | sed 's/:$//' | xargs)
 
-	if (echo $TARGETS | grep -q "auto-hook-${HOOKTYPE}"); then
-		exec make "auto-hook-${HOOKTYPE}"
-	fi
+  if (echo $TARGETS | grep -q "auto-hook-${HOOKTYPE}"); then
+    exec make "auto-hook-${HOOKTYPE}"
+  fi
 fi
