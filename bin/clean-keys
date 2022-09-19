@@ -12,15 +12,8 @@ fi
 # all of the people who have signed my key
 mysigners=$(gpg --list-sigs $mykey | grep '^sig' | cut -c 14-21 | sort -u)
 
-# keep also the keys of persons I'm tracking on keybase.io
-keybase_tracks=""
-for person in $(keybase list-tracking); do
-  id=$(keybase id $person 2>&1 | grep "public key fingerprint" | cut -d ':' -f 2 | cut -c 41-50 | sed "s/ //g")
-  keybase_tracks="$keybase_tracks $id"
-done
-
 # keep all of the signers, plus my key (if I haven't self-signed)
-keepers=$(echo $mykey $mysigners $keybase_tracks | tr ' ' '\012' | sort -u)
+keepers=$(echo $mykey $mysigners | tr ' ' '\012' | sort -u)
 
 # the keepers list in egrep syntax: ^(key|key|…)
 keepers_egrep=$(echo $keepers | sed 's/^/^(/; s/$/)/; s/ /|/g;')
@@ -29,7 +22,7 @@ keepers_egrep=$(echo $keepers | sed 's/^/^(/; s/$/)/; s/ /|/g;')
 echo '# Keepers: ' $keepers
 
 # everyone who isn't on the keepers list is deleted
-deleters=$(gpg --list-keys | grep '^pub' | cut -c 13-20 | egrep -v ${keepers_egrep})
+deleters=$(gpg --list-keys | grep '^pub' | cut -c 13-20 | grep -E -v ${keepers_egrep})
 
 # echo the command if there are any to delete
 # command is interactive
