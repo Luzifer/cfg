@@ -103,7 +103,7 @@ blocks:
       - type: text
         style: plain
         foreground: p:yellow
-        template: "\u279c"
+        template: "<#666>#</>"
 
 console_title_template: "{{ .UserName }}@{{ .HostName }} \u279c {{ .Folder }}"
 
