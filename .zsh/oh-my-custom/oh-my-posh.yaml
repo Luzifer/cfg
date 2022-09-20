@@ -1,0 +1,145 @@
+blocks:
+  - type: prompt
+    alignment: left
+    newline: true
+    segments:
+      - type: time
+        style: diamond
+        leading_diamond: &ld '<#666>[</> '
+        trailing_diamond: &td ' <#666>]</>'
+        foreground: p:white
+        template: '{{ .CurrentDate | date "15:04:05" }}'
+
+      - type: session
+        style: diamond
+        leading_diamond: *ld
+        trailing_diamond: *td
+        foreground: p:green
+        template: '{{ .UserName }}{{ if .SSHSession }}@{{ .HostName }}{{ end }}'
+
+      - type: command
+        style: diamond
+        leading_diamond: *ld
+        trailing_diamond: *td
+        foreground: p:red
+        properties:
+          command: '~/bin/config-git-status.sh || echo "mod"'
+        template: '{{ if eq .Output "mod" }}{{ end }}'
+
+      - type: kubectl
+        style: diamond
+        leading_diamond: *ld
+        trailing_diamond: *td
+        foreground: p:white
+        foreground_templates:
+          - '{{ if eq .Context "int" }}p:yellow{{ end }}'
+          - '{{ if eq .Context "minikube" }}p:green{{ end }}'
+          - '{{ if eq .Context "prod" }}p:red{{ end }}'
+        template: '{{ .Context }}'
+
+      - type: command
+        style: diamond
+        leading_diamond: *ld
+        trailing_diamond: *td
+        foreground: p:yellow
+        properties:
+          command: short_path
+        template: '{{ .Output }}'
+
+      - type: exit
+        style: diamond
+        leading_diamond: *ld
+        trailing_diamond: *td
+        foreground: p:white
+        foreground_templates:
+          - '{{ if gt .Code 0 }}p:red{{ end }}'
+        properties:
+          always_enabled: false
+        template: '{{ if gt .Code 0 }}{{ .Code }}{{ else }}{{ end }}'
+
+  - type: prompt
+    alignment: right
+    overflow: hide
+    segments:
+      - type: executiontime
+        style: diamond
+        leading_diamond: *ld
+        trailing_diamond: *td
+        properties:
+          style: austin
+        template: '{{ .FormattedMs }}'
+
+      - type: git
+        style: diamond
+        leading_diamond: *ld
+        trailing_diamond: *td
+        foreground: p:green
+        foreground_templates:
+          - '{{ if or (.Working.Changed) (.Staging.Changed) }}p:yellow{{ end }}'
+          - '{{ if and (gt .Ahead 0) (gt .Behind 0) }}p:red{{ end }}'
+          - '{{ if gt .Ahead 0 }}#49416D{{ end }}'
+          - '{{ if gt .Behind 0 }}#7A306C{{ end }}'
+        properties:
+          bitbucket_icon: "\ue703"
+          branch_icon: ''
+          branch_max_length: 25
+          fetch_status: true
+          fetch_upstream_icon: true
+          github_icon: "\ue709"
+          git_icon: "\uf1d3"
+          gitlab_icon: "\uf296"
+        templates:
+          - '{{ if .UpstreamURL }}{{ url .UpstreamIcon .UpstreamURL }} {{ end }}'
+          - '{{ .HEAD }} ({{ .ShortHash }})'
+          - '{{ if .BranchStatus }} {{ .BranchStatus }}{{ end }}'
+          - '{{ if .Working.Changed }}  {{ .Working.String }}{{ end }}'
+          - '{{ if .Staging.Changed }}  {{ .Staging.String }}{{ end }}'
+
+  - type: prompt
+    alignment: left
+    newline: true
+    segments:
+      - type: text
+        style: plain
+        foreground: p:yellow
+        template: "\u279c"
+
+console_title_template: "{{ .UserName }}@{{ .HostName }} \u279c {{ .Folder }}"
+
+final_space: true
+
+palette:
+  black: '#262B44'
+  blue: '#4B95E9'
+  gray: '#333333'
+  green: '#00bc00'
+  orange: '#F07623'
+  red: '#c91b00'
+  white: '#E0DEF4'
+  yellow: '#f4f400'
+  darkblue: '#0b1052'
+
+tooltips:
+  - type: aws
+    style: diamond
+    leading_diamond: &ttld 
+    trailing_diamond: &tttd 
+    background: p:orange
+    foreground: p:white
+    properties:
+      display_default: true
+    template: '  {{ .Profile }}{{ if .Region }}@{{ .Region }}{{ end }} '
+    tips:
+      - aws
+
+  - type: az
+    style: diamond
+    leading_diamond: *ttld
+    trailing_diamond: *tttd
+    background: p:blue
+    foreground: p:white
+    template: ' ﴃ {{ .Name }} '
+    tips:
+      - az
+
+version: 2
