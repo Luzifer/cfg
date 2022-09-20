@@ -39,6 +39,7 @@ blocks:
         template: '{{ .Context }}'
 
       - type: command
+        alias: ShortPath
         style: diamond
         leading_diamond: *ld
         trailing_diamond: *td
@@ -109,7 +110,12 @@ blocks:
         foreground: p:yellow
         template: "<#666>#</>"
 
-console_title_template: "{{ .UserName }}@{{ .HostName }} \u279c {{ .Folder }}"
+      - type: text
+        style: hidden
+        foreground: p:red
+        template: "{{ .Segments }}"
+
+console_title_template: "{{ .UserName }}@{{ .HostName }} \u279c {{ .Segments.Shortpath.Output }}"
 
 final_space: true
 
