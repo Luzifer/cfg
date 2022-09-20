@@ -23,7 +23,8 @@ blocks:
         trailing_diamond: *td
         foreground: p:red
         properties:
-          command: '~/bin/config-git-status.sh || echo "mod"'
+          command: '~/bin/config-git-status.sh && echo "unmod" || echo "mod"'
+          shell: bash
         template: '{{ if eq .Output "mod" }}{{ end }}'
 
       - type: kubectl
