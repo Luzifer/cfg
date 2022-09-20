@@ -58,6 +58,10 @@ blocks:
           always_enabled: false
         template: '{{ if gt .Code 0 }}{{ .Code }}{{ else }}{{ end }}'
 
+      - type: text
+        style: plain
+        template: "\u200b"
+
   - type: prompt
     alignment: right
     overflow: hide

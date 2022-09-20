@@ -1,0 +1,3 @@
+#!/bin/bash
+
+xclip -selection c -o | sed "s/$(printf '\u200b').*//" | xclip -selection c -i
