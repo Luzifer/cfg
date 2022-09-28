@@ -15,6 +15,13 @@ for remote in $(git remote -v | awk '{print $1}' | sort | uniq); do
 done
 
 [[ -z ${jump_branch} ]] || {
+  [[ ${jump_branch} != "-d" ]] || {
+    step "Detecting base branch to jump to..."
+    known_bases=($(git branch | grep -Eo '(develop|main|master)$'))
+    [ ${#known_bases[@]} -eq 1 ] || fail "Expected exactly one potential base branch, got ${#known_bases[@]}: ${known_bases[@]}"
+    jump_branch=${known_bases[0]}
+  }
+
   step "Switching to branch ${jump_branch}"
   git switch "${jump_branch}"
 }
