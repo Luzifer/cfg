@@ -2,4 +2,20 @@
 
 set -euo pipefail
 
-git checkout -b $(slugify "$@" | cut -c 1-72)
+prefix=""
+
+while getopts ":p:" o; do
+  case "${o}" in
+  p)
+    prefix="${OPTARG}"
+    ;;
+  *)
+    usage
+    fatal "Invalid option -- ${OPTARG}"
+    ;;
+  esac
+done
+shift $((OPTIND - 1))
+
+branchname="${prefix}/$(slugify "$@" | cut -c 1-72)"
+git checkout -b "${branchname##/}"
