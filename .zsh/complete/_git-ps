@@ -1,0 +1,14 @@
+#compdef git-ps
+#description switches to specified branch and updates from remote
+
+_git-ps() {
+  local options=(
+    '-d:detect base branch'
+  )
+
+  for branch in $(git branch 2>/dev/null | sed 's/^..//'); do
+    options+=("${branch}:$(git log -n1 --format='[%G?] %(describe:tags) - %ar - %s - %an' ${branch})")
+  done
+
+  _describe 'branches' options
+}
