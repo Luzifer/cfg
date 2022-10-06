@@ -57,7 +57,7 @@ directory = *
 [user]
 email = knut@ahlers.me
 name = Knut Ahlers
-signingkey = D215AD7D
+signingkey = 5D7EEBD183A1F4395D1ED038A5143194CB681B44
 
 # Mappings for private repos and `go get`
 [url "git@bitbucket.org:"]
