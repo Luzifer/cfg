@@ -1,0 +1,38 @@
+#!/bin/bash
+set -euo pipefail
+
+source ~/bin/script_framework.sh
+
+function authCurl() {
+  curl -sSfL \
+    -H "Accept: application/vnd.github+json" \
+    -H "Authorization: Bearer ${GPG_TOKEN}" \
+    "$@"
+}
+
+key_id=${1:-}
+[[ -n $key_id ]] || fatal "Usage: $0 <gpg-key-id 16-character>"
+[[ ${#key_id} -eq 16 ]] || fatal "Key ID has ${#key_id} characters, expected 16"
+
+GPG_TOKEN=${GPG_TOKEN:-$(vault read -field=token secret/private/github/gpg-keyupdate)}
+[[ -n $GPG_TOKEN ]] || fatal "GPG_TOKEN neither present in ENV nor found in Vault"
+
+step "Exporting public key for key id ${key_id}..."
+armored_public_key="$(gpg --export -a ${key_id} 2>/dev/null || echo "")"
+[[ -n $armored_public_key ]] || fatal "Key not found"
+
+step "Checking existence of key in Github profile..."
+existing_id=$(
+  authCurl https://api.github.com/user/gpg_keys |
+    jq --arg key_id "${key_id}" -e '.[] | select(.key_id == $key_id) | .id' || echo ""
+)
+if [[ -n $existing_id ]]; then
+  step "Removing existing key..."
+  authCurl -X DELETE "https://api.github.com/user/gpg_keys/${existing_id}" || fatal "Key deletion failed"
+fi
+
+step "Creating key in Github profile..."
+authCurl \
+  -X POST \
+  -d "$(jq -cn --arg key "${armored_public_key}" '{"armored_public_key": $key}')" \
+  https://api.github.com/user/gpg_keys | jq -e '.id' >/dev/null && success "Key created / updated" || fatal "Key creation failed"
