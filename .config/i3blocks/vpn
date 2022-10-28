@@ -16,16 +16,6 @@ def check_ping_reachable(ip):
         return False
 
 
-def check_service_active(service):
-    try:
-        subprocess.check_call(['systemctl', 'status', service],
-                              stdout=subprocess.DEVNULL,
-                              stderr=subprocess.DEVNULL)
-        return True
-    except subprocess.CalledProcessError:
-        return False
-
-
 def main():
     config = yaml.load(
         open(Path('~/.config/i3-vpn.json').expanduser()),
