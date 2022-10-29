@@ -1,0 +1,39 @@
+#!/bin/bash
+set -euo pipefail
+
+source ~/bin/script_framework.sh
+
+function usage() { fatal "Usage: $0 -f <hash-filename> <clean|smudge>"; }
+
+check_utils \
+  openssl \
+  sha256sum \
+  vault
+
+passkey="secret/osslvault/$(basename $(pwd))"
+salt=""
+
+while getopts ":f:k:" o; do
+  case "${o}" in
+  f) salt="$(sha256sum ${OPTARG} | cut -d ' ' -f 1)" ;;
+  k) passkey="${OPTARG}" ;;
+  *) usage ;;
+  esac
+done
+shift $((OPTIND - 1))
+
+pass="$(vault read -field=pass "${passkey}")"
+[[ -n $pass ]] || fatal "Password not found."
+
+case ${1:-_invalid} in
+clean)
+  [[ -n $salt ]] || fatal "Missing paramter -f"
+  openssl enc -k ${pass} -S ${salt} -pbkdf2 -e -a
+  ;;
+smudge)
+  openssl enc -k ${pass} -pbkdf2 -d -a
+  ;;
+*)
+  usage
+  ;;
+esac

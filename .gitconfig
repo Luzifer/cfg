@@ -36,6 +36,11 @@ required = true
 clean = git-lfs clean -- %f
 smudge = git-lfs smudge -- %f
 
+[filter "osslvault"]
+clean = git-filter-osslvault -f %f clean
+smudge = git-filter-osslvault smudge
+required = true
+
 [gpg]
 program = gpg2
 
