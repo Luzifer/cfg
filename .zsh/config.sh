@@ -10,11 +10,11 @@ export PATH=$PATH:$HOME/.local/bin
 
 ## Make join_by function globally available
 function join_by() {
-	local d=$1
-	shift
-	echo -n "$1"
-	shift
-	printf "%s" "${@/#/$d}"
+  local d=$1
+  shift
+  echo -n "$1"
+  shift
+  printf "%s" "${@/#/$d}"
 }
 
 ## Some default settings
@@ -69,15 +69,19 @@ source ${HOME}/.zsh/gpg-agent.plugin.zsh
 source ${HOME}/.zsh/config-git.zsh
 
 ## Load local-config if available
-[ -e ${HOME}/.zsh/local-config.zsh ] && source ${HOME}/.zsh/local-config.zsh
+[[ -d ${HOME}/.zsh/config.sh.d ]] && {
+  for lc in $(find ${HOME}/.zsh/config.sh.d -name '*.zsh' -o -name '*.sh'); do
+    [[ -e $lc ]] && source ${lc} || true
+  done
+} || true
 
 ## Load peco functions
 source ${HOME}/.zsh/peco.sh
 
 ## Load direnv
 (which direnv >/dev/null 2>&1) && {
-	export DIRENV_LOG_FORMAT=""
-	eval "$(direnv hook zsh)"
+  export DIRENV_LOG_FORMAT=""
+  eval "$(direnv hook zsh)"
 }
 
 ## Clean PATH from duplicates
