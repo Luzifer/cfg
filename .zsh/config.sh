@@ -85,7 +85,7 @@ source ${HOME}/.zsh/peco.sh
 }
 
 ## Clean PATH from duplicates
-export PATH=$(${HOME}/bin/path-dedup.py)
+export PATH=$(clean-str-dups.py : "${PATH}")
 
 ## Add custom auto-completions
 export fpath=("${HOME}/.zsh/complete" $fpath)
