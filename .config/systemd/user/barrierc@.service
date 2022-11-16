@@ -1,0 +1,11 @@
+[Unit]
+Description=Barrier Client
+After=network-online.target
+
+[Service]
+ExecStart=/usr/bin/barrierc -f --no-tray --debug INFO --name %H %i:24800
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=default.target
