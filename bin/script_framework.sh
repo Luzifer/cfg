@@ -39,6 +39,14 @@ function info() {
   echo -e "${COLOR_CYAN}$@${COLOR_PLAIN}" >&2
 }
 
+function join_by() {
+  local d=$1
+  shift
+  echo -n "$1"
+  shift
+  printf "%s" "${@/#/$d}"
+}
+
 function log_level_matches() {
   declare -A log_levels=(
     [debug]=0

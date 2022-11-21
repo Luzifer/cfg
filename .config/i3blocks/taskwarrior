@@ -1,0 +1,30 @@
+#!/bin/bash
+set -euo pipefail
+
+source "${HOME}/bin/script_framework.sh"
+
+function colorized() {
+  echo "<span color=\"$1\">$2</span>"
+}
+
+count_pending=$(task status:pending count)
+count_due=$(task due.before=tomorrow and due.after=today and -status:completed count)
+count_overdue=$(task due.before=today and -status:completed count)
+count_active=$(task +ACTIVE count)
+
+parts=("$(colorized "#8FAAFC" "${count_pending} pending")")
+
+if [ $count_due -gt 0 ]; then
+  parts+=("$(colorized "#FFD966" "${count_due} due")")
+fi
+
+if [ $count_overdue -gt 0 ]; then
+  parts+=("$(colorized "#dd0000" "${count_overdue} overdue")")
+fi
+
+if [ $count_active -gt 0 ]; then
+  active_tasks=$(task +ACTIVE export | jq -r '[ .[] | ["["+(.id|tostring)+"]", .description] | join(" ") ] | join(", ")')
+  parts+=("$(colorized "#50fa7b" "Active: ${active_tasks}")")
+fi
+
+echo "$(printf '\uf0ae') $(join_by ", " "${parts[@]}")"
