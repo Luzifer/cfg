@@ -8,7 +8,7 @@ function colorized() {
 }
 
 count_pending=$(task status:pending count)
-count_due=$(task due.before=tomorrow and due.after=today and -status:completed count)
+count_due=$(task due.before=tomorrow and due.after=yesterday and -status:completed count)
 count_overdue=$(task due.before=today and -status:completed count)
 count_active=$(task +ACTIVE count)
 

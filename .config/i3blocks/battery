@@ -3,8 +3,8 @@ set -euo pipefail
 
 # Check no support for battery (likely desktop PC)
 acpi -b |& grep -q 'No support' && {
-	printf '\uf0e7\n'
-	exit 0
+  printf '\uf0e7\n'
+  exit 0
 } || true
 
 IFS=$'\n'
@@ -13,28 +13,29 @@ ac_conn=0
 (acpi -a | grep -q on-line) && ac_conn=1
 
 bat_cap=()
-for line in $(acpi -b | grep -v 'unavailable' | sed -E 's/.*: ([^,]+), ([0-9]+)%(, ([0-9]+:[0-9]+|)|).*/\1\t\2\t\4/'); do
-	color='#ffffff'
+for line in $(acpi -b | grep -v 'unavailable' | sed -E 's/.*: ([^,]+), ([0-9]+)%(, ([0-9]+:[0-9]+|charging at zero rate|))?.*/\1\t\2\t\4/'); do
+  color='#ffffff'
 
-	state=$(echo "${line}" | cut -d $'\t' -f 1)
-	cap=$(echo "${line}" | cut -d $'\t' -f 2)
-	remain="($(echo "${line}" | cut -d $'\t' -f 3)) "
+  state=$(echo "${line}" | cut -d $'\t' -f 1)
+  cap=$(echo "${line}" | cut -d $'\t' -f 2)
+  remain=" ($(echo "${line}" | cut -d $'\t' -f 3))"
 
-	[[ ${state} == 'Full' ]] && remain=''
-	[[ ${remain} == '() ' ]] && remain='(??) '
+  [[ ${state} == 'Full' ]] && remain=''
+  [[ $remain == ' (charging at zero rate)' ]] || [[ $remain == ' (00:00)' ]] && remain=''
+  [[ ${remain} == ' ()' ]] && remain=' (??)'
 
-	[ ${cap} -lt 50 ] && color='#ffd966'
-	[ ${cap} -lt 25 ] && color='#dd0000'
+  [ ${cap} -lt 50 ] && color='#ffd966'
+  [ ${cap} -lt 25 ] && color='#dd0000'
 
-	bat_cap+=("<span color=\"${color}\">${cap}% ${remain}</span>")
+  bat_cap+=("<span color=\"${color}\">${cap}%${remain}</span>")
 done
 
 IFS=' '
 
 if [ ${ac_conn} -eq 0 ]; then
-	# PS not connected, on battery
-	printf '\uf241 %s\n' "${bat_cap[*]}"
+  # PS not connected, on battery
+  printf '\uf241 %s\n' "${bat_cap[*]}"
 else
-	# PS connected, on AC
-	printf '\uf376 %s\n' "${bat_cap[*]}"
+  # PS connected, on AC
+  printf '\uf376 %s\n' "${bat_cap[*]}"
 fi
