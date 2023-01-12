@@ -37,4 +37,5 @@ step "Loading key ${KEY_NAME}"
 vault-sshadd "${KEY_NAME}"
 
 step "Executing ssh"
-exec env TERM=xterm-color ssh -p ${PORT} "${HOST}" "$@"
+[[ $HOST == workwork.cloud.kserver.biz ]] || export TERM=xterm-color
+exec ssh -p ${PORT} "${HOST}" "$@"
