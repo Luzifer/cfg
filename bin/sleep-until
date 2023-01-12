@@ -7,6 +7,7 @@ time=${1:-}
 [ -z "${time}" ] && fail "No time specified"
 
 tdiff=$(($(date -d "$1" +%s) - $(date +%s)))
-step "Sleeping ${tdiff}s until ${time}..."
+[ $tdiff -gt 0 ] || tdiff=$((tdiff + 86400))
 
+step "Sleeping ${tdiff}s until $(date -d "now + ${tdiff} seconds" "+%Y-%m-%d %H:%M:%S")..."
 sleep ${tdiff}
