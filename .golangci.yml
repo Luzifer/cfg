@@ -163,6 +163,8 @@ linters-settings:
       - name: unexported-naming       # Warns on wrongly named un-exported symbols
       - name: unexported-return       # Warns when a public return is from unexported type.
       - name: unhandled-error         # Warns on unhandled errors returned by funcion calls
+        arguments:
+          - "fmt.(Fp|P)rint(f|ln|)"
       - name: unnecessary-stmt        # Suggests removing or simplifying unnecessary statements
       - name: unreachable-code        # Warns on unreachable code
       - name: unused-parameter        # Suggests to rename or remove unused function parameters
