@@ -167,3 +167,7 @@ bar {
   status_command envrun --env-file ${HOME}/.config/i3blocks.env -- i3blocks -c ${HOME}/.config/i3blocks/config.`hostname`
   tray_output primary
 }
+
+# Assign windows to workspaces
+assign [class="discord"] comms
+assign [class="Element"] comms
