@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+source ~/bin/script_framework.sh
+
+step "Please select area of screen..."
+slopout=$(slop -f '%x %y %w %h %g %i')
+X=$(echo "${slopout}" | cut -d ' ' -f 1)
+Y=$(echo "${slopout}" | cut -d ' ' -f 2)
+W=$(echo "${slopout}" | cut -d ' ' -f 3)
+H=$(echo "${slopout}" | cut -d ' ' -f 4)
+G=$(echo "${slopout}" | cut -d ' ' -f 5)
+
+outfile="/tmp/$(date +%Y-%m-%d_%H-%M-%S).mp4"
+
+step "Initiating capture of ${G} to ${outfile}, Ctrl+C to stop..."
+exec ffmpeg -video_size ${W}x${H} -framerate 30 -f x11grab -i :0.0+${X},${Y} "${outfile}"
