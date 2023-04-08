@@ -171,3 +171,7 @@ bar {
 # Assign windows to workspaces
 assign [class="discord"] comms
 assign [class="Element"] comms
+
+# Set up monitoring screen
+workspace mon output HDMI-0
+assign [class="Chromium" title="Knut-Gaming - Dashboards"] mon
