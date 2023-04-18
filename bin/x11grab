@@ -14,4 +14,4 @@ G=$(echo "${slopout}" | cut -d ' ' -f 5)
 outfile="/tmp/$(date +%Y-%m-%d_%H-%M-%S).mp4"
 
 step "Initiating capture of ${G} to ${outfile}, Ctrl+C to stop..."
-exec ffmpeg -video_size ${W}x${H} -framerate 30 -f x11grab -i :0.0+${X},${Y} "${outfile}"
+exec ffmpeg -video_size ${W}x${H} -framerate 30 -f x11grab -i :0.0+${X},${Y} -c:v h264_nvenc -b:v 5000k "${outfile}"
