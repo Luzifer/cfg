@@ -2,15 +2,15 @@
 set -euo pipefail
 
 program_kills=(
-	Discord
+  'electron.*discord/app.asar'
 )
 
 systemd_services=(
-	streamdeck
+  streamdeck
 )
 
 function log() {
-	echo "$@" >&2
+  echo "$@" >&2
 }
 
 # Stop MPD playback when mpc client was found
@@ -18,12 +18,12 @@ function log() {
 
 # Disable systemd user services
 for svc in "${systemd_services[@]}"; do
-	systemctl --user is-active ${svc} >/dev/null 2>&1 && systemctl --user stop ${svc} || log "Service ${svc} not active / not found"
+  systemctl --user is-active ${svc} >/dev/null 2>&1 && systemctl --user stop ${svc} || log "Service ${svc} not active / not found"
 done
 
 # Terminate Discord in order to get mobile notifications
 for prog in "${program_kills[@]}"; do
-	killall -TERM ${prog} || true
+  kill -TERM $(pgrep -fo "${prog}") || true
 done
 
 # Mute default sink & source
@@ -34,5 +34,5 @@ i3lock -e -f -n -c 000000
 
 # Restart user-services
 for svc in "${systemd_services[@]}"; do
-	systemctl --user is-enabled ${svc} >/dev/null 2>&1 && systemctl --user start ${svc} || log "Service ${svc} not enabled, skipping start"
+  systemctl --user is-enabled ${svc} >/dev/null 2>&1 && systemctl --user start ${svc} || log "Service ${svc} not enabled, skipping start"
 done
