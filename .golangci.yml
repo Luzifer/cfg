@@ -67,10 +67,6 @@ linters:
     - wrapcheck     # Checks that errors returned from external packages are wrapped [fast: false, auto-fix: false]
 
 linters-settings:
-  forbidigo:
-    forbid:
-      - 'fmt\.Errorf' # Should use github.com/pkg/errors
-
   funlen:
     lines: 100
     statements: 60
