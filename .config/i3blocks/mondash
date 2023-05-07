@@ -8,7 +8,7 @@ from block import *
 
 import requests
 
-ICON = '\ufa6d'
+ICON = '\U000f056e'
 MONDASH_URL = 'https://mondash.org/{dashid}'
 STATUS_COLOR = {
     'OK': COLOR_SUCCESS,
