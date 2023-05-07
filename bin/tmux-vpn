@@ -17,7 +17,7 @@ def check_ping_reachable(ip):
 
 
 def main():
-    config = yaml.load(open(Path('~/.config/i3-vpn.json').expanduser()))
+    config = yaml.safe_load(open(Path('~/.config/i3-vpn.json').expanduser()))
     results = []
 
     for check in config['checks']:
