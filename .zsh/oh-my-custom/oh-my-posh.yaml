@@ -6,7 +6,7 @@ blocks:
       - type: time
         style: diamond
         leading_diamond: &ld '<#666>[</> '
-        trailing_diamond: &td ' <#666>]</>'
+        trailing_diamond: &td '<#666> ]</>'
         foreground: p:white
         template: '{{ .CurrentDate | date "15:04:05" }}'
 
