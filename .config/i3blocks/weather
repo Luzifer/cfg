@@ -1,0 +1,100 @@
+#!/usr/bin/env python3
+
+# You need to somehow make the variables OWM_LAT, OWM_LON, OWM_APIKEY
+# available in the environment before using this.
+
+import requests
+import sys
+import os
+
+from block import *
+
+WEATHER_URL = "https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&units=metric&appid={apikey}"
+
+
+class Weather(Block):
+    def execute(self):
+        url = WEATHER_URL.format(
+            lat=os.environ['OWM_LAT'],
+            lon=os.environ['OWM_LON'],
+            apikey=os.environ['OWM_APIKEY'],
+        )
+
+        weather = requests.get(url).json()
+
+        self.icon_from_id(weather['weather'][0]['icon'])
+
+        return '{temp:.1f}°C \ue34b {windspeed:.1f}m/s'.format(
+            temp=weather['main']['temp'],
+            windspeed=weather['wind']['speed'],
+        )
+
+    def icon_from_id(self, icon_id):
+        # https://openweathermap.org/weather-conditions
+        # http://nerdfonts.com/?set=nf-weather-#cheat-sheet
+        if icon_id.startswith('01'):
+            # clear sky
+            if icon_id[2] == 'd':
+                self.set_icon('\ue30d')  # nf-weather-day_sunny
+                self.set_icon_color('yellow')
+            else:
+                self.set_icon('\ue32b')  # nf-weather-night_clear
+                self.set_icon_color('gray')
+
+        elif icon_id.startswith('02'):
+            # few clouds
+            if icon_id[2] == 'd':
+                self.set_icon('\ue30c')  # nf-weather-day_sunny_overcast
+            else:
+                self.set_icon('\ue37b')  # nf-weather-night_partly_cloudy
+
+        elif icon_id.startswith('03') or icon_id.startswith('04'):
+            # scattered clouds / broken clouds
+            if icon_id[2] == 'd':
+                self.set_icon('\ue302')  # nf-weather-day_cloudy
+            else:
+                self.set_icon('\ue32e')  # nf-weather-night_cloudy
+
+        elif icon_id.startswith('09'):
+            # shower rain
+            if icon_id[2] == 'd':
+                self.set_icon('\ue309')  # nf-weather-day_showers
+            else:
+                self.set_icon('\ue334')  # nf-weather-night_showers
+
+        elif icon_id.startswith('10'):
+            # rain
+            if icon_id[2] == 'd':
+                self.set_icon('\ue308')  # nf-weather-day_rain
+            else:
+                self.set_icon('\ue333')  # nf-weather-night_rain
+
+        elif icon_id.startswith('11'):
+            # thunderstorm
+            if icon_id[2] == 'd':
+                self.set_icon('\ue30f')  # nf-weather-day_thunderstorm
+            else:
+                self.set_icon('\ue338')  # nf-weather-night_thunderstorm
+
+        elif icon_id.startswith('13'):
+            # snow
+            if icon_id[2] == 'd':
+                self.set_icon('\ue30a')  # nf-weather-day_snow
+            else:
+                self.set_icon('\ue335')  # nf-weather-night_snow
+
+        elif icon_id.startswith('50'):
+            # mist
+            if icon_id[2] == 'd':
+                self.set_icon('\ue303')  # nf-weather-day_fog
+            else:
+                self.set_icon('\ue346')  # nf-weather-night_fog
+
+
+def main():
+    block = Weather(None)
+    block.render()
+
+
+if __name__ == '__main__':
+    main()
