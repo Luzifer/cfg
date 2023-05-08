@@ -73,7 +73,7 @@ class Block:
         else:
             text = result
 
-        print('{icon}  {text}'.format(
+        print('{icon} {text}'.format(
             icon=self.color_text(self.ICON, self.ICON_COLOR),
             text=text,
         ))
