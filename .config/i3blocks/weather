@@ -24,8 +24,9 @@ class Weather(Block):
 
         self.icon_from_id(weather['weather'][0]['icon'])
 
-        return '{temp:.1f}°C {wind_icon} {windspeed:.1f}m/s'.format(
+        return '{temp:.1f}°C {wind_bft}  {windspeed:.1f}m/s {wind_icon}'.format(
             temp=weather['main']['temp'],
+            wind_bft=self.wind_bft(weather['wind']['speed']),
             wind_icon=self.wind_icon(weather['wind']['deg']),
             windspeed=weather['wind']['speed'],
         )
@@ -90,6 +91,30 @@ class Weather(Block):
                 self.set_icon('\ue303')  # nf-weather-day_fog
             else:
                 self.set_icon('\ue346')  # nf-weather-night_fog
+
+    def wind_bft(self, speed):
+        scale = [
+            [0.0, '\ue3b9', 'white'],  # 0 BFT
+            [0.5, '\ue3b0', 'white'],  # 1 BFT
+            [1.6, '\ue3b1', 'white'],  # 2 BFT
+            [3.4, '\ue3b2', 'white'],  # 3 BFT
+            [5.5, '\ue3b3', 'white'],  # 4 BFT
+            [8.0, '\ue3b4', 'white'],  # 5 BFT
+            [10.8, '\ue3b5', 'yellow'],  # 6 BFT
+            [13.9, '\ue3b6', 'yellow'],  # 7 BFT
+            [17.2, '\ue3b7', 'yellow'],  # 8 BFT
+            [20.8, '\ue3b8', 'red'],  # 9 BFT
+            [24.5, '\ue3b9', 'red'],  # 10 BFT
+            [28.5, '\ue3ba', 'red'],  # 11 BFT
+            [32.7, '\ue3bb', 'red'],  # 12 BFT
+        ]
+
+        selected = None
+        for scale_item in scale:
+            if scale_item[0] <= speed:
+                selected = scale_item
+
+        return self.color_text(selected[1], selected[2])
 
     def wind_icon(self, direction):
         icons = [
