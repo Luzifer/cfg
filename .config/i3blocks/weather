@@ -24,8 +24,9 @@ class Weather(Block):
 
         self.icon_from_id(weather['weather'][0]['icon'])
 
-        return '{temp:.1f}°C \ue34b {windspeed:.1f}m/s'.format(
+        return '{temp:.1f}°C {wind_icon} {windspeed:.1f}m/s'.format(
             temp=weather['main']['temp'],
+            wind_icon=self.wind_icon(weather['wind']['deg']),
             windspeed=weather['wind']['speed'],
         )
 
@@ -89,6 +90,21 @@ class Weather(Block):
                 self.set_icon('\ue303')  # nf-weather-day_fog
             else:
                 self.set_icon('\ue346')  # nf-weather-night_fog
+
+    def wind_icon(self, direction):
+        icons = [
+            '\ue353',  # nf-weather-direction_up
+            '\ue352',  # nf-weather-direction_up_right
+            '\ue349',  # nf-weather-direction_right
+            '\ue380',  # nf-weather-direction_down_right
+            '\ue340',  # nf-weather-direction_down
+            '\ue33f',  # nf-weather-direction_down_left
+            '\ue344',  # nf-weather-direction_left
+            '\ue37f',  # nf-weather-direction_up_left
+            '\ue353',  # nf-weather-direction_up
+        ]
+
+        return icons[round(direction / 45)]
 
 
 def main():
