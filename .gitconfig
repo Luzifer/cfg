@@ -32,7 +32,6 @@ renames = true
 
 [filter "jsonfmt"]
 clean = jq -S . %f
-smudge = cat %f
 
 [filter "lfs"]
 process = git-lfs filter-process
