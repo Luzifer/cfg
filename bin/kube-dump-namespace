@@ -1,0 +1,37 @@
+#!/bin/bash
+set -euo pipefail
+
+source ~/bin/script_framework.sh
+
+namespace="${1:-}"
+[[ -n $namespace ]] || fatal "Missing namespace."
+
+step "Collecting available api-resources..."
+api_rss=($(
+	kubectl api-resources --verbs=list --namespaced -o name |
+		grep -v "events.events.k8s.io" |
+		grep -v "events" |
+		sort | uniq
+))
+
+for rss in "${api_rss[@]}"; do
+	step "Fetching resources in api-resource ${rss}..."
+
+	names=($(
+		kubectl -n "${namespace}" \
+			get --ignore-not-found "${rss}" \
+			-o name
+	))
+
+	for name in "${names[@]}"; do
+		echo -e "---\n"
+
+		kubectl -n "${namespace}" \
+			get -o yaml "${name}"
+
+		echo
+	done
+
+done
+
+echo -e "..."
