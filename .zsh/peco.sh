@@ -1,5 +1,5 @@
 # Helpers
-function exists { which $1 &> /dev/null }
+function exists() { which $1 &>/dev/null; }
 
 # kill process
 function peco-kill-process() {
@@ -10,6 +10,22 @@ function peco-kill-process() {
   fi
 }
 alias killp='peco-kill-process'
+
+# load gpg-key
+function peco-load-gpg-key() {
+  local keys
+  keys=$({
+    for keyid in $(vault list secret/gpg-key | tail -n+3); do
+      local uid=$({gpg --with-colons -k "${keyid}" 2>/dev/null || echo ""} | awk -F: '$1=="uid" {print $10; exit}')
+      [[ -n $uid ]] || continue # Key is not present on machine
+      echo "${uid} (${keyid})"
+    done
+  } | peco --query "$LBUFFER")
+  [[ -n $keys ]] || return
+
+  sed -E 's/.*\((.*)\)/\1/' <<<"${keys}" | xargs vault-gpg
+}
+alias pgpgkey='peco-load-gpg-key'
 
 # load ssh-key
 function peco-load-ssh-key() {
@@ -23,11 +39,13 @@ alias psshkey='peco-load-ssh-key'
 
 # select history
 function peco-select-history() {
-	local tac
-	exists gtac && tac="gtac" || { exists tac && tac="tac" || { tac="tail -r" } }
-	BUFFER=$(fc -l -n 1 | eval $tac | peco --query "$LBUFFER")
-	CURSOR=$#BUFFER         # move cursor
-	zle -R -c               # refresh
+  local tac
+  exists gtac && tac="gtac" || { exists tac && tac="tac" || { tac="tail -r"; }; }
+  BUFFER=$(fc -l -n 1 | eval $tac | peco --query "$LBUFFER")
+  CURSOR=$#BUFFER # move cursor
+  zle -R -c       # refresh
 }
 zle -N peco-select-history
 bindkey '^R' peco-select-history
+
+# vim: set ft=zsh :
