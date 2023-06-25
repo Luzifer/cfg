@@ -6,6 +6,7 @@ import sys
 from block import *
 
 CRIT = 90.0
+HIDE = 70.0
 MOUNT_BLACKLIST = ['/dev', '/efi', '/proc', '/run', '/sys', '/tmp']
 FS_BLACKLIST = ['//', 'cgroup', 'dev',
                 'fusectl', 'overlay', 'proc', 'run', 'sys', 'tmpfs']
@@ -47,6 +48,9 @@ class Disk(Block):
 
             if usage > CRIT:
                 color = '#dd0000'
+
+            if usage < HIDE:
+                continue
 
             strings.append('<span color="#8FAAFC">{}</span>: <span color="{}">{:.0f}%</span>'.format(
                 mount,
