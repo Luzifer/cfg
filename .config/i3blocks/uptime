@@ -1,3 +1,3 @@
 #!/usr/bin/env zsh
 
-printf "\uf2f2 %.1f Days\n" $(($(cut -d ' ' -f 1 </proc/uptime) / 86400.0))
+printf "\uf2f2 %.1fd\n" $(($(cut -d ' ' -f 1 </proc/uptime) / 86400.0))
