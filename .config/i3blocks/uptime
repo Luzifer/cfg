@@ -1,3 +1,22 @@
 #!/usr/bin/env zsh
 
-printf "\uf2f2 %.1fd\n" $(($(cut -d ' ' -f 1 </proc/uptime) / 86400.0))
+up_secs=$(cut -d ' ' -f 1 </proc/uptime | cut -d . -f 1)
+
+num=0
+suffix=d
+
+if [ $up_secs -gt 86400 ]; then
+  num=$((up_secs / 86400.0))
+  suffix=d
+elif [ $up_secs -gt 3600 ]; then
+  num=$((up_secs / 3600.0))
+  suffix=h
+elif [ $up_secs -gt 60 ]; then
+  num=$((up_secs / 60.0))
+  suffix=m
+else
+  num=${up_secs}
+  suffix=s
+fi
+
+printf "\uf2f2 %.0f%s\n" ${num} ${suffix}
