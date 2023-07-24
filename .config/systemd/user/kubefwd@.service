@@ -1,0 +1,11 @@
+[Unit]
+Description=kubectl port-foward as a service
+
+[Service]
+EnvironmentFile=%h/.config/kubefwd.service.d/%i.conf
+ExecStart=kubectl -n ${NAMESPACE} port-forward ${TARGET} ${TARGET_PORT}:${LOCAL_PORT}
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=default.target
