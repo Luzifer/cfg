@@ -48,7 +48,7 @@ for repo_name in "${!REPOS[@]}"; do
   clone_url=$(echo ${REPOS[$repo_name]} | cut -d '#' -f 1)
   branch=$(echo ${REPOS[$repo_name]} | cut -d '#' -f 2)
 
-  step "Working on '${repo_name}' (remote: '${clone_url}', branch: '${branch}'..."
+  step "Working on '${repo_name}' (remote: '${clone_url}', branch: '${branch}')..."
 
   # Clone repo if it's not already available
   if ! [ -d "${HOME}/.cfg/${repo_name}" ]; then
