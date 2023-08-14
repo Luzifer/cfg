@@ -4,4 +4,4 @@
 DIFF=$(${HOME}/bin/tmux-timediff)
 [ -n "${DIFF}" ] && DIFF="(${DIFF})" || true
 
-printf '\uf017 %s %s' "$(date "+%a %Y-%m-%d %H:%M:%S")" "${DIFF}"
+printf '\uf017 %s %s\n' "$(date "+%a %Y-%m-%d %H:%M:%S")" "${DIFF}"
