@@ -47,7 +47,7 @@ alias gsdk='docker run --rm -ti -v "${HOME}/.config/gcloud:/root/.config/gcloud"
 alias htpasswd='python3 -c "import crypt; import sys; print(crypt.crypt(sys.argv[1], crypt.mksalt(crypt.METHOD_SHA512)));"'
 alias l='exa --git -lg'
 alias ls='/usr/bin/exa'
-alias lt='exa --git -lg --tree'
+alias lt='exa --git -lg --tree -I node_modules'
 alias markdownlint='dtool markdownlint'
 alias mqttcli='vault2env --key=secret/private/mqttcli -- mqttcli'
 alias mysql='docker run --rm -ti -v $(pwd):$(pwd) -w $(pwd) mysql bash'
