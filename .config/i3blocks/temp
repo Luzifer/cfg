@@ -6,7 +6,7 @@ import subprocess
 
 from block import *
 
-CRIT = 70.0
+CRIT = 90.0
 
 CHIP_BLACKLIST = []
 SENSOR_BLACKLIST = [r'^AUXTIN[0-9]']
