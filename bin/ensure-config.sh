@@ -53,6 +53,8 @@ for repo_name in "${!REPOS[@]}"; do
   # Clone repo if it's not already available
   if ! [ -d "${HOME}/.cfg/${repo_name}" ]; then
     git clone --bare "${clone_url}" --branch "${branch}" "${HOME}/.cfg/${repo_name}"
+  else
+    config remote set-url origin "${clone_url}"
   fi
 
   # Set basic git options for the repo
