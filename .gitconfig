@@ -27,6 +27,9 @@ pager = less -F -X
 repositoryformatversion = 0
 warnAmbiguousRefs = false
 
+[credential]
+helper = vault
+
 [diff]
 renames = true
 
