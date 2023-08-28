@@ -1,0 +1,10 @@
+[Unit]
+Description=Barrier Server
+
+[Service]
+ExecStart=/usr/bin/barriers -f --no-tray --debug INFO --name %H --disable-client-cert-checking -c %h/.config/barriers.conf --address :24800
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=default.target
