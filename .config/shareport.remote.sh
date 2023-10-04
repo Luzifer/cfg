@@ -1,18 +1,18 @@
 function gen_prefix() {
-	tr -dc 'a-z0-9' </dev/urandom | head -c 8 || true
+  tr -dc 'a-z0-9' </dev/urandom | head -c 8 || true
 }
 
 # Generate an unique ID and set config path for it
 share_id=${FQDN_PREFIX:-}
 while :; do
-	config_file="/home/shareport/nginx/shareport_${share_id}.conf"
+  config_file="/home/shareport/nginx/shareport_${share_id}.conf"
 
-	if [[ -z $share_id ]] || [[ -e $config_file ]]; then
-		share_id=$(gen_prefix)
-		continue
-	fi
+  if [[ -z $share_id ]] || [[ -e $config_file ]]; then
+    share_id=$(gen_prefix)
+    continue
+  fi
 
-	break
+  break
 done
 
 # Ensure configuration directory is there
@@ -23,6 +23,8 @@ cat -s <<EOF >${config_file}
 server {
   listen        443 ssl http2;
   server_name   ${share_id}.knut.dev;
+
+  client_max_body_size 1024m;
 
   ssl_certificate     /data/ssl/nginxle/knut.dev.pem;
   ssl_certificate_key /data/ssl/nginxle/knut.dev.key;
@@ -41,9 +43,9 @@ EOF
 
 # Register cleanup for script exit
 function cleanup() {
-	rm -f \
-		${config_file}
-	sudo /bin/systemctl reload nginx.service
+  rm -f \
+    ${config_file}
+  sudo /bin/systemctl reload nginx.service
 }
 trap cleanup EXIT
 
