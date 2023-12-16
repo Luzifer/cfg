@@ -1,5 +1,4 @@
 #!/bin/bash
-
 set -euo pipefail
 
 source "${HOME}/bin/script_framework.sh"
@@ -11,8 +10,14 @@ git committerconfig
 
 ### Commit
 
-step "Loading passphrase for GPG key..."
-vault-gpg $(git config user.signingkey)
+signingkey=$(git config user.signingkey)
+if [[ $signingkey =~ ^(ssh|ecdsa) ]]; then
+  step "Loading ssh key into agent..."
+  vault-sshadd $(cut -d ' ' -f 3 <<<"${signingkey}")
+else
+  step "Loading passphrase for GPG key..."
+  vault-gpg ${signingkey}
+fi
 
 step "Execute pre-commit auto-hook"
 git autohook pre-commit

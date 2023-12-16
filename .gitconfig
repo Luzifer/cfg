@@ -48,7 +48,7 @@ smudge = git-filter-osslvault smudge
 required = true
 
 [gpg]
-program = gpg2
+format = ssh
 
 [push]
 default = upstream
@@ -65,10 +65,13 @@ enabled = true
 # therefore to disable the directory safety check
 directory = *
 
+[gpg.ssh]
+allowedSignersFile = ~/.git_allowed_signers
+
 [user]
 email = knut@ahlers.me
 name = Knut Ahlers
-signingkey = 5D7EEBD183A1F4395D1ED038A5143194CB681B44
+signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGVbYCO34iJikI+nLxpu2zjrvIh92GQqiss3Bkt+CSo4 loki
 
 # Mappings for private repos and `go get`
 [url "git@bitbucket.org:"]
