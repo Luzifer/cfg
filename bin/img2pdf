@@ -1,0 +1,43 @@
+#!/usr/bin/env zsh
+set -euo pipefail
+
+source ~/bin/script_framework.sh
+
+usage="$(basename $0) [-d DPI] [-f] [-h] [-l] <outfile.pdf> <...infile.jpg|png|...>"
+
+A4H=11.7 # inch
+A4W=8.3  # inch
+DPI=150
+
+h=${A4H}
+w=${A4W}
+scalearg=""
+
+while getopts "d:fhl" opt; do
+  case "${opt}" in
+  d) DPI=${OPTARG} ;;
+  f) scalearg="^" ;;
+  h) fatal "${usage}" ;;
+  l)
+    h=${A4W}
+    w=${A4H}
+    ;;
+  esac
+done
+
+shift $((OPTIND - 1))
+
+outfile=${1:-}
+[[ -n $outfile ]] || fatal "${usage}"
+shift
+
+exec convert "$@" \
+  -compress jpeg \
+  -resize $((w * DPI))x$((h * DPI))${scalearg} \
+  -gravity center \
+  -extent $((w * DPI))x$((h * DPI)) \
+  -units PixelsPerInch \
+  -density ${DPI} \
+  "${outfile}"
+
+# vim: set ft=sh :
