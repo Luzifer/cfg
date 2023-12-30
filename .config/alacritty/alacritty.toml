@@ -1,0 +1,43 @@
+live_config_reload = true
+
+[colors.bright]
+black = "#767676"
+blue = "#6871ff"
+cyan = "#5ffdff"
+green = "#5ff967"
+magenta = "#ff76ff"
+red = "#ff6d67"
+white = "#feffff"
+yellow = "#fefb67"
+
+[colors.normal]
+black = "#666666"
+blue = "#0631f8"
+cyan = "#00c5c7"
+green = "#00c200"
+magenta = "#c930c7"
+red = "#c91b00"
+white = "#c7c7c7"
+yellow = "#c7c400"
+
+[colors.primary]
+background = "#000000"
+foreground = "#c7c7c7"
+
+[font]
+size = 8.0
+
+[font.bold]
+family = "DejaVuSansM Nerd Font Mono"
+style = "Bold"
+
+[font.normal]
+family = "DejaVuSansM Nerd Font Mono"
+style = "Regular"
+
+[font.offset]
+x = 0
+y = 0
+
+[scrolling]
+history = 10000
