@@ -42,7 +42,7 @@ def main():
             if 'signingkey' in combi and combi['signingkey'] != '':
                 set_local_config('user.signingkey', combi['signingkey'])
                 set_local_config('gpg.format', 'ssh' if re.search(
-                    r'^(?:ssh|ecdsa)', combi['signingkey']) else 'openpgp')
+                    r'^(?:ssh|ecdsa|key::)', combi['signingkey']) else 'openpgp')
 
             if 'commit-opts' in combi:
                 set_local_config('commit.cliopts', combi['commit-opts'])

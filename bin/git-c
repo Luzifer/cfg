@@ -11,7 +11,7 @@ git committerconfig
 ### Commit
 
 signingkey=$(git config user.signingkey)
-if [[ $signingkey =~ ^(ssh|ecdsa) ]]; then
+if [[ $signingkey =~ ^(ssh|ecdsa|key::) ]]; then
   step "Loading ssh key into agent..."
   vault-sshadd $(cut -d ' ' -f 3 <<<"${signingkey}")
 else
