@@ -11,9 +11,10 @@ DPI=150
 
 h=${A4H}
 w=${A4W}
+rotate=0
 scalearg=""
 
-while getopts "d:fhl" opt; do
+while getopts "d:fhlr:" opt; do
   case "${opt}" in
   d) DPI=${OPTARG} ;;
   f) scalearg="^" ;;
@@ -22,6 +23,7 @@ while getopts "d:fhl" opt; do
     h=${A4W}
     w=${A4H}
     ;;
+  r) rotate=${OPTARG} ;;
   esac
 done
 
@@ -33,6 +35,7 @@ shift
 
 exec convert "$@" \
   -compress jpeg \
+  -rotate ${rotate} \
   -resize $((w * DPI))x$((h * DPI))${scalearg} \
   -gravity center \
   -extent $((w * DPI))x$((h * DPI)) \
