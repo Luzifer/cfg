@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+. <(vault2env --key=secret/minio/knut-cc --export)
+
+exec ~/gocode/bin/share --bucket=knut-cc --file-template="permanent/{{ printf \"%.8s\" .Hash}}/{{ .SafeFileName }}" --base-url="https://knut.cc/#" --progress "$@"
