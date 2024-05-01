@@ -2,7 +2,7 @@
 set -euo pipefail
 
 program_kills=(
-  'electron.*discord/app.asar'
+  'electron.*discord/resources/app.asar'
 )
 
 systemd_services=(
