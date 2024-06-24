@@ -14,20 +14,21 @@ import sys
 import re
 import subprocess
 import os.path
-import json
+import yaml
 
-CONFIG = os.path.expanduser('~/.config/git-committerconfig.json')
+CONFIG = os.path.expanduser('~/.config/git-committerconfig.yaml')
 
 
 def main():
     try:
-        repos = [x.split()[1] for x in subprocess.check_output(['git', 'remote', '-v'], universal_newlines=True).split('\n') if len(x.strip()) > 0]
+        repos = [x.split()[1] for x in subprocess.check_output(
+            ['git', 'remote', '-v'], universal_newlines=True).split('\n') if len(x.strip()) > 0]
     except:
         print('Could not find origin, not loading key.')
         return 0
 
     if os.path.isfile(CONFIG):
-        combinations = json.loads(open(CONFIG).read())
+        combinations = yaml.safe_load(open(CONFIG).read())
     else:
         print('Config ({}) found.'.format(CONFIG))
         return 1
@@ -45,6 +46,7 @@ def main():
         subprocess.check_call(['vault-sshadd', key])
 
     return 0
+
 
 if __name__ == "__main__":
     exit(main())
