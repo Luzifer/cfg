@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+CHECK=$(printf '\u2705')
+CROSS=$(printf '\u274C')
+
+startpath=$(pwd)
+
+function check() {
+  bash -euo pipefail -c "LANG=C $1" && echo -n "${CHECK}" || echo -n "${CROSS}"
+}
+
+for repo in $(find . -name ".git"); do
+  cd $(dirname $repo)
+  reponame=$(short_path)
+
+  clean=$(check 'git status | grep -q "nothing to commit"')
+  remote=$(check 'git remote -vv | grep -q "push"')
+  ahead=$(check 'git status | grep -q "is up to date with"')
+  branch=$(check 'git branch --show-current | grep -qE "(develop|main|master)"')
+
+  echo -e "${reponame}\t${branch}\t${clean}\t${remote}\t${ahead}"
+
+  cd $startpath
+done | sort | column -t -N "Repo,B,C,R,U" -s $'\t'
+
+echo
+echo "B = On base-branch, C = Clean, R = Remote set, U = Up to date with remote"
