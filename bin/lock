@@ -5,6 +5,10 @@ program_kills=(
   'electron.*discord/resources/app.asar'
 )
 
+program_starts=(
+  discord
+)
+
 systemd_services=(
   streamdeck
 )
@@ -35,4 +39,9 @@ i3lock -e -f -n -c 000000
 # Restart user-services
 for svc in "${systemd_services[@]}"; do
   systemctl --user is-enabled ${svc} >/dev/null 2>&1 && systemctl --user start ${svc} || log "Service ${svc} not enabled, skipping start"
+done
+
+# Restart programs
+for cmd in "${program_starts[@]}"; do
+  which ${cmd} >/dev/null 2>&1 && i3-msg "exec ${cmd}" || true
 done
