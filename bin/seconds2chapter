@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+source ~/bin/script_framework.sh
+
+ts=${1:-}
+[[ -n $ts ]] || fatal "Usage: ${0##*/} <timestamp, i.e. 12226>"
+
+pts=()
+
+for div in 3600 60 1; do
+  pt=$(( ts / div ))
+  ts=$(( ts % div ))
+
+  pts+=(${pt})
+done
+
+IFS=':'; echo "${pts[*]}"
