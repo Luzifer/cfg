@@ -2,4 +2,3 @@
 set -euo pipefail
 
 exec xclip -selection c -o "$@"
-
