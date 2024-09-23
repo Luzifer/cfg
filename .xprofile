@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+[[ -d ${HOME}/.xprofile.d ]] && {
+  for lc in $(find ${HOME}/.xprofile.d -name '*.zsh' -o -name '*.sh'); do
+    [[ -e $lc ]] && source ${lc} || true
+  done
+} || true
