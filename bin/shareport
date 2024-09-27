@@ -4,15 +4,13 @@ set -euo pipefail
 source "${HOME}/bin/script_framework.sh"
 
 function usage() {
-	echo "Usage: $0 [-hv] [-p prefix] <port>" >&2
+	echo "Usage: $0 [-h] [-k key] [-p prefix] <port>" >&2
 }
 
-# Get real shareport command
-shareport=$(which -a shareport | grep -v $0 | head -n1)
-
-# Start argument array
-args=($shareport)
+args=(-p 31088 master.k8s.kserver.biz)
 host=localhost
+key=loki
+remote="80"
 
 # Parse options
 while getopts ":hi:p:v" o; do
@@ -21,14 +19,11 @@ while getopts ":hi:p:v" o; do
 		usage
 		exit 0
 		;;
-	i)
-		host="${OPTARG}"
+	k)
+		key="${OPTARG}"
 		;;
 	p)
-		args+=(--var "FQDN_PREFIX=${OPTARG}")
-		;;
-	v)
-		args+=(--log-level debug)
+		remote="${OPTARG}:80"
 		;;
 	*)
 		usage
@@ -41,25 +36,7 @@ shift $((OPTIND - 1))
 # Add port
 port="${1:-}"
 [[ -n $port ]] || fatal "Missing local port as first argument"
-args+=(--local-addr "${host}:${port}")
 
-step "Fetching secrets..."
-export IDENTITY_FILE=$(mktemp)
-export IDENTITY_FILE_PASSWORD=$(vault read -field=passphrase secret/ssh-key/shareport)
-
-vault read -field=private secret/ssh-key/shareport >${IDENTITY_FILE}
-
-# Configure remote
-export REMOTE_HOST=knut.dev:22
-export REMOTE_SCRIPT="${HOME}/.config/shareport.remote.sh"
-export REMOTE_USER=shareport
-
-# Setup removal of SSH key after exit
-function cleanup() {
-	step "Cleaning up..."
-	rm -f ${IDENTITY_FILE}
-}
-trap cleanup EXIT
-
-step "Starting shareport..."
-"${args[@]}"
+step "Starting port-forward..."
+vault-sshadd ${key}
+exec /usr/bin/ssh -R "${remote}:${host}:${port}" "${args[@]}"
