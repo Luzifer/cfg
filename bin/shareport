@@ -39,4 +39,4 @@ port="${1:-}"
 
 step "Starting port-forward..."
 vault-sshadd ${key}
-exec /usr/bin/ssh -R "${remote}:${host}:${port}" "${args[@]}"
+exec /usr/bin/ssh -o ControlPath=/tmp/shareport-${port} -R "${remote}:${host}:${port}" "${args[@]}"
