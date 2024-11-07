@@ -17,7 +17,7 @@ match_patch:
   - "[fF]ix:"
   - "[lL]int:"
   - "[rR]efactor:"
-  - "Update dependencies"
+  - "(?i)Update(?: .*)? dependencies"
 
 # Every commit message matching one of the regular expressions defined
 # in here will cause a major-version increase (1.0.0 -> 2.0.0).
