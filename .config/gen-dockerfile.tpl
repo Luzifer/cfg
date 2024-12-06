@@ -1,4 +1,4 @@
-FROM golang:alpine as builder
+FROM golang:alpine AS builder
 
 {{ if hasFeature "private-mods" -}}
 ARG VAULT_ADDR
@@ -10,8 +10,8 @@ RUN set -ex \
  && git config --global credential.helper 'vault --vault-path-prefix {{ env `VAULT_GIT_CREDENTIAL_PATH` }}'
 {{- end }}
 
-COPY . /go/src/{{ .package }}
-WORKDIR /go/src/{{ .package }}
+COPY . /src/{{ .binary }}
+WORKDIR /src/{{ .binary }}
 
 RUN set -ex \
  && apk add --update git \
@@ -24,7 +24,7 @@ RUN set -ex \
 
 FROM alpine:latest
 
-LABEL maintainer "{{ .git_name }} <{{ .git_mail }}>"
+LABEL maintainer="{{ .git_name }} <{{ .git_mail }}>"
 
 RUN set -ex \
  {{ if ne .timezone "" -}}
