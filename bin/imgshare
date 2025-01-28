@@ -1,0 +1,59 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+: ${COPY:=0}   # Copy URL to clipboard
+: ${DIRECT:=0} # Remove hash from URL
+: ${TRIM:=0}   # Trim Image to content
+
+source ~/bin/script_framework.sh
+
+usage="$(basename $0) [-cdt] [image]"
+
+while getopts "cdt" opt; do
+  case "${opt}" in
+  c) COPY=1 ;;
+  d) DIRECT=1 ;;
+  t) TRIM=1 ;;
+  *) fatal "${usage}" ;;
+  esac
+done
+
+source_file=${1:-}
+deletions=()
+
+function exec_deletions() {
+  [ ${#deletions[@]} -gt 0 ] || return
+  rm "${deletions[@]}"
+}
+
+trap exec_deletions EXIT
+
+if ! [[ -f ${source_file} ]]; then
+  step "Reading source-file from clipboard..."
+  tmp_src=$(mktemp --suffix .png XXXXXXXX)
+  pbpaste -t image/png >${tmp_src}
+  source_file=${tmp_src}
+  deletions+=(${tmp_src})
+fi
+
+if [ $TRIM -eq 1 ]; then
+  step "Trimming source-file..."
+  trim_file=$(mktemp --suffix .png XXXXXXXX)
+  magick ${source_file} -fuzz 2% -trim ${trim_file}
+  source_file=${trim_file}
+  deletions+=(${trim_file})
+fi
+
+step "Sharing image..."
+url=$(share ${source_file})
+
+if [ $DIRECT -eq 1 ]; then
+  url=$(sed 's/#//' <<<"${url}")
+fi
+
+if [ $COPY -eq 1 ]; then
+  step "Copying URL..."
+  pbcopy <<<"${url}"
+else
+  echo "${url}"
+fi
