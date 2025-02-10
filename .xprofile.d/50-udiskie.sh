@@ -1,0 +1,2 @@
+killall udiskie || true
+udiskie &

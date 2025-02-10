@@ -1,0 +1,2 @@
+killall dunst || true
+dunst &
