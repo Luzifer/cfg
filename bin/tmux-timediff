@@ -25,6 +25,7 @@ KEY_OFFSET = 'Offset'
 KEY_PARSED_OFFSET = 'Parsed Offset'
 
 mult = {
+    '': 1.0,
     's': 1.0,
     'ms': 1.0 / 1000.0,
     'us': 1.0 / 1000000.0,
@@ -40,8 +41,9 @@ def get_stats():
         desc, cont = line_parts
         stats[desc.strip()] = cont.strip()
 
-    groups = re.search(r'^([+-])([0-9.]+)([a-z]+)$',
-                       stats[KEY_OFFSET]).groups()
+    search = re.search(r'^([+-])([0-9.]+)([a-z]*)$',
+                       stats[KEY_OFFSET])
+    groups = search.groups()
     offset = float(groups[1])
     offset = offset * mult[groups[2]]
 
