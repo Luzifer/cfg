@@ -421,6 +421,11 @@
 # NOTE: It might be helpful to run dunst -print in a terminal in order
 # to find fitting options for rules.
 
+[youtube_page_changes]
+  appname = "Chromium"
+  body = "*youtube.com*"
+  timeout = 10
+
 # Disable the transient hint so that idle_threshold cannot be bypassed from the
 # client
 #[transient_disable]
