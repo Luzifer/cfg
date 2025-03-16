@@ -112,10 +112,6 @@ blocks:
     foreground: p:yellow
     type: text
     style: plain
-  - template: "{{ .Segments }}"
-    foreground: p:red
-    type: text
-    style: hidden
   newline: true
 tooltips:
 - properties:
