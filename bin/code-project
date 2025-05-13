@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ws=$(short_path)
+
+code .
+sleep 1
+i3-msg "move workspace ${ws}; workspace ${ws}"
