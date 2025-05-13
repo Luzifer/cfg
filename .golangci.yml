@@ -2,6 +2,7 @@ version: '2'
 
 run:
   modules-download-mode: readonly
+  relative-path-mode: wd
 
 output:
   formats:
