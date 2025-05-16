@@ -37,7 +37,7 @@ def main():
 
     for repo in sorted(set(repos)):
         for combi in combinations:
-            if re.search(combi['match'], repo):
+            if re.search(combi['match'], repo) and 'keyname' in combi:
                 required_keys.append(combi['keyname'])
                 break
 
