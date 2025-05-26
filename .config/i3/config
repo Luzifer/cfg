@@ -58,8 +58,10 @@ bindsym $mod+Shift+Down move down
 bindsym $mod+Shift+Up move up
 bindsym $mod+Shift+Right move right
 
-bindsym $mod+Shift+bracketright move workspace to output right
-bindsym $mod+Shift+bracketleft move workspace to output left
+bindsym $mod+Ctrl+Up move workspace to output up
+bindsym $mod+Ctrl+Left move workspace to output left
+bindsym $mod+Ctrl+Right move workspace to output right
+bindsym $mod+Ctrl+Down move workspace to output down
 
 # split in horizontal orientation
 bindsym $mod+h split h
