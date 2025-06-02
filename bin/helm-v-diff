@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+source ${HOME}/bin/script_framework.sh
+
+repo=${1:-}
+chart=${2:-}
+v1=${3:-}
+v2=${4:-}
+
+[[ -n $repo ]] && [[ -n $chart ]] && [[ -n $v1 ]] && [[ -n $v2 ]] || fatal "Usage: $(basename $0) <repo> <chart> <version1> <version 2>"
+
+tempdir=$(mktemp -d)
+trap "rm -rf ${tempdir}" EXIT
+
+step "Fetching chart archives..."
+cd ${tempdir}
+
+helm pull --repo ${repo} --version ${v1} ${chart}
+helm pull --repo ${repo} --version ${v2} ${chart}
+
+cd - >/dev/null 2>&1
+
+step "Comparing archives..."
+tar-diff ${tempdir}/${chart}-${v1}.tgz ${tempdir}/${chart}-${v2}.tgz

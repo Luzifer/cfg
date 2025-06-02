@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+source ${HOME}/bin/script_framework.sh
+
+tar1=${1:-}
+tar2=${2:-}
+
+[[ -n ${tar1} ]] && [[ -n ${tar2} ]] || fatal "Usage: $(basename $0) <tar1> <tar2>"
+
+tempdir=$(mktemp -d)
+trap "rm -rf ${tempdir}" EXIT
+
+step "Creating tempdir structure..."
+mkdir -p ${tempdir}/{a,b}
+
+step "Unpacking into tempdir..."
+tar --auto-compress -xf "${tar1}" -C ${tempdir}/a
+tar --auto-compress -xf "${tar2}" -C ${tempdir}/b
+
+step "Diffing files..."
+cd ${tempdir}
+diff --color -wur a b
+cd - >/dev/null 2>&1
