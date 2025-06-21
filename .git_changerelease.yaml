@@ -12,6 +12,7 @@ ignore_messages:
 # Every commit message matching one of the regular expressions defined
 # in here will cause a patch-version increase (1.0.0 -> 1.0.1).
 match_patch:
+  - "(?:ci|chore|fix|lint|refactor)(?:\\([^)]+\\))?:"
   - "\\[CI\\]"
   - "[dD]ep:"
   - "[fF]ix:"
@@ -22,6 +23,7 @@ match_patch:
 # Every commit message matching one of the regular expressions defined
 # in here will cause a major-version increase (1.0.0 -> 2.0.0).
 match_major:
+  - "^[^:]+!:"
   - "^[Bb]reaking"
 
 # Template to format the commit message containing the changelog change
