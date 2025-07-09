@@ -1,0 +1,24 @@
+#!/bin/bash
+set -euo pipefail
+
+# In case we got a click, open the notifications page
+[ -n "${BLOCK_BUTTON:-}" ] && xdg-open "https://git.luzifer.io/notifications" >/dev/null 2>&1
+
+# Get token from vault
+gh_token=$(vault read -field=token secret/private/forgejo/notifications)
+[ -z "${gh_token}" ] && exit 1
+
+# Get unread notifications (capped, no pagination!)
+count=$(curl -sH "Authorization: token ${gh_token}" https://git.luzifer.io/api/v1/notifications | jq '. | length')
+
+# No updates: Gray
+color="#7f7f7f"
+display_num=""
+
+# Normal updates: White
+[ $count -gt 0 ] && {
+	color="#ffffff"
+	display_num=" ${count}"
+}
+
+printf '<span color="%s">\uf1d3%s</span>\n' "${color}" "${display_num}"
