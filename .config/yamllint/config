@@ -9,6 +9,10 @@
 extends: default
 
 rules:
+  anchors:
+    forbid-undeclared-aliases: true
+    forbid-duplicated-anchors: true
+    forbid-unused-anchors: true
   braces:
     level: warning
     min-spaces-inside: 1
@@ -17,17 +21,31 @@ rules:
     max-spaces-inside-empty: 1
   brackets:
     level: warning
+    min-spaces-inside: 0
+    max-spaces-inside: 1
+    min-spaces-inside-empty: 0
+    max-spaces-inside-empty: 1
   colons:
     level: warning
   commas:
     level: warning
+  comments:
+    level: warning
+  comments-indentation:
+    level: warning
   document-end:
     level: warning
-    present: true
-  document-start:
-    level: warning
-    present: true
+    present: false
+  document-start: disable
   empty-lines:
+    level: warning
+  empty-values:
+    level: warning
+  float-values:
+    forbid-inf: true
+    forbid-nan: true
+    forbid-scientific-notation: false
+    require-numeral-before-decimal: true
     level: warning
   hyphens:
     level: warning
@@ -44,6 +62,8 @@ rules:
   new-line-at-end-of-file:
     level: warning
   trailing-spaces:
+    level: warning
+  truthy:
     level: warning
 
 ...
