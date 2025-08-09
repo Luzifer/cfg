@@ -3,8 +3,187 @@ set -euo pipefail
 
 source ~/bin/script_framework.sh
 
+function cut-precise() { # start, duration, output
+  local start_ts="${1}"
+  local duration="${2}"
+  local output="${3}"
+
+  local v_codec v_bitrate a_codec a_bitrate
+
+  # Get video & audio codec + bitrate
+  IFS="|" read -r v_codec v_bitrate <<<"$(get_stream_info v)"
+  IFS="|" read -r a_codec a_bitrate <<<"$(get_stream_info a)"
+
+  # Get resolution
+  local resolution=$(
+    ffprobe \
+      -v error \
+      -select_streams v:0 \
+      -show_entries stream=width,height \
+      -of csv=s=x:p=0 \
+      "${source_video}"
+  )
+
+  # Get framerate (avg_frame_rate field)
+  local framerate=$(
+    ffprobe \
+      -v error \
+      -select_streams v:0 \
+      -show_entries stream=avg_frame_rate \
+      -of default=nk=1:nw=1 \
+      "${source_video}" |
+      awk -F/ '{if ($2 != 0) printf "%.3f", $1/$2; else print "0"}'
+  )
+
+  # Get audio sample rate
+  local a_samplerate=$(
+    ffprobe \
+      -v error \
+      -select_streams a:0 \
+      -show_entries stream=sample_rate \
+      -of default=nk=1:nw=1 \
+      "${source_video}"
+  )
+
+  # Get audio channels
+  local a_channels=$(
+    ffprobe \
+      -v error \
+      -select_streams a:0 \
+      -show_entries stream=channels \
+      -of default=nk=1:nw=1 \
+      "${source_video}"
+  )
+
+  debug "Video codec: $v_codec, bitrate: ${v_bitrate:-auto}, res: $resolution, fps: $framerate"
+  debug "Audio codec: $a_codec, bitrate: ${a_bitrate:-auto}, rate: $a_samplerate, channels: $a_channels"
+
+  case "${v_codec}" in
+  h264) v_codec="h264_nvenc" ;;
+  esac
+
+  # Build ffmpeg command
+  local cmd=(
+    ffmpeg
+    -v error
+    -ss "${start_ts}"
+    -i "${source_video}"
+    -t "${duration}"
+    -c:v "$v_codec"
+    -c:a "$a_codec"
+    -vf "scale=${resolution}"
+    -r "$framerate"
+    -ar "$a_samplerate"
+    -ac "$a_channels"
+  )
+
+  # Add bitrate flags only if known
+  [[ -n "$v_bitrate" ]] && cmd+=(-b:v "$v_bitrate")
+  [[ -n "$a_bitrate" ]] && cmd+=(-b:a "$a_bitrate")
+
+  cmd+=(-y "${output}")
+
+  debug "Running: ${cmd[@]}"
+  "${cmd[@]}"
+
+  info "Done: ${output}"
+}
+
+function cut-quick() { # start, duration, output
+  local start_ts="${1}"
+  local duration="${2}"
+  local output="${3}"
+
+  local cmd=(
+    ffmpeg
+    -v error
+    -ss ${start_ts}
+    -i "${source_video}"
+    -c copy
+    -t ${duration}
+    -y "${output}"
+  )
+
+  debug "Running: ${cmd[@]}"
+  "${cmd[@]}"
+
+  info "Done: ${output}"
+}
+
+function get_stream_info() {
+  local stream_type="$1" # v or a
+  local codec bitrate
+
+  codec=$(
+    ffprobe \
+      -v error \
+      -select_streams "${stream_type}:0" \
+      -show_entries stream=codec_name \
+      -of default=nk=1:nw=1 \
+      "${source_video}"
+  )
+
+  bitrate=$(
+    ffprobe \
+      -v error -select_streams "${stream_type}:0" \
+      -show_entries stream=bit_rate \
+      -of default=nk=1:nw=1 \
+      "${source_video}" || true
+  )
+
+  if [[ "$bitrate" == "N/A" || -z "$bitrate" ]]; then
+    local total_bitrate=$(
+      ffprobe \
+        -v error \
+        -show_entries format=bit_rate \
+        -of default=nk=1:nw=1 \
+        "${source_video}" || echo "N/A"
+    )
+
+    if [[ "$total_bitrate" != "N/A" && "$total_bitrate" =~ ^[0-9]+$ ]]; then
+      if [[ "$stream_type" == "v" ]]; then
+        bitrate=$((total_bitrate * 8 / 10)) # assume ~80% video
+      else
+        bitrate=$((total_bitrate * 2 / 10)) # assume ~20% audio
+      fi
+    else
+      bitrate="" # Let ffmpeg choose
+    fi
+  fi
+
+  echo "$codec|$bitrate"
+}
+
+function main() {
+  IFS=$'\n'
+
+  local ext="${source_video##*.}"
+
+  for line in $(grep -vE "^(|#.*)$" ${chapters_file}); do
+    local cut_mode=$(cut -d ' ' -f 1 <<<"${line}")
+    local start_ts=$(cut -d ' ' -f 2 <<<"${line}")
+    local end_ts=$(cut -d ' ' -f 3 <<<"${line}")
+    local name=$(cut -d ' ' -f 4- <<<"${line}")
+
+    local output="${name}.${ext}"
+
+    local duration=$(awk -v s="${start_ts}" -v e="${end_ts}" 'BEGIN {printf "%.3f", e - s}')
+    if (($(echo "$duration <= 0" | bc -l))); then
+      fail "Error: end time must be greater than start time."
+    fi
+
+    step "Copying segment with ${duration}s starting at ${start_ts}s into file ${output}"
+
+    case "${cut_mode}" in
+    P) cut-precise ${start_ts} ${duration} "${output}" ;;
+    Q) cut-quick ${start_ts} ${duration} "${output}" ;;
+    *) fail "Invalid cut-mode ${cut_mode}" ;;
+    esac
+  done
+}
+
 function usage() {
-	fail "Usage: $0 <chapters file> <source video>"
+  fail "Usage: $0 <chapters file> <source video>"
 }
 
 chapters_file="${1:-}"
@@ -13,13 +192,4 @@ chapters_file="${1:-}"
 source_video="${2:-}"
 [[ -n $source_video ]] || usage
 
-IFS=$'\n'
-
-for line in $(grep -vE "^(|#.*)$" ${chapters_file}); do
-	start_ts=$(echo "${line}" | cut -d ' ' -f 1)
-	end_ts=$(echo "${line}" | cut -d ' ' -f 2)
-	name=$(echo "${line}" | cut -d ' ' -f 3-)
-
-	step "Copying segment between ${start_ts}s and ${end_ts}s into file ${name}.${source_video##*.}"
-	ffmpeg -ss ${start_ts} -i "${source_video}" -c copy -t $((end_ts - start_ts)) "${name}.${source_video##*.}"
-done
+main
