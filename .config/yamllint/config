@@ -56,9 +56,7 @@ rules:
     check-multi-line-strings: true
   key-duplicates:
     level: error
-  line-length:
-    level: warning
-    allow-non-breakable-inline-mappings: true
+  line-length: off
   new-line-at-end-of-file:
     level: warning
   trailing-spaces:
