@@ -3,6 +3,6 @@ set -euo pipefail
 
 ws=$(short_path)
 
-code .
+vscodium-electron $(pwd)
 sleep 1
 i3-msg "move workspace ${ws}; workspace ${ws}"
