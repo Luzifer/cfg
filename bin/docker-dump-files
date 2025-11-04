@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+source ${HOME}/bin/script_framework.sh
+
+image=${1:-}
+[[ -n $image ]] || fatal "Usage: $(basename $0) <image:tag>"
+shift
+
+docker create --name="tmp_$$" ${image} "$@"
+docker export tmp_$$ | tar -x
+docker rm tmp_$$
