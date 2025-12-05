@@ -10,7 +10,7 @@ palette:
   red: "#c91b00"
   white: "#E0DEF4"
   yellow: "#f4f400"
-console_title_template: "{{ .UserName }}@{{ .HostName }} ➜ {{ .Segments.Shortpath.Output }}"
+console_title_template: "{{ .UserName }}@{{ .HostName }} ➜ {{ .Env.OMP_SHORTPATH }}"
 blocks:
 - type: prompt
   alignment: left
@@ -27,14 +27,11 @@ blocks:
     foreground: p:green
     type: session
     style: diamond
-  - properties:
-      command: ~/bin/config-git-status.sh && echo "unmod" || echo "mod"
-      shell: bash
-    leading_diamond: "<#666>[</> "
+  - leading_diamond: "<#666>[</> "
     trailing_diamond: "<#666> ]</>"
-    template: "{{ if eq .Output \"mod\" }}\uf00d{{ end }}"
+    template: "{{ if eq .Env.OMP_CFG_GIT_STATUS \"mod\" }}\uf00d{{ end }}"
     foreground: p:red
-    type: command
+    type: text
     style: diamond
   - leading_diamond: "<#666>[</> "
     trailing_diamond: "<#666> ]</>"
@@ -46,14 +43,11 @@ blocks:
     - "{{ if eq .Context \"int\" }}p:yellow{{ end }}"
     - "{{ if eq .Context \"minikube\" }}p:green{{ end }}"
     - "{{ if eq .Context \"prod\" }}p:red{{ end }}"
-  - properties:
-      command: short_path
-    alias: ShortPath
-    leading_diamond: "<#666>[</> "
+  - leading_diamond: "<#666>[</> "
     trailing_diamond: "<#666> ]</>"
-    template: "{{ .Output }}"
+    template: "{{ .Env.OMP_SHORTPATH }}"
     foreground: p:yellow
-    type: command
+    type: text
     style: diamond
   - properties:
       always_enabled: false
