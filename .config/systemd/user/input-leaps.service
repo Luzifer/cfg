@@ -1,0 +1,10 @@
+[Unit]
+Description=Input-Leap Server
+
+[Service]
+ExecStart=/usr/bin/input-leaps -f --no-tray --debug INFO --name %H --disable-client-cert-checking -c %h/.config/barriers.conf --address :24800
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=default.target

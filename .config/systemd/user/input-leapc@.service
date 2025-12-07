@@ -1,0 +1,11 @@
+[Unit]
+Description=Input-Leap Client
+After=network-online.target
+
+[Service]
+ExecStart=/usr/bin/input-leapc -f --no-tray --debug INFO --name %H %i:24800
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=default.target
