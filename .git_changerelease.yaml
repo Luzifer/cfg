@@ -1,5 +1,3 @@
----
-
 # Disable GPG signing for tags in case you do not want to have signed
 # tags or do not have set up GPG signing for git.
 disable_signed_tags: false
@@ -8,17 +6,14 @@ disable_signed_tags: false
 # message. By default below is a matcher for PR merges on Github.
 ignore_messages:
   - "^Merge pull request"
+  - "update .* docker digest to"
+  - "update .* action to"
+  - "^chore\\(deps\\):"
 
 # Every commit message matching one of the regular expressions defined
 # in here will cause a patch-version increase (1.0.0 -> 1.0.1).
 match_patch:
-  - "(?:ci|chore|fix|lint|refactor)(?:\\([^)]+\\))?:"
-  - "\\[CI\\]"
-  - "[dD]ep:"
-  - "[fF]ix:"
-  - "[lL]int:"
-  - "[rR]efactor:"
-  - "(?i)Update(?: .*)? dependencies"
+  - "(?i)(?:ci|chore|fix|lint|refactor)(?:\\([^)]+\\))?:"
 
 # Every commit message matching one of the regular expressions defined
 # in here will cause a major-version increase (1.0.0 -> 2.0.0).
@@ -30,4 +25,3 @@ match_major:
 # which will be used to add the tag to.
 release_commit_message: "prepare release {{.Version}}"
 
-...
