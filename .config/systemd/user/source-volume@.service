@@ -1,10 +1,19 @@
 [Unit]
-Description=Forces volume to stay at a level despite browser objecting
-After=pulseaudio.service
-Requires=pulseaudio.service
+Description=Force input volume to stay at %i%% (PulseAudio or PipeWire-Pulse)
+Documentation=man:pactl(1)
+After=sound.target
+Wants=sound.target
 
 [Service]
-ExecStart=/usr/bin/bash -e -c 'while true; do pactl set-source-volume @DEFAULT_SOURCE@ %i%; sleep 0.5; done'
+Type=simple
+Restart=always
+RestartSec=5
+
+# Wait until pactl can talk to *something* (PulseAudio OR pipewire-pulse).
+ExecStartPre=/usr/bin/bash -e -c 'for i in {1..200}; do pactl info >/dev/null 2>&1 && exit 0; sleep 0.1; done; echo "pactl: no server reachable" >&2; exit 1'
+
+# Then keep enforcing the desired volume.
+ExecStart=/usr/bin/bash -e -c 'while true; do pactl set-source-volume @DEFAULT_SOURCE@ %i%%; sleep 0.5; done'
 
 [Install]
 WantedBy=default.target
