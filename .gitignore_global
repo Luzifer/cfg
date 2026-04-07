@@ -45,3 +45,7 @@ Justfile
 # Golang
 go.work
 go.work.sum
+
+# Codex
+.codex
+AGENTS.md
