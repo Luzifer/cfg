@@ -1,12 +1,24 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-source ${HOME}/bin/script_framework.sh
+source "${HOME}/bin/script_framework.sh"
+
+check_utils \
+  rsync \
+  skopeo \
+  umoci
 
 image=${1:-}
-[[ -n $image ]] || fatal "Usage: $(basename $0) <image:tag>"
-shift
+[[ -n $image ]] || fatal "Usage: $(basename "$0") <image-ref>"
 
-docker create --name="tmp_$$" ${image} "$@"
-docker export tmp_$$ | tar -x
-docker rm tmp_$$
+tmpdir=$(mktemp -d)
+trap "rm -rf ${tmpdir}" EXIT
+
+info "Fetching image..."
+skopeo copy "docker://${image}" "oci:${tmpdir}/img:latest"
+
+info "Unpacking image..."
+umoci unpack --image "${tmpdir}/img:latest" --rootless "${tmpdir}/bundle"
+
+info "Copying image contents to $(pwd)..."
+rsync -ar "${tmpdir}/bundle/rootfs/" ./
