@@ -47,5 +47,6 @@ go.work
 go.work.sum
 
 # Codex
+.agents
 .codex
 AGENTS.md
