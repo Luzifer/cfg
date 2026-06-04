@@ -1,0 +1,20 @@
+#!/bin/bash
+set -euo pipefail
+
+echo "$@" >>/tmp/golangci.calllog
+
+args=()
+
+# remove ./... from argument list
+for arg; do
+  shift
+  [ "$arg" = "./..." ] && continue
+  args+=("${arg}")
+done
+
+if [ -f go.work ]; then
+  mapfile -t modules < <(go list -m -f '{{.Dir}}/...')
+  args+=("${modules[@]}")
+fi
+
+exec golangci-lint "${args[@]}"
