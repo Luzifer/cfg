@@ -1,4 +1,5 @@
----
+# yaml-language-server: $schema=https://www.schemastore.org/yamllint.json
+
 # See documentation for configuration / rules here:
 # https://yamllint.readthedocs.io/en/stable/configuration.html
 #
@@ -31,6 +32,7 @@ rules:
     level: warning
   comments:
     level: warning
+    min-spaces-from-content: 1
   comments-indentation:
     level: warning
   document-end:
@@ -56,14 +58,12 @@ rules:
     check-multi-line-strings: false
   key-duplicates:
     level: error
-  line-length: off
+  line-length: false
   new-line-at-end-of-file:
     level: warning
   trailing-spaces:
     level: warning
   truthy:
     level: warning
-
-...
 
 # vim: set ft=yaml:
