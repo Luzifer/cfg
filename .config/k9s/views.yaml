@@ -1,0 +1,9 @@
+views:
+  cert-manager.io/v1/certificates:
+    columns:
+      - NAMESPACE
+      - NAME
+      - READY
+      - SECRET
+      - EXPIRES:.status.notAfter
+      - AGE
