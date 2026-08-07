@@ -35,6 +35,12 @@ blocks:
     style: diamond
   - leading_diamond: "<#666>[</> "
     trailing_diamond: "<#666> ]</>"
+    foreground: p:white
+    style: diamond
+    template: "\uf0ef {{ .Profile }}"
+    type: aws
+  - leading_diamond: "<#666>[</> "
+    trailing_diamond: "<#666> ]</>"
     template: "{{ .Context }}"
     foreground: p:white
     type: kubectl
