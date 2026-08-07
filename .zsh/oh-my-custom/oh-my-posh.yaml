@@ -114,17 +114,6 @@ blocks:
     style: plain
   newline: true
 tooltips:
-- properties:
-    display_default: true
-  leading_diamond: 
-  trailing_diamond: 
-  template: " \ue7ad {{ .Profile }}{{ if .Region }}@{{ .Region }}{{ end }} "
-  foreground: p:white
-  background: p:orange
-  type: aws
-  style: diamond
-  tips:
-  - aws
 - leading_diamond: 
   trailing_diamond: 
   template: " ﴃ {{ .Name }} "
