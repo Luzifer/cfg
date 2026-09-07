@@ -50,6 +50,9 @@ required = true
 [gpg]
 format = ssh
 
+[init]
+defaultBranch = develop
+
 [push]
 default = upstream
 gpgSign = if-asked
