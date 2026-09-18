@@ -5,8 +5,8 @@ import sys
 
 from block import *
 
-CRIT = 90.0
-HIDE = 70.0
+CRIT = 95.0
+HIDE = 90.0
 MOUNT_BLACKLIST = ['/dev', '/efi', '/proc', '/run', '/sys', '/tmp']
 FS_BLACKLIST = ['//', 'cgroup', 'dev',
                 'fusectl', 'overlay', 'proc', 'run', 'sys', 'tmpfs']
