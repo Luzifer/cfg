@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+source ~/bin/script_framework.sh
+
+function main() {
+  local credentials="$(vault read -format=json secret/private/nextcloud)"
+  local user="$(jq -r '.data.user' <<<"${credentials}")"
+  local pass="$(jq -r '.data.password' <<<"${credentials}")"
+
+  local targetVersion="${1:-}"
+  [[ -n ${targetVersion} ]] || usage
+
+  local host="${2:-https://ahlers.space}"
+
+  local result="$(
+    curl -sSfL -u "${user}:${pass}" \
+      -H 'OCS-APIRequest: true' \
+      "${host}/ocs/v2.php/apps/updatenotification/api/v1/applist/${targetVersion}?format=json"
+  )"
+
+  {
+    printf "APP\tSTATUS\tDESCRIPTION\n"
+    {
+      jq -r '.ocs.data.missing[] | [.appId, "missing", .appName] | join("\t")' <<<"${result}"
+      jq -r '.ocs.data.available[] | [.appId, "available", .appName] | join("\t")' <<<"${result}"
+    } | sort
+  } | column -t -K -s $'\t'
+}
+
+function usage() {
+  fail "Usage: $(basename $0) <target-version> [host=https://ahlers.space]"
+}
+
+main "$@"
