@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+source ~/bin/script_framework.sh
+
+function get_fucked_keys() {
+  xinput list --short |
+    grep 'slave\s*keyboard' |
+    sed -E s'#.*id=([0-9]+).*slave\s*keyboard.*#\1#' |
+    xargs -n1 xinput query-state |
+    grep down |
+    sed -E 's#.*key\[([0-9]+)].*#\1#' |
+    sort -u
+}
+
+function main() {
+  step "Collecting keys permanently pressed..."
+  mapfile -t fucked_keys < <(
+    comm -12 <(get_fucked_keys) <(
+      sleep 1
+      get_fucked_keys
+    )
+  )
+
+  if [ ${#fucked_keys[@]} -eq 0 ]; then
+    success "No permanently pressed keys found"
+    notify-send "No permanently pressed keys found" || true
+    exit 0
+  fi
+
+  args=()
+
+  for key in "${fucked_keys[@]}"; do
+    args+=(keyup "${key}")
+  done
+
+  step "Unfucking keys ${fucked_keys[@]}..."
+  notify-send "Unfucking keys ${fucked_keys[@]}..." || true
+  exec xdotool "${args[@]}"
+}
+
+main
