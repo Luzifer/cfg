@@ -1,0 +1,11 @@
+[Unit]
+Description=Find old files in Downloads older than %i minutes
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/find \
+            %h/Downloads \
+            -mmin +%i \
+            -type f \
+            -printf 'Deleting %%p\n' \
+            -delete

@@ -1,0 +1,10 @@
+[Unit]
+Description=Run Downloads cleanup every 10 minutes
+
+[Timer]
+OnActiveSec=0
+OnUnitActiveSec=10min
+Unit=download-cleanup@%i.service
+
+[Install]
+WantedBy=timers.target
