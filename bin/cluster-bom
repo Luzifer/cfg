@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+source ~/bin/script_framework.sh
+
+outdir=${1:-}
+context=${2:-luzifer@private}
+
+[[ -n "${outdir}" ]] || fail "Usage: $(basename "$0") <outdir> [context]"
+
+step "Creating output directory..."
+mkdir -p "${outdir}"
+
+step "Fetching images used in active pods..."
+images=($(
+  kubectl --context "${context}" get -A pods -o yaml |
+    yq '.items[] | (.spec.initContainers // []) + (.spec.containers // []) | .[] | .image' |
+    sort -u
+))
+
+step "Found ${#images[@]} unique images, starting scan..."
+for img in "${images[@]}"; do
+  digest=$(skopeo inspect "docker://${img/:[^@]*@/@}" | jq -r .Digest)
+  target_file="${outdir}/${digest/:/-}.cdx.json"
+
+  if [[ -e "${target_file}" ]]; then
+    info "Skipping image, digest out exists: ${img}"
+    continue
+  fi
+
+  step "Analyzing image: ${img}"
+
+  trivy -q image \
+    --format cyclonedx \
+    --output "${target_file}.tmp" \
+    "${img}"
+
+  mv "${target_file}"{.tmp,}
+done
