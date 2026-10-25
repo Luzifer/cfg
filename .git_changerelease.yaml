@@ -8,7 +8,6 @@ ignore_messages:
   - "^Merge pull request"
   - "update .* docker digest to"
   - "update .* action to"
-  - "^chore\\(deps\\):"
 
 # Every commit message matching one of the regular expressions defined
 # in here will cause a patch-version increase (1.0.0 -> 1.0.1).
