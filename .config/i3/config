@@ -162,6 +162,9 @@ bindsym $mod+r mode "resize"
 # Execute autostart DesktopEntries
 exec dex -ae i3
 
+# Run XSSLock
+exec --no-startup-id xss-lock -- systemctl --user start --wait lock.service
+
 bar {
   position top
   status_command envrun --env-file ${HOME}/.config/i3blocks.env -- i3blocks -c ${HOME}/.config/i3blocks/config.`hostname`
